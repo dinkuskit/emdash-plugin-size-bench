@@ -1,0 +1,58 @@
+{
+  "id": "atproto",
+  "version": "0.2.3",
+  "declaredAccess": {
+    "content": {
+      "read": {}
+    },
+    "network": {
+      "request": {}
+    }
+  },
+  "capabilities": [
+    "content:read",
+    "network:request:unrestricted",
+    "network:request"
+  ],
+  "allowedHosts": [],
+  "storage": {
+    "records": {
+      "indexes": [
+        "contentId",
+        "status",
+        "lastSyncedAt"
+      ]
+    }
+  },
+  "hooks": [
+    "plugin:install",
+    "content:afterSave",
+    "content:afterPublish",
+    "content:afterDelete",
+    "page:metadata"
+  ],
+  "routes": [
+    "status",
+    "test-connection",
+    "sync-publication",
+    "recent-syncs",
+    "verification",
+    "admin"
+  ],
+  "admin": {
+    "pages": [
+      {
+        "path": "/status",
+        "label": "AT Protocol",
+        "icon": "globe"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "sync-status",
+        "title": "AT Protocol",
+        "size": "third"
+      }
+    ]
+  }
+}

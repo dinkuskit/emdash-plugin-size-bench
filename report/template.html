@@ -1,0 +1,319 @@
+<title>Plugin Size Benchmark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Martian+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column (~72ch) with charts and tables allowed to run a little wider; summary first, method last. */
+:root {
+	--bg: #f7f8f6;
+	--surface: #ffffff;
+	--ink: #14171a;
+	--ink-2: #4b5157;
+	--ink-3: #737a80;
+	--rule: #dfe3e0;
+	--grid: #eceeec;
+	--accent: #b34a1e;
+	--series-1: #2a78d6;
+	--series-2: #eb6834;
+	--series-3: #1baf7a;
+	--warn-bg: #fff4e5;
+	--warn-ink: #7a4300;
+	--font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--font-mono: "Martian Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--bg: #121413; --surface: #1a1c1b; --ink: #eef0ee; --ink-2: #c1c6c2; --ink-3: #8f9692;
+		--rule: #2e3230; --grid: #252927; --accent: #e58256;
+		--series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
+		--warn-bg: #2f2410; --warn-ink: #f2c779; color-scheme: dark;
+	}
+}
+:root[data-theme="dark"] {
+	--bg: #121413; --surface: #1a1c1b; --ink: #eef0ee; --ink-2: #c1c6c2; --ink-3: #8f9692;
+	--rule: #2e3230; --grid: #252927; --accent: #e58256;
+	--series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
+	--warn-bg: #2f2410; --warn-ink: #f2c779; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; padding-inline: 16px; padding-block: 32px 64px; }
+main { max-width: 860px; margin: 0 auto; display: grid; gap: 40px; }
+.prose { max-width: 70ch; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(28px, 5vw, 40px); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 22px; font-weight: 600; }
+h3 { font-size: 16px; font-weight: 600; }
+p { margin: 0; }
+section { display: grid; gap: 14px; min-width: 0; }
+.eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.lede { color: var(--ink-2); font-size: 17px; }
+.meta { font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); }
+ul.findings { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+ul.findings li { padding-left: 18px; position: relative; }
+ul.findings li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 8px; height: 2px; background: var(--accent); }
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.92em; }
+.callout { background: var(--warn-bg); color: var(--warn-ink); border-radius: 6px; padding: 14px 16px; display: grid; gap: 8px; }
+.callout strong { color: inherit; }
+.figure { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 16px; display: grid; gap: 10px; min-width: 0; position: relative; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 16px; height: 2px; border-radius: 1px; }
+.legend i.dot { width: 9px; height: 9px; border-radius: 50%; background: transparent; border: 2px solid var(--ink); }
+.legend i.ref { height: 0; border-top: 2px dashed var(--accent); background: none; }
+svg text { font-family: var(--font-mono); font-size: 10.5px; fill: var(--ink-3); }
+svg .lbl { fill: var(--ink-2); }
+svg .lbl-strong { fill: var(--ink); font-weight: 500; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 16px rgb(0 0 0 / 0.12); display: grid; gap: 3px; min-width: 150px; }
+.tip .h { color: var(--ink-3); font-family: var(--font-mono); font-size: 11px; }
+.tip .r { display: flex; align-items: center; gap: 8px; }
+.tip .r b { font-family: var(--font-mono); font-weight: 500; color: var(--ink); min-width: 52px; text-align: right; }
+.tip .r i { width: 12px; height: 2px; display: inline-block; }
+.tip .r span { color: var(--ink-2); }
+.table-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--grid); white-space: nowrap; font-variant-numeric: tabular-nums; }
+th { font-weight: 600; color: var(--ink-2); font-size: 12px; background: var(--bg); position: sticky; top: 0; }
+td:first-child, th:first-child { text-align: left; }
+td.mono { font-family: var(--font-mono); font-size: 12px; }
+tr:last-child td { border-bottom: 0; }
+td.hot { color: var(--accent); font-weight: 600; }
+details { border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); }
+details summary { cursor: pointer; padding: 12px 14px; font-weight: 600; }
+details summary:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+details .inner { padding: 0 14px 14px; display: grid; gap: 10px; }
+details .table-wrap { border: 0; }
+code { font-family: var(--font-mono); font-size: 0.85em; background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 1px 5px; overflow-wrap: anywhere; }
+pre { font-family: var(--font-mono); font-size: 12px; background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; padding: 12px; overflow-x: auto; margin: 0; }
+ol, .prose ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px; }
+.two > * { min-width: 0; }
+footer { color: var(--ink-3); font-size: 13px; }
+</style>
+
+<main>
+	<header style="display:grid;gap:12px">
+		<div class="eyebrow">EmDash 1.2.0 · sandboxed plugins</div>
+		<h1>Plugin Size Benchmark</h1>
+		<p class="lede prose">How much does a bigger sandboxed (Registry) plugin cost to load? We loaded 57 plugins, from 5 KB to 8 MB, through EmDash's own <code>CloudflareSandboxRunner</code> and Worker Loader, 21 times each in fresh isolates, and measured the first call, later calls, memory, sites with ten plugins, and Node hosting.</p>
+		<p class="meta" id="meta">Prepared by DinkusKit for the EmDash maintainers · local workerd 1.20261006.1 on a 4-vCPU Xeon VM</p>
+	</header>
+
+	<section>
+		<h2>What we found</h2>
+		<ul class="findings prose">
+			<li><strong>Size only costs on the first call into a new isolate.</strong> Every later call took 0 to 1 ms at every size up to 8 MB.</li>
+			<li><strong>What the code does at load matters more than its bytes.</strong> Code that runs at import costs about <span class="num" id="f-eager"></span> ms per extra MB on this machine. The same code wrapped so it runs later costs about <span class="num" id="f-lazy"></span> ms per MB, and plain data about <span class="num" id="f-data"></span> ms per MB. DinkusKit Commerce (114 KB) loads faster than Inventory's 74 KB build.</li>
+			<li><strong>Up to 256 KB, the first call stays under about 70 ms</strong> even for worst-case code that runs everything at import. 1 MB costs about <span class="num" id="f-1m"></span> ms and 8 MB about <span class="num" id="f-8m"></span> ms.</li>
+			<li><strong>Memory grows about 9 MB per MB of run-at-import code</strong>, on top of about 1.2 MB for an empty isolate. That puts a single plugin near the 128 MB isolate ceiling at roughly 12 to 14 MB of code.</li>
+			<li><strong>Several plugins add up.</strong> On a cold site, ten 1 MB plugins woken one after another (for example, ten save hooks on one content save) took about <span class="num" id="f-10x1m"></span> ms. Ten copies of today's Commerce took <span class="num" id="f-10xc"></span> ms.</li>
+			<li><strong>Local workerd ignores the 50 ms CPU limit</strong>, so whether a big plugin's first call would fail in production is still open. The callout below explains why.</li>
+		</ul>
+	</section>
+
+	<section>
+		<h2>First call into a new isolate, by plugin size</h2>
+		<div class="figure" id="fig-cold">
+			<div class="legend" id="legend-cold"></div>
+			<div id="chart-cold"></div>
+			<p class="meta">Median of 21 cold loads per point (3 passes × 7, each pass in a fresh workerd with shuffled order). Log scale across, linear up. Hover or tab through the sizes for exact values.</p>
+		</div>
+	</section>
+
+	<section>
+		<h2>Real plugins</h2>
+		<p class="prose">Unmodified published bundles. At this size, run-to-run noise (5 to 20 ms) is as large as the size effect, so these mostly show that today's plugins are cheap to load.</p>
+		<div class="table-wrap"><table id="t-real"></table></div>
+	</section>
+
+	<section class="callout prose">
+		<h3>The open question: does start-up count against the 50 ms CPU limit?</h3>
+		<p>EmDash gives each sandboxed call <span class="num">cpuMs: 50</span> through Worker Loader (<code>packages/cloudflare/src/sandbox/runner.ts</code>, <code>DEFAULT_LIMITS</code>). Local workerd does not enforce it: a plugin that spins for 3 seconds at import, or inside a route, still succeeds under the production limits (table below).</p>
+		<p>On the edge, if parsing and running a module's top level count toward the first call's 50 ms, then run-at-import code past roughly 192 KB on this machine's speed would fail on its first call. Lazy code would reach that point near 1 MB. The edge folder in the benchmark measures exactly this on real Cloudflare.</p>
+	</section>
+
+	<section>
+		<div class="table-wrap"><table id="t-limits"></table></div>
+	</section>
+
+	<div class="two">
+		<section>
+			<h2>Memory per plugin isolate</h2>
+			<p>Growth in workerd's resident memory, averaged over eight loaded copies.</p>
+			<div class="table-wrap"><table id="t-mem"></table></div>
+		</section>
+		<section>
+			<h2>Ten plugins on a cold site</h2>
+			<p>Ten fresh plugins of the same size, called one after another and all at once.</p>
+			<div class="table-wrap"><table id="t-multi"></table></div>
+		</section>
+	</div>
+
+	<section>
+		<h2>Node hosting</h2>
+		<p class="prose">On Node, EmDash runs sandboxed plugins in a standalone workerd process and restarts it with every plugin whenever one is installed, updated or removed (<code>packages/workerd/src/sandbox/runner.ts</code>). The table shows the time from starting workerd until every plugin answers, with resident memory in brackets. Median of 3 runs.</p>
+		<div class="table-wrap"><table id="t-node"></table></div>
+	</section>
+
+	<section class="prose">
+		<h2>How it was measured</h2>
+		<ol>
+			<li>Each plugin goes through <code>CloudflareSandboxRunner.load()</code> from <code>@emdash-cms/cloudflare@1.2.0</code>, then one <code>invokeRoute()</code>. That is the same Worker Loader binding, generated wrapper and <code>PluginBridge</code> a Cloudflare-hosted site uses. The harness runs inside workerd through <code>@cloudflare/vitest-plugin</code>.</li>
+			<li>Every cold load gets a new isolate key and a unique source comment, so nothing is reused. Loading the same source twice gave the same times, so we saw no compile cache.</li>
+			<li>Synthetic plugins are built from real minified libraries (dayjs, marked, moment, lodash, luxon, rxjs, handlebars, date-fns, acorn, three, typescript) in three shapes. <em>Run at import</em> initialises every library on load, which is what a bundled ESM plugin does. <em>Run later</em> wraps the same code in functions called only on demand. <em>Plain data</em> puts the same bytes in one string.</li>
+			<li>The timer is <code>Date.now()</code> inside workerd around the awaited call. A Node-side clock agreed with it.</li>
+		</ol>
+		<h3 style="margin-top:8px">Not covered</h3>
+		<ul>
+			<li>Real edge hardware and the enforced CPU limit. A deployable worker for that is included.</li>
+			<li>Downloading a bigger bundle from the Registry at install, and reading <code>backend.js</code> from R2 on every cold start of the host (<code>loadBundleFromR2</code>).</li>
+			<li>Absolute numbers on production machines. Read this page for shape and ratios.</li>
+		</ul>
+	</section>
+
+	<details>
+		<summary>Every measurement (57 plugins)</summary>
+		<div class="inner"><div class="table-wrap"><table id="t-all"></table></div></div>
+	</details>
+
+	<footer class="prose">Benchmark source, raw results and run instructions: <a href="https://github.com/dinkuskit/emdash-plugin-size-bench">github.com/dinkuskit/emdash-plugin-size-bench</a>. Times are milliseconds unless marked.</footer>
+</main>
+
+<script>
+const DATA = /*__DATA__*/null;
+const el = (tag, attrs = {}, text) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
+const svgEl = (tag, attrs = {}) => { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; };
+const size = (b) => b >= 1048576 ? `${+(b / 1048576).toFixed(1)} MB` : `${Math.round(b / 1024)} KB`;
+const SHAPES = [["eager", "Run at import", "--series-1"], ["lazy", "Run later", "--series-2"], ["data", "Plain data", "--series-3"]];
+const NAMES = { "real-audit-log": "audit-log (upstream)", "real-webhook-notifier": "webhook-notifier (upstream)", "real-atproto": "atproto (upstream)", "real-dinkus-inventory-zodmini": "DinkusKit Inventory, zod/mini", "real-dinkus-commerce": "DinkusKit Commerce", "real-dinkus-inventory": "DinkusKit Inventory, full zod" };
+const label = (n) => NAMES[n] ?? n;
+const byName = Object.fromEntries(DATA.matrix.map((m) => [m.n, m]));
+const fit = Object.fromEntries(DATA.fits.map((f) => [f.shape, f]));
+
+document.getElementById("f-eager").textContent = Math.round(fit.eager.msPerMB);
+document.getElementById("f-lazy").textContent = Math.round(fit.lazy.msPerMB);
+document.getElementById("f-data").textContent = Math.round(fit.data.msPerMB);
+document.getElementById("f-1m").textContent = byName["eager-1024k"].p50;
+document.getElementById("f-8m").textContent = byName["eager-8192k"].p50;
+const m10 = (n) => DATA.multi.find((m) => m.payload === n);
+document.getElementById("f-10x1m").textContent = m10("eager-1024k")?.sequentialMs ?? "n/a";
+document.getElementById("f-10xc").textContent = m10("real-dinkus-commerce")?.sequentialMs ?? "n/a";
+document.getElementById("meta").textContent += ` · results ${DATA.generatedAt.slice(0, 10)}`;
+
+function table(id, head, rows, opts = {}) {
+	const t = document.getElementById(id);
+	const thead = el("thead"); const tr = el("tr");
+	head.forEach((h) => tr.append(el("th", { scope: "col" }, h)));
+	thead.append(tr); t.append(thead);
+	const tb = el("tbody");
+	for (const r of rows) {
+		const row = el("tr");
+		r.forEach((c, i) => { const td = el("td", {}, c == null ? "n/a" : String(c)); if (opts.mono?.includes(i)) td.className = "mono"; if (opts.hot?.(r, i)) td.classList.add("hot"); row.append(td); });
+		tb.append(row);
+	}
+	t.append(tb);
+}
+
+// ---- chart
+(function chart() {
+	const host = document.getElementById("chart-cold");
+	const leg = document.getElementById("legend-cold");
+	for (const [, name, v] of SHAPES) { const s = el("span"); const i = el("i"); i.style.background = `var(${v})`; s.append(i, document.createTextNode(name)); leg.append(s); }
+	{ const s = el("span"); s.append(el("i", { class: "dot" }), document.createTextNode("Real plugin")); leg.append(s); }
+	{ const s = el("span"); s.append(el("i", { class: "ref" }), document.createTextNode("50 ms CPU limit per call")); leg.append(s); }
+
+	const W = 800, H = 380, m = { l: 52, r: 118, t: 14, b: 40 };
+	const xs = (b) => m.l + (Math.log2(b / 4096) / Math.log2(8388608 / 4096)) * (W - m.l - m.r);
+	const yMax = 900;
+	const ys = (v) => H - m.b - (v / yMax) * (H - m.t - m.b);
+	const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img", "aria-label": "First-call time against plugin size for three code shapes and six real plugins" });
+	for (let v = 0; v <= yMax; v += 100) {
+		svg.append(svgEl("line", { x1: m.l, x2: W - m.r, y1: ys(v), y2: ys(v), stroke: "var(--grid)", "stroke-width": 1 }));
+		const t = svgEl("text", { x: m.l - 8, y: ys(v) + 3.5, "text-anchor": "end" }); t.textContent = v === yMax ? `${v} ms` : v; svg.append(t);
+	}
+	const ticks = [4096, 16384, 65536, 131072, 262144, 1048576, 4194304, 8388608];
+	for (const b of ticks) {
+		const t = svgEl("text", { x: xs(b), y: H - m.b + 16, "text-anchor": "middle" }); t.textContent = size(b); svg.append(t);
+	}
+	const xl = svgEl("text", { x: (W - m.r + m.l) / 2, y: H - 6, "text-anchor": "middle", class: "lbl" }); xl.textContent = "plugin file size"; svg.append(xl);
+	// today's cap
+	svg.append(svgEl("line", { x1: xs(131072), x2: xs(131072), y1: m.t, y2: H - m.b, stroke: "var(--ink-3)", "stroke-width": 1, "stroke-dasharray": "2 3" }));
+	const capT = svgEl("text", { x: xs(131072) + 5, y: m.t + 10, class: "lbl" }); capT.textContent = "today's 128 KB cap"; svg.append(capT);
+	// 50 ms line
+	svg.append(svgEl("line", { x1: m.l, x2: W - m.r, y1: ys(50), y2: ys(50), stroke: "var(--accent)", "stroke-width": 1.5, "stroke-dasharray": "5 4" }));
+	const lim = svgEl("text", { x: W - m.r + 6, y: ys(50) + 3.5, class: "lbl" }); lim.textContent = "50 ms"; svg.append(lim);
+
+	const sizes = [...new Set(DATA.matrix.filter((d) => d.s !== "real").map((d) => d.b >> 10))].sort((a, b) => a - b);
+	for (const [shape, name, v] of SHAPES) {
+		const pts = DATA.matrix.filter((d) => d.s === shape).sort((a, b) => a.b - b.b);
+		svg.append(svgEl("path", { d: pts.map((p, i) => `${i ? "L" : "M"}${xs(p.b).toFixed(1)},${ys(p.p50).toFixed(1)}`).join(""), fill: "none", stroke: `var(${v})`, "stroke-width": 2, "stroke-linejoin": "round" }));
+		const last = pts[pts.length - 1];
+		const t = svgEl("text", { x: xs(last.b) + 8, y: ys(last.p50) + 3.5, class: "lbl-strong" }); t.textContent = name; svg.append(t);
+	}
+	for (const p of DATA.matrix.filter((d) => d.s === "real")) {
+		svg.append(svgEl("circle", { cx: xs(p.b), cy: ys(p.p50), r: 4.5, fill: "var(--surface)", stroke: "var(--ink)", "stroke-width": 1.75 }));
+	}
+	// hover layer
+	const cross = svgEl("line", { y1: m.t, y2: H - m.b, stroke: "var(--ink-3)", "stroke-width": 1, visibility: "hidden" });
+	svg.append(cross);
+	const dots = SHAPES.map(([, , v]) => { const c = svgEl("circle", { r: 4.5, fill: `var(${v})`, stroke: "var(--surface)", "stroke-width": 2, visibility: "hidden" }); svg.append(c); return c; });
+	const tip = el("div", { class: "tip", hidden: "" }); host.parentElement.append(tip);
+	function show(kb, evtX) {
+		const b = kb * 1024; const x = xs(b);
+		cross.setAttribute("x1", x); cross.setAttribute("x2", x); cross.setAttribute("visibility", "visible");
+		tip.replaceChildren(el("div", { class: "h" }, `${size(b)} · median (90th pct)`));
+		SHAPES.forEach(([shape, name, v], i) => {
+			const d = DATA.matrix.find((p) => p.s === shape && p.b >> 10 === kb);
+			if (!d) return;
+			dots[i].setAttribute("cx", xs(d.b)); dots[i].setAttribute("cy", ys(d.p50)); dots[i].setAttribute("visibility", "visible");
+			const r = el("div", { class: "r" }); const k = el("i"); k.style.background = `var(${v})`;
+			r.append(k, el("b", {}, `${d.p50} ms`), el("span", {}, `${name} (${d.p90})`)); tip.append(r);
+		});
+		const real = DATA.matrix.filter((p) => p.s === "real" && Math.abs(Math.log2(p.b / b)) < 0.3);
+		for (const d of real) { const r = el("div", { class: "r" }); r.append(el("i"), el("b", {}, `${d.p50} ms`), el("span", {}, label(d.n))); tip.append(r); }
+		tip.hidden = false;
+		const box = host.getBoundingClientRect(); const fig = host.parentElement.getBoundingClientRect();
+		const px = (x / W) * box.width + (box.left - fig.left);
+		tip.style.left = `${Math.min(Math.max(8, px + 12), fig.width - tip.offsetWidth - 8)}px`;
+		tip.style.top = `${box.top - fig.top + 24}px`;
+	}
+	function hide() { cross.setAttribute("visibility", "hidden"); dots.forEach((d) => d.setAttribute("visibility", "hidden")); tip.hidden = true; }
+	const hit = svgEl("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: "transparent", tabindex: 0, "aria-label": "Chart values: use arrow keys" });
+	svg.append(hit);
+	let idx = -1;
+	hit.addEventListener("pointermove", (e) => {
+		const r = svg.getBoundingClientRect(); const x = ((e.clientX - r.left) / r.width) * W;
+		let best = 0, bd = Infinity; sizes.forEach((kb, i) => { const d = Math.abs(xs(kb * 1024) - x); if (d < bd) { bd = d; best = i; } });
+		idx = best; show(sizes[best]);
+	});
+	hit.addEventListener("pointerleave", hide);
+	hit.addEventListener("focus", () => { idx = idx < 0 ? 0 : idx; show(sizes[idx]); });
+	hit.addEventListener("blur", hide);
+	hit.addEventListener("keydown", (e) => {
+		if (e.key === "ArrowRight") idx = Math.min(sizes.length - 1, idx + 1); else if (e.key === "ArrowLeft") idx = Math.max(0, idx - 1); else return;
+		e.preventDefault(); show(sizes[idx]);
+	});
+	host.append(svg);
+})();
+
+// ---- tables
+const real = DATA.matrix.filter((d) => d.s === "real").sort((a, b) => a.b - b.b);
+table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Later calls"], real.map((d) => [label(d.n), size(d.b), d.p50, d.p90, d.w]));
+
+const limLabel = { quick: "Returns at once", "spin-at-import": "Spins 3 s at import", "spin-in-route": "Spins 2 s in the route" };
+table("t-limits", ["Test plugin", "Limits", "First call", "Error", "Second call", "Error"], DATA.limits.map((l) => [limLabel[l.payload] ?? l.payload, l.limits === "prod" ? "EmDash default (50 ms)" : "120 s", l.coldMs, l.coldError ?? "none", l.warmMs, l.warmError ?? "none"]));
+
+const memName = (n) => NAMES[n] ?? `${n.startsWith("eager") ? "Run at import" : n.startsWith("lazy") ? "Run later" : "Plain data"}`;
+table("t-mem", ["Plugin", "Size", "Per isolate"], DATA.memory.map((m) => [memName(m.payload), size(m.bytes), `${(m.perIsolateKb / 1024).toFixed(1)} MB`]));
+table("t-multi", ["Plugin", "Size each", "In a row", "At once"], DATA.multi.map((m) => [m.payload.startsWith("eager") ? "Run at import" : label(m.payload), size(m.bytes), `${m.sequentialMs} ms`, `${m.parallelMs} ms`]));
+
+const counts = [...new Set(DATA.node.map((n) => n.c))].sort((a, b) => a - b);
+const nodeRows = [...new Set(DATA.node.map((n) => n.n))].map((name) => {
+	const r = DATA.node.filter((n) => n.n === name);
+	return [memName(name), size(r[0].b), ...counts.map((c) => { const x = r.find((n) => n.c === c); return x ? `${x.ms ?? "n/a"} ms (${x.mb} MB)` : "n/a"; })];
+});
+table("t-node", ["Plugin", "Size each", ...counts.map((c) => `${c} plugin${c > 1 ? "s" : ""}`)], nodeRows);
+
+const shapeName = { eager: "Run at import", lazy: "Run later", data: "Plain data", real: "Real" };
+const all = [...DATA.matrix].sort((a, b) => ["real", "eager", "lazy", "data"].indexOf(a.s) - ["real", "eager", "lazy", "data"].indexOf(b.s) || a.b - b.b);
+table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), d.p50, d.p90, d.min, d.same, d.w, d.k]), { mono: [0] });
+</script>

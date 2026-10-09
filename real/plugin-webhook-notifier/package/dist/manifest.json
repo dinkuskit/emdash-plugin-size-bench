@@ -1,0 +1,74 @@
+{
+  "id": "webhook-notifier",
+  "version": "0.2.3",
+  "declaredAccess": {
+    "content": {
+      "read": {}
+    },
+    "media": {
+      "read": {}
+    },
+    "network": {
+      "request": {}
+    }
+  },
+  "capabilities": [
+    "content:read",
+    "media:read",
+    "network:request:unrestricted",
+    "network:request"
+  ],
+  "allowedHosts": [],
+  "storage": {
+    "deliveries": {
+      "indexes": [
+        "timestamp",
+        "webhookUrl",
+        "status"
+      ]
+    }
+  },
+  "hooks": [
+    {
+      "name": "content:afterSave",
+      "priority": 210,
+      "timeout": 10000,
+      "errorPolicy": "continue"
+    },
+    {
+      "name": "content:afterDelete",
+      "priority": 210,
+      "timeout": 10000,
+      "errorPolicy": "continue"
+    },
+    {
+      "name": "media:afterUpload",
+      "priority": 210,
+      "timeout": 10000,
+      "errorPolicy": "continue"
+    }
+  ],
+  "routes": [
+    "admin",
+    "status",
+    "settings",
+    "settings/save",
+    "test"
+  ],
+  "admin": {
+    "pages": [
+      {
+        "path": "/settings",
+        "label": "Webhook Settings",
+        "icon": "send"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "status",
+        "title": "Webhooks",
+        "size": "third"
+      }
+    ]
+  }
+}
