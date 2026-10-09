@@ -94,8 +94,8 @@ footer { color: var(--ink-3); font-size: 13px; }
 	<header style="display:grid;gap:12px">
 		<div class="eyebrow">EmDash 1.2.0 · sandboxed plugins</div>
 		<h1>Plugin Size Benchmark</h1>
-		<p class="lede prose">How much does a bigger sandboxed (Registry) plugin cost to load? We loaded 57 plugins, from 5 KB to 8 MB, through EmDash's own <code>CloudflareSandboxRunner</code> and Worker Loader, 21 times each in fresh isolates, and measured the first call, later calls, memory, sites with ten plugins, and Node hosting.</p>
-		<p class="meta" id="meta">Prepared by DinkusKit for the EmDash maintainers · local workerd 1.20261006.1 on a 4-vCPU Xeon VM</p>
+		<p class="lede prose">How much does a bigger sandboxed (Registry) plugin cost to load? We loaded <span id="n-plugins">57</span> plugins, from 5 KB to 8 MB, through EmDash's own <code>CloudflareSandboxRunner</code> and Worker Loader, <span id="n-samples">21</span> times each in fresh isolates, and measured the first call, later calls, memory, sites with ten plugins, and Node hosting.</p>
+		<p class="meta" id="meta">Prepared by DinkusKit for the EmDash maintainers · local workerd 1.20261006.1 on <span id="machine">a 4-vCPU Xeon VM</span></p>
 	</header>
 
 	<section>
@@ -115,20 +115,31 @@ footer { color: var(--ink-3); font-size: 13px; }
 		<div class="figure" id="fig-cold">
 			<div class="legend" id="legend-cold"></div>
 			<div id="chart-cold"></div>
-			<p class="meta">Median of 21 cold loads per point (3 passes × 7, each pass in a fresh workerd with shuffled order). Log scale across, linear up. Hover or tab through the sizes for exact values.</p>
+			<p class="meta" id="chart-note">Median of 21 cold loads per point (3 passes × 7, each pass in a fresh workerd with shuffled order). Log scale across, linear up. Hover or tab through the sizes for exact values.</p>
 		</div>
 	</section>
 
 	<section>
 		<h2>Real plugins</h2>
-		<p class="prose">Unmodified published bundles. At this size, run-to-run noise (5 to 20 ms) is as large as the size effect, so these mostly show that today's plugins are cheap to load.</p>
+		<p class="prose" id="real-note">Unmodified published bundles. At this size, run-to-run noise (5 to 20 ms) is as large as the size effect, so these mostly show that today's plugins are cheap to load.</p>
 		<div class="table-wrap"><table id="t-real"></table></div>
 	</section>
 
 	<section class="callout prose">
 		<h3>The open question: does start-up count against the 50 ms CPU limit?</h3>
 		<p>EmDash gives each sandboxed call <span class="num">cpuMs: 50</span> through Worker Loader (<code>packages/cloudflare/src/sandbox/runner.ts</code>, <code>DEFAULT_LIMITS</code>). Local workerd does not enforce it: a plugin that spins for 3 seconds at import, or inside a route, still succeeds under the production limits (table below).</p>
-		<p>On the edge, if parsing and running a module's top level count toward the first call's 50 ms, then run-at-import code past roughly 192 KB on this machine's speed would fail on its first call. Lazy code would reach that point near 1 MB. The edge folder in the benchmark measures exactly this on real Cloudflare.</p>
+		<p id="cross-50">On the edge, if parsing and running a module's top level count toward the first call's 50 ms, then run-at-import code past roughly 192 KB on this machine's speed would fail on its first call. Lazy code would reach that point near 1 MB. The edge folder in the benchmark measures exactly this on real Cloudflare.</p>
+	</section>
+
+	<section id="sec-bisect" hidden>
+		<h2>On Cloudflare: the smallest CPU limit each plugin loads under</h2>
+		<p class="prose">Measured on Cloudflare's edge through Worker Loader. For each plugin, the CPU limit was lowered step by step until a fresh isolate could no longer load it and answer (two of three fresh loads at each step). EmDash's default is 50 ms.</p>
+		<div class="table-wrap"><table id="t-bisect"></table></div>
+	</section>
+
+	<section id="sec-edge" hidden>
+		<h2>On Cloudflare: first call by size</h2>
+		<div class="table-wrap"><table id="t-edge"></table></div>
 	</section>
 
 	<section>
@@ -160,7 +171,7 @@ footer { color: var(--ink-3); font-size: 13px; }
 			<li>Each plugin goes through <code>CloudflareSandboxRunner.load()</code> from <code>@emdash-cms/cloudflare@1.2.0</code>, then one <code>invokeRoute()</code>. That is the same Worker Loader binding, generated wrapper and <code>PluginBridge</code> a Cloudflare-hosted site uses. The harness runs inside workerd through <code>@cloudflare/vitest-plugin</code>.</li>
 			<li>Every cold load gets a new isolate key and a unique source comment, so nothing is reused. Loading the same source twice gave the same times, so we saw no compile cache.</li>
 			<li>Synthetic plugins are built from real minified libraries (dayjs, marked, moment, lodash, luxon, rxjs, handlebars, date-fns, acorn, three, typescript) in three shapes. <em>Run at import</em> initialises every library on load, which is what a bundled ESM plugin does. <em>Run later</em> wraps the same code in functions called only on demand. <em>Plain data</em> puts the same bytes in one string.</li>
-			<li>The timer is <code>Date.now()</code> inside workerd around the awaited call. A Node-side clock agreed with it.</li>
+			<li id="timer-note">The timer is <code>Date.now()</code> inside workerd around the awaited call. A Node-side clock agreed with it.</li>
 		</ol>
 		<h3 style="margin-top:8px">Not covered</h3>
 		<ul>
@@ -171,7 +182,7 @@ footer { color: var(--ink-3); font-size: 13px; }
 	</section>
 
 	<details>
-		<summary>Every measurement (57 plugins)</summary>
+		<summary>Every measurement (<span id="n-all">57</span> plugins)</summary>
 		<div class="inner"><div class="table-wrap"><table id="t-all"></table></div></div>
 	</details>
 
@@ -184,20 +195,53 @@ const el = (tag, attrs = {}, text) => { const e = document.createElement(tag); f
 const svgEl = (tag, attrs = {}) => { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; };
 const size = (b) => b >= 1048576 ? `${+(b / 1048576).toFixed(1)} MB` : `${Math.round(b / 1024)} KB`;
 const SHAPES = [["eager", "Run at import", "--series-1"], ["lazy", "Run later", "--series-2"], ["data", "Plain data", "--series-3"]];
-const NAMES = { "real-audit-log": "audit-log (upstream)", "real-webhook-notifier": "webhook-notifier (upstream)", "real-atproto": "atproto (upstream)", "real-dinkus-inventory-zodmini": "DinkusKit Inventory, zod/mini", "real-dinkus-commerce": "DinkusKit Commerce", "real-dinkus-inventory": "DinkusKit Inventory, full zod" };
+const NAMES = { "real-audit-log": "audit-log (upstream)", "real-webhook-notifier": "webhook-notifier (upstream)", "real-atproto": "atproto (upstream)", "real-dinkus-inventory-zodmini": "DinkusKit Inventory, zod/mini", "real-dinkus-commerce": "DinkusKit Commerce", "real-dinkus-inventory": "DinkusKit Inventory, full zod", "real-combo-commerce-inventory-zodmini": "Commerce + Inventory zod/mini, one plugin", "real-combo-commerce-inventory": "Commerce + Inventory, one plugin", "real-combo-x2": "Commerce + Inventory ×2, one plugin", "real-combo-x4": "Commerce + Inventory ×4, one plugin" };
 const label = (n) => NAMES[n] ?? n;
+// Runs with the outside high-resolution clock report it (one decimal); older runs only have workerd's 1 ms clock.
+const OUTER = DATA.matrix.some((d) => d.o != null);
+const val = (d) => (OUTER ? d.o : d.p50);
+const val90 = (d) => (OUTER ? d.o90 : d.p90);
+const fmt = (v) => (v == null ? null : Number.isInteger(v) ? String(v) : v.toFixed(1));
+const extra = (d) => (d.x == null ? null : `${fmt(d.x)}${d.xr ? ` (${fmt(d.xr[0])} to ${fmt(d.xr[1])})` : ""}`);
 const byName = Object.fromEntries(DATA.matrix.map((m) => [m.n, m]));
 const fit = Object.fromEntries(DATA.fits.map((f) => [f.shape, f]));
 
-document.getElementById("f-eager").textContent = Math.round(fit.eager.msPerMB);
-document.getElementById("f-lazy").textContent = Math.round(fit.lazy.msPerMB);
-document.getElementById("f-data").textContent = Math.round(fit.data.msPerMB);
-document.getElementById("f-1m").textContent = byName["eager-1024k"].p50;
-document.getElementById("f-8m").textContent = byName["eager-8192k"].p50;
+const setNum = (id, v) => { document.getElementById(id).textContent = v ?? "n/a"; };
+const perMB = (shape) => (fit[shape] ? Math.round(fit[shape].msPerMB) : null);
+const at = (name) => (byName[name] ? fmt(val(byName[name])) : null);
+setNum("f-eager", perMB("eager"));
+setNum("f-lazy", perMB("lazy"));
+setNum("f-data", perMB("data"));
+setNum("f-1m", at("eager-1024k"));
+setNum("f-8m", at("eager-8192k"));
 const m10 = (n) => DATA.multi.find((m) => m.payload === n);
 document.getElementById("f-10x1m").textContent = m10("eager-1024k")?.sequentialMs ?? "n/a";
 document.getElementById("f-10xc").textContent = m10("real-dinkus-commerce")?.sequentialMs ?? "n/a";
-document.getElementById("meta").textContent += ` · results ${DATA.generatedAt.slice(0, 10)}`;
+document.getElementById("meta").append(` · results ${DATA.generatedAt.slice(0, 10)}`);
+const samples = Math.max(...DATA.matrix.map((d) => d.k));
+document.getElementById("n-plugins").textContent = DATA.matrix.length;
+document.getElementById("n-samples").textContent = samples;
+document.getElementById("n-all").textContent = DATA.matrix.length;
+if (OUTER) {
+	document.getElementById("timer-note").textContent = "Each call is timed from outside the sandbox with Node's high-resolution clock, read just before and after the awaited call, and also with Date.now() inside workerd, which only has 1 ms resolution. Every cold load is paired with a cold load of the smallest possible plugin taken right next to it, alternating which goes first; the difference is reported as \"extra over a tiny plugin\" with a 95% bootstrap range of its median. It removes the isolate's fixed start-up cost, the clock round trip and slow drift in the machine.";
+	if (DATA.matrix.some((d) => d.n.startsWith("real-combo"))) document.getElementById("real-note").textContent = "Unmodified published bundles, plus DinkusKit's Commerce and Inventory Registry backends bundled together into single plugins of about 190 KB to 1 MB, so sizes above today's cap are measured on real plugin code. Copies repeated inside one plugin are separate code, so each copy is parsed and run.";
+}
+if (DATA.machine) {
+	const mc = DATA.machine;
+	document.getElementById("machine").textContent = `${mc.label ? `${mc.label}, ` : ""}${mc.cpus} × ${mc.cpu}, ${mc.memGb} GB`;
+	document.getElementById("chart-note").textContent = `Median of ${samples} cold loads per point (${mc.passes} passes × ${mc.cold}, each pass in a fresh workerd with shuffled order)${OUTER ? ", timed from outside the sandbox with a high-resolution clock" : ""}. Log scale across, linear up. Hover or tab through the sizes for exact values.`;
+}
+// Where each shape first crosses 50 ms on this machine.
+{
+	const cross = (shape) => DATA.matrix.filter((d) => d.s === shape).sort((a, b) => a.b - b.b).find((d) => val(d) > 50);
+	const e = cross("eager"), l = cross("lazy");
+	const realOver = DATA.matrix.filter((d) => d.s === "real" && val(d) > 50).sort((a, b) => a.b - b.b)[0];
+	const bits = [];
+	bits.push(e ? `run-at-import code from about ${size(e.b)} would fail on its first call at this machine's speed` : "run-at-import code stayed under 50 ms at every size measured");
+	bits.push(l ? `lazy code would reach that point near ${size(l.b)}` : "lazy code stayed under 50 ms at every size measured");
+	if (realOver) bits.push(`the smallest real plugin over 50 ms here is ${label(realOver.n)} at ${size(realOver.b)} (${fmt(val(realOver))} ms)`);
+	document.getElementById("cross-50").textContent = `On the edge, if parsing and running a module's top level count toward the first call's 50 ms, then ${bits.join("; ")}. ${DATA.bisect?.length ? "The Cloudflare measurements below answer it directly." : "The edge folder in the benchmark measures exactly this on real Cloudflare."}`;
+}
 
 function table(id, head, rows, opts = {}) {
 	const t = document.getElementById(id);
@@ -223,10 +267,11 @@ function table(id, head, rows, opts = {}) {
 
 	const W = 800, H = 380, m = { l: 52, r: 118, t: 14, b: 40 };
 	const xs = (b) => m.l + (Math.log2(b / 4096) / Math.log2(8388608 / 4096)) * (W - m.l - m.r);
-	const yMax = 900;
+	const yMax = Math.max(100, Math.ceil(Math.max(...DATA.matrix.map(val)) / 100) * 100);
 	const ys = (v) => H - m.b - (v / yMax) * (H - m.t - m.b);
 	const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img", "aria-label": "First-call time against plugin size for three code shapes and six real plugins" });
-	for (let v = 0; v <= yMax; v += 100) {
+	const yStep = yMax > 1200 ? 200 : 100;
+	for (let v = 0; v <= yMax; v += yStep) {
 		svg.append(svgEl("line", { x1: m.l, x2: W - m.r, y1: ys(v), y2: ys(v), stroke: "var(--grid)", "stroke-width": 1 }));
 		const t = svgEl("text", { x: m.l - 8, y: ys(v) + 3.5, "text-anchor": "end" }); t.textContent = v === yMax ? `${v} ms` : v; svg.append(t);
 	}
@@ -245,12 +290,13 @@ function table(id, head, rows, opts = {}) {
 	const sizes = [...new Set(DATA.matrix.filter((d) => d.s !== "real").map((d) => d.b >> 10))].sort((a, b) => a - b);
 	for (const [shape, name, v] of SHAPES) {
 		const pts = DATA.matrix.filter((d) => d.s === shape).sort((a, b) => a.b - b.b);
-		svg.append(svgEl("path", { d: pts.map((p, i) => `${i ? "L" : "M"}${xs(p.b).toFixed(1)},${ys(p.p50).toFixed(1)}`).join(""), fill: "none", stroke: `var(${v})`, "stroke-width": 2, "stroke-linejoin": "round" }));
+		if (!pts.length) continue;
+		svg.append(svgEl("path", { d: pts.map((p, i) => `${i ? "L" : "M"}${xs(p.b).toFixed(1)},${ys(val(p)).toFixed(1)}`).join(""), fill: "none", stroke: `var(${v})`, "stroke-width": 2, "stroke-linejoin": "round" }));
 		const last = pts[pts.length - 1];
-		const t = svgEl("text", { x: xs(last.b) + 8, y: ys(last.p50) + 3.5, class: "lbl-strong" }); t.textContent = name; svg.append(t);
+		const t = svgEl("text", { x: xs(last.b) + 8, y: ys(val(last)) + 3.5, class: "lbl-strong" }); t.textContent = name; svg.append(t);
 	}
 	for (const p of DATA.matrix.filter((d) => d.s === "real")) {
-		svg.append(svgEl("circle", { cx: xs(p.b), cy: ys(p.p50), r: 4.5, fill: "var(--surface)", stroke: "var(--ink)", "stroke-width": 1.75 }));
+		svg.append(svgEl("circle", { cx: xs(p.b), cy: ys(val(p)), r: 4.5, fill: "var(--surface)", stroke: "var(--ink)", "stroke-width": 1.75 }));
 	}
 	// hover layer
 	const cross = svgEl("line", { y1: m.t, y2: H - m.b, stroke: "var(--ink-3)", "stroke-width": 1, visibility: "hidden" });
@@ -264,12 +310,12 @@ function table(id, head, rows, opts = {}) {
 		SHAPES.forEach(([shape, name, v], i) => {
 			const d = DATA.matrix.find((p) => p.s === shape && p.b >> 10 === kb);
 			if (!d) return;
-			dots[i].setAttribute("cx", xs(d.b)); dots[i].setAttribute("cy", ys(d.p50)); dots[i].setAttribute("visibility", "visible");
+			dots[i].setAttribute("cx", xs(d.b)); dots[i].setAttribute("cy", ys(val(d))); dots[i].setAttribute("visibility", "visible");
 			const r = el("div", { class: "r" }); const k = el("i"); k.style.background = `var(${v})`;
-			r.append(k, el("b", {}, `${d.p50} ms`), el("span", {}, `${name} (${d.p90})`)); tip.append(r);
+			r.append(k, el("b", {}, `${fmt(val(d))} ms`), el("span", {}, `${name} (${fmt(val90(d))})`)); tip.append(r);
 		});
 		const real = DATA.matrix.filter((p) => p.s === "real" && Math.abs(Math.log2(p.b / b)) < 0.3);
-		for (const d of real) { const r = el("div", { class: "r" }); r.append(el("i"), el("b", {}, `${d.p50} ms`), el("span", {}, label(d.n))); tip.append(r); }
+		for (const d of real) { const r = el("div", { class: "r" }); r.append(el("i"), el("b", {}, `${fmt(val(d))} ms`), el("span", {}, label(d.n))); tip.append(r); }
 		tip.hidden = false;
 		const box = host.getBoundingClientRect(); const fig = host.parentElement.getBoundingClientRect();
 		const px = (x / W) * box.width + (box.left - fig.left);
@@ -297,7 +343,8 @@ function table(id, head, rows, opts = {}) {
 
 // ---- tables
 const real = DATA.matrix.filter((d) => d.s === "real").sort((a, b) => a.b - b.b);
-table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Later calls"], real.map((d) => [label(d.n), size(d.b), d.p50, d.p90, d.w]));
+if (OUTER) table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Extra over a tiny plugin (95% range)", "Later calls"], real.map((d) => [label(d.n), size(d.b), fmt(val(d)), fmt(val90(d)), extra(d), d.w]));
+else table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Later calls"], real.map((d) => [label(d.n), size(d.b), d.p50, d.p90, d.w]));
 
 const limLabel = { quick: "Returns at once", "spin-at-import": "Spins 3 s at import", "spin-in-route": "Spins 2 s in the route" };
 table("t-limits", ["Test plugin", "Limits", "First call", "Error", "Second call", "Error"], DATA.limits.map((l) => [limLabel[l.payload] ?? l.payload, l.limits === "prod" ? "EmDash default (50 ms)" : "120 s", l.coldMs, l.coldError ?? "none", l.warmMs, l.warmError ?? "none"]));
@@ -315,5 +362,16 @@ table("t-node", ["Plugin", "Size each", ...counts.map((c) => `${c} plugin${c > 1
 
 const shapeName = { eager: "Run at import", lazy: "Run later", data: "Plain data", real: "Real" };
 const all = [...DATA.matrix].sort((a, b) => ["real", "eager", "lazy", "data"].indexOf(a.s) - ["real", "eager", "lazy", "data"].indexOf(b.s) || a.b - b.b);
-table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), d.p50, d.p90, d.min, d.same, d.w, d.k]), { mono: [0] });
+if (OUTER) table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Extra over a tiny plugin (95% range)", "Inside clock, median", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), fmt(d.o), fmt(d.o90), fmt(d.omin), extra(d), d.p50, d.same, d.w, d.k]), { mono: [0] });
+else table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), d.p50, d.p90, d.min, d.same, d.w, d.k]), { mono: [0] });
+
+if (DATA.bisect?.length) {
+	document.getElementById("sec-bisect").hidden = false;
+	const rows = [...DATA.bisect].sort((a, b) => ["real", "eager", "lazy"].indexOf(a.s) - ["real", "eager", "lazy"].indexOf(b.s) || a.b - b.b);
+	table("t-bisect", ["Plugin", "Shape", "Size", "Smallest CPU limit that loads", "Fits EmDash's 50 ms default"], rows.map((d) => [label(d.n), shapeName[d.s], size(d.b), d.cpu == null ? d.note : `${d.cpu} ms`, d.cpu == null ? "no" : d.cpu <= 50 ? "yes" : "no"]), { hot: (r, i) => i === 4 && r[4] === "no" });
+}
+if (DATA.edge?.length) {
+	document.getElementById("sec-edge").hidden = false;
+	table("t-edge", ["Plugin", "Size", "CPU limit", "First call, median", "90th pct", "Later calls", "Failed loads"], DATA.edge.map((d) => [label(d.n), size(d.b), `${d.cpu} ms`, d.p50, d.p90, d.w, `${d.failed} of ${d.total}`]), { hot: (r, i) => i === 6 && !r[6].startsWith("0 ") });
+}
 </script>

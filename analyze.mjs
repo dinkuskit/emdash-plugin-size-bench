@@ -61,6 +61,8 @@ const table = [...byPayload.values()]
 		coldP90: q(e.cold, 0.9),
 		coldMin: q(e.cold, 0),
 		outerP50: r1(q(e.outer, 0.5)),
+		outerP90: r1(q(e.outer, 0.9)),
+		outerMin: r1(q(e.outer, 0)),
 		outerRange: medianRange(e.outer),
 		extraP50: r1(q(e.extra, 0.5)),
 		extraRange: medianRange(e.extra),
