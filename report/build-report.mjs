@@ -1,7 +1,7 @@
 // Builds report/plugin-size-benchmark.html from results/summary.json.
 import { readFileSync, writeFileSync } from "node:fs";
 
-const s = JSON.parse(readFileSync(new URL("../results/summary.json", import.meta.url), "utf8"));
+const s = JSON.parse(readFileSync(new URL(`../${process.env.RESULTS_DIR ?? "results"}/summary.json`, import.meta.url), "utf8"));
 const tpl = readFileSync(new URL("./template.html", import.meta.url), "utf8");
 
 const pick = (t) => ({ n: t.payload, s: t.shape, b: t.bytes, p50: t.coldP50, p90: t.coldP90, min: t.coldMin, w: t.warmP50, same: t.sameSourceP50, k: t.samples });

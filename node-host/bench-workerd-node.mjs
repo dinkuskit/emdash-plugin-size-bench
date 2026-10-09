@@ -15,12 +15,12 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const out = resolve(process.argv[2] ?? join(root, "results/node-host.jsonl"));
+const out = resolve(process.argv[2] ?? join(root, process.env.RESULTS_DIR ?? "results", "node-host.jsonl"));
 const workerdBin = process.env.WORKERD_BIN;
 if (!workerdBin) throw new Error("Set WORKERD_BIN to the workerd binary");
 
 const index = JSON.parse(readFileSync(join(root, "payloads/index.json"), "utf8"));
-const PAYLOADS = (process.env.NODE_PAYLOADS ?? "real-audit-log,real-dinkus-commerce,eager-128k,eager-256k,eager-512k,eager-1024k,eager-2048k,eager-4096k,lazy-1024k,data-1024k").split(",");
+const PAYLOADS = (process.env.NODE_PAYLOADS ?? "real-audit-log,real-dinkus-commerce,real-combo-commerce-inventory,real-combo-x2,eager-128k,eager-256k,eager-512k,eager-1024k,eager-2048k,eager-4096k,lazy-1024k,data-1024k").split(",");
 const COUNTS = (process.env.NODE_COUNTS ?? "1,5,10,20").split(",").map(Number);
 const REPS = Number(process.env.NODE_REPS ?? 3);
 
