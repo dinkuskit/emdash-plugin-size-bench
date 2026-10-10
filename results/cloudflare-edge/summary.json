@@ -1,0 +1,1991 @@
+{
+  "generatedAt": "2026-10-10T01:40:01.925Z",
+  "machine": null,
+  "baselineColdMs": 0,
+  "fits": [],
+  "table": [],
+  "memory": [],
+  "multi": [],
+  "limits": [],
+  "nodeHost": [],
+  "edge": [
+    {
+      "payload": "data-16k",
+      "shape": "data",
+      "bytes": 16384,
+      "cpuMs": 50,
+      "coldP50": 15,
+      "coldP90": 17,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-16k",
+      "shape": "data",
+      "bytes": 16384,
+      "cpuMs": 30000,
+      "coldP50": 14,
+      "coldP90": 17,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-32k",
+      "shape": "data",
+      "bytes": 32768,
+      "cpuMs": 50,
+      "coldP50": 15,
+      "coldP90": 19,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-32k",
+      "shape": "data",
+      "bytes": 32768,
+      "cpuMs": 30000,
+      "coldP50": 16,
+      "coldP90": 17,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-64k",
+      "shape": "data",
+      "bytes": 65536,
+      "cpuMs": 50,
+      "coldP50": 16,
+      "coldP90": 18,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-64k",
+      "shape": "data",
+      "bytes": 65536,
+      "cpuMs": 30000,
+      "coldP50": 16,
+      "coldP90": 21,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-96k",
+      "shape": "data",
+      "bytes": 98304,
+      "cpuMs": 50,
+      "coldP50": 16,
+      "coldP90": 18,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-96k",
+      "shape": "data",
+      "bytes": 98304,
+      "cpuMs": 30000,
+      "coldP50": 17,
+      "coldP90": 19,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-128k",
+      "shape": "data",
+      "bytes": 131072,
+      "cpuMs": 50,
+      "coldP50": 17,
+      "coldP90": 21,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-128k",
+      "shape": "data",
+      "bytes": 131072,
+      "cpuMs": 30000,
+      "coldP50": 17,
+      "coldP90": 22,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-192k",
+      "shape": "data",
+      "bytes": 196608,
+      "cpuMs": 50,
+      "coldP50": 18,
+      "coldP90": 21,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-192k",
+      "shape": "data",
+      "bytes": 196608,
+      "cpuMs": 30000,
+      "coldP50": 17,
+      "coldP90": 20,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-256k",
+      "shape": "data",
+      "bytes": 262144,
+      "cpuMs": 50,
+      "coldP50": 17,
+      "coldP90": 19,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-256k",
+      "shape": "data",
+      "bytes": 262144,
+      "cpuMs": 30000,
+      "coldP50": 18,
+      "coldP90": 24,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-384k",
+      "shape": "data",
+      "bytes": 393216,
+      "cpuMs": 50,
+      "coldP50": 19,
+      "coldP90": 25,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-384k",
+      "shape": "data",
+      "bytes": 393216,
+      "cpuMs": 30000,
+      "coldP50": 19,
+      "coldP90": 21,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-512k",
+      "shape": "data",
+      "bytes": 524288,
+      "cpuMs": 50,
+      "coldP50": 21,
+      "coldP90": 27,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-512k",
+      "shape": "data",
+      "bytes": 524288,
+      "cpuMs": 30000,
+      "coldP50": 22,
+      "coldP90": 25,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-768k",
+      "shape": "data",
+      "bytes": 786432,
+      "cpuMs": 50,
+      "coldP50": 23,
+      "coldP90": 36,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-768k",
+      "shape": "data",
+      "bytes": 786432,
+      "cpuMs": 30000,
+      "coldP50": 23,
+      "coldP90": 37,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-1024k",
+      "shape": "data",
+      "bytes": 1048576,
+      "cpuMs": 50,
+      "coldP50": 24,
+      "coldP90": 32,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-1024k",
+      "shape": "data",
+      "bytes": 1048576,
+      "cpuMs": 30000,
+      "coldP50": 24,
+      "coldP90": 33,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-1536k",
+      "shape": "data",
+      "bytes": 1572864,
+      "cpuMs": 50,
+      "coldP50": 32,
+      "coldP90": 40,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-1536k",
+      "shape": "data",
+      "bytes": 1572864,
+      "cpuMs": 30000,
+      "coldP50": 34,
+      "coldP90": 60,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-2048k",
+      "shape": "data",
+      "bytes": 2097152,
+      "cpuMs": 50,
+      "coldP50": 41,
+      "coldP90": 72,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-2048k",
+      "shape": "data",
+      "bytes": 2097152,
+      "cpuMs": 30000,
+      "coldP50": 36,
+      "coldP90": 62,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-4096k",
+      "shape": "data",
+      "bytes": 4194304,
+      "cpuMs": 50,
+      "coldP50": 60,
+      "coldP90": 81,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-4096k",
+      "shape": "data",
+      "bytes": 4194304,
+      "cpuMs": 30000,
+      "coldP50": 56,
+      "coldP90": 73,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-8192k",
+      "shape": "data",
+      "bytes": 8388608,
+      "cpuMs": 50,
+      "coldP50": 120,
+      "coldP90": 247,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "data-8192k",
+      "shape": "data",
+      "bytes": 8388608,
+      "cpuMs": 30000,
+      "coldP50": 115,
+      "coldP90": 269,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-16k",
+      "shape": "eager",
+      "bytes": 16420,
+      "cpuMs": 50,
+      "coldP50": 17,
+      "coldP90": 19,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-16k",
+      "shape": "eager",
+      "bytes": 16420,
+      "cpuMs": 30000,
+      "coldP50": 16,
+      "coldP90": 20,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-32k",
+      "shape": "eager",
+      "bytes": 32906,
+      "cpuMs": 50,
+      "coldP50": 19,
+      "coldP90": 22,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-32k",
+      "shape": "eager",
+      "bytes": 32906,
+      "cpuMs": 30000,
+      "coldP50": 19,
+      "coldP90": 24,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-64k",
+      "shape": "eager",
+      "bytes": 65544,
+      "cpuMs": 50,
+      "coldP50": 29,
+      "coldP90": 32,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-64k",
+      "shape": "eager",
+      "bytes": 65544,
+      "cpuMs": 30000,
+      "coldP50": 25,
+      "coldP90": 30,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-96k",
+      "shape": "eager",
+      "bytes": 98307,
+      "cpuMs": 50,
+      "coldP50": 27,
+      "coldP90": 31,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-96k",
+      "shape": "eager",
+      "bytes": 98307,
+      "cpuMs": 30000,
+      "coldP50": 28,
+      "coldP90": 34,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-128k",
+      "shape": "eager",
+      "bytes": 131102,
+      "cpuMs": 50,
+      "coldP50": 30,
+      "coldP90": 39,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-128k",
+      "shape": "eager",
+      "bytes": 131102,
+      "cpuMs": 30000,
+      "coldP50": 29,
+      "coldP90": 41,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-192k",
+      "shape": "eager",
+      "bytes": 196660,
+      "cpuMs": 50,
+      "coldP50": 55,
+      "coldP90": 62,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-192k",
+      "shape": "eager",
+      "bytes": 196660,
+      "cpuMs": 30000,
+      "coldP50": 51,
+      "coldP90": 57,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-256k",
+      "shape": "eager",
+      "bytes": 262258,
+      "cpuMs": 50,
+      "coldP50": 61,
+      "coldP90": 70,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-256k",
+      "shape": "eager",
+      "bytes": 262258,
+      "cpuMs": 30000,
+      "coldP50": 56,
+      "coldP90": 68,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-384k",
+      "shape": "eager",
+      "bytes": 393292,
+      "cpuMs": 50,
+      "coldP50": 67,
+      "coldP90": 82,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-384k",
+      "shape": "eager",
+      "bytes": 393292,
+      "cpuMs": 30000,
+      "coldP50": 69,
+      "coldP90": 86,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-512k",
+      "shape": "eager",
+      "bytes": 524396,
+      "cpuMs": 50,
+      "coldP50": 96,
+      "coldP90": 147,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-512k",
+      "shape": "eager",
+      "bytes": 524396,
+      "cpuMs": 30000,
+      "coldP50": 86,
+      "coldP90": 115,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-768k",
+      "shape": "eager",
+      "bytes": 786673,
+      "cpuMs": 50,
+      "coldP50": 110,
+      "coldP90": 130,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-768k",
+      "shape": "eager",
+      "bytes": 786673,
+      "cpuMs": 30000,
+      "coldP50": 110,
+      "coldP90": 150,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-1024k",
+      "shape": "eager",
+      "bytes": 1048682,
+      "cpuMs": 50,
+      "coldP50": 150,
+      "coldP90": 164,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-1024k",
+      "shape": "eager",
+      "bytes": 1048682,
+      "cpuMs": 30000,
+      "coldP50": 139,
+      "coldP90": 166,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-1536k",
+      "shape": "eager",
+      "bytes": 1572959,
+      "cpuMs": 50,
+      "coldP50": 189,
+      "coldP90": 220,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-1536k",
+      "shape": "eager",
+      "bytes": 1572959,
+      "cpuMs": 30000,
+      "coldP50": 180,
+      "coldP90": 210,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-2048k",
+      "shape": "eager",
+      "bytes": 2097349,
+      "cpuMs": 50,
+      "coldP50": 232,
+      "coldP90": 281,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-2048k",
+      "shape": "eager",
+      "bytes": 2097349,
+      "cpuMs": 30000,
+      "coldP50": 232,
+      "coldP90": 286,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-4096k",
+      "shape": "eager",
+      "bytes": 4194652,
+      "cpuMs": 50,
+      "coldP50": 399,
+      "coldP90": 465,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-4096k",
+      "shape": "eager",
+      "bytes": 4194652,
+      "cpuMs": 30000,
+      "coldP50": 427,
+      "coldP90": 518,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-8192k",
+      "shape": "eager",
+      "bytes": 8389137,
+      "cpuMs": 50,
+      "coldP50": 763,
+      "coldP90": 900,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "eager-8192k",
+      "shape": "eager",
+      "bytes": 8389137,
+      "cpuMs": 30000,
+      "coldP50": 767,
+      "coldP90": 883,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-16k",
+      "shape": "lazy",
+      "bytes": 16462,
+      "cpuMs": 50,
+      "coldP50": 17,
+      "coldP90": 19,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-16k",
+      "shape": "lazy",
+      "bytes": 16462,
+      "cpuMs": 30000,
+      "coldP50": 14,
+      "coldP90": 18,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-32k",
+      "shape": "lazy",
+      "bytes": 32776,
+      "cpuMs": 50,
+      "coldP50": 16,
+      "coldP90": 23,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-32k",
+      "shape": "lazy",
+      "bytes": 32776,
+      "cpuMs": 30000,
+      "coldP50": 17,
+      "coldP90": 19,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-64k",
+      "shape": "lazy",
+      "bytes": 65586,
+      "cpuMs": 50,
+      "coldP50": 20,
+      "coldP90": 23,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-64k",
+      "shape": "lazy",
+      "bytes": 65586,
+      "cpuMs": 30000,
+      "coldP50": 18,
+      "coldP90": 21,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-96k",
+      "shape": "lazy",
+      "bytes": 98349,
+      "cpuMs": 50,
+      "coldP50": 20,
+      "coldP90": 24,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-96k",
+      "shape": "lazy",
+      "bytes": 98349,
+      "cpuMs": 30000,
+      "coldP50": 20,
+      "coldP90": 22,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-128k",
+      "shape": "lazy",
+      "bytes": 131144,
+      "cpuMs": 50,
+      "coldP50": 20,
+      "coldP90": 25,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-128k",
+      "shape": "lazy",
+      "bytes": 131144,
+      "cpuMs": 30000,
+      "coldP50": 22,
+      "coldP90": 26,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-192k",
+      "shape": "lazy",
+      "bytes": 196702,
+      "cpuMs": 50,
+      "coldP50": 26,
+      "coldP90": 32,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-192k",
+      "shape": "lazy",
+      "bytes": 196702,
+      "cpuMs": 30000,
+      "coldP50": 26,
+      "coldP90": 31,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-256k",
+      "shape": "lazy",
+      "bytes": 262300,
+      "cpuMs": 50,
+      "coldP50": 29,
+      "coldP90": 42,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-256k",
+      "shape": "lazy",
+      "bytes": 262300,
+      "cpuMs": 30000,
+      "coldP50": 29,
+      "coldP90": 38,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-384k",
+      "shape": "lazy",
+      "bytes": 393334,
+      "cpuMs": 50,
+      "coldP50": 37,
+      "coldP90": 46,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-384k",
+      "shape": "lazy",
+      "bytes": 393334,
+      "cpuMs": 30000,
+      "coldP50": 34,
+      "coldP90": 43,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-512k",
+      "shape": "lazy",
+      "bytes": 524438,
+      "cpuMs": 50,
+      "coldP50": 42,
+      "coldP90": 47,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-512k",
+      "shape": "lazy",
+      "bytes": 524438,
+      "cpuMs": 30000,
+      "coldP50": 44,
+      "coldP90": 58,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-768k",
+      "shape": "lazy",
+      "bytes": 786540,
+      "cpuMs": 50,
+      "coldP50": 51,
+      "coldP90": 70,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-768k",
+      "shape": "lazy",
+      "bytes": 786540,
+      "cpuMs": 30000,
+      "coldP50": 54,
+      "coldP90": 75,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-1024k",
+      "shape": "lazy",
+      "bytes": 1048724,
+      "cpuMs": 50,
+      "coldP50": 70,
+      "coldP90": 86,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-1024k",
+      "shape": "lazy",
+      "bytes": 1048724,
+      "cpuMs": 30000,
+      "coldP50": 63,
+      "coldP90": 86,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-1536k",
+      "shape": "lazy",
+      "bytes": 1573001,
+      "cpuMs": 50,
+      "coldP50": 91,
+      "coldP90": 126,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-1536k",
+      "shape": "lazy",
+      "bytes": 1573001,
+      "cpuMs": 30000,
+      "coldP50": 86,
+      "coldP90": 111,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-2048k",
+      "shape": "lazy",
+      "bytes": 2097391,
+      "cpuMs": 50,
+      "coldP50": 117,
+      "coldP90": 151,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-2048k",
+      "shape": "lazy",
+      "bytes": 2097391,
+      "cpuMs": 30000,
+      "coldP50": 107,
+      "coldP90": 170,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-4096k",
+      "shape": "lazy",
+      "bytes": 4194694,
+      "cpuMs": 50,
+      "coldP50": 224,
+      "coldP90": 298,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-4096k",
+      "shape": "lazy",
+      "bytes": 4194694,
+      "cpuMs": 30000,
+      "coldP50": 212,
+      "coldP90": 302,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-8192k",
+      "shape": "lazy",
+      "bytes": 8388997,
+      "cpuMs": 50,
+      "coldP50": 432,
+      "coldP90": 524,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "lazy-8192k",
+      "shape": "lazy",
+      "bytes": 8388997,
+      "cpuMs": 30000,
+      "coldP50": 424,
+      "coldP90": 496,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-audit-log",
+      "shape": "real",
+      "bytes": 4905,
+      "cpuMs": 50,
+      "coldP50": 14,
+      "coldP90": 16,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-audit-log",
+      "shape": "real",
+      "bytes": 4905,
+      "cpuMs": 30000,
+      "coldP50": 16,
+      "coldP90": 18,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-webhook-notifier",
+      "shape": "real",
+      "bytes": 9911,
+      "cpuMs": 50,
+      "coldP50": 15,
+      "coldP90": 19,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-webhook-notifier",
+      "shape": "real",
+      "bytes": 9911,
+      "cpuMs": 30000,
+      "coldP50": 17,
+      "coldP90": 20,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-atproto",
+      "shape": "real",
+      "bytes": 20310,
+      "cpuMs": 50,
+      "coldP50": 16,
+      "coldP90": 20,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-atproto",
+      "shape": "real",
+      "bytes": 20310,
+      "cpuMs": 30000,
+      "coldP50": 16,
+      "coldP90": 20,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-dinkus-inventory-zodmini",
+      "shape": "real",
+      "bytes": 76051,
+      "cpuMs": 50,
+      "coldP50": 39,
+      "coldP90": 47,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-dinkus-inventory-zodmini",
+      "shape": "real",
+      "bytes": 76051,
+      "cpuMs": 30000,
+      "coldP50": 37,
+      "coldP90": 41,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-dinkus-commerce",
+      "shape": "real",
+      "bytes": 117068,
+      "cpuMs": 50,
+      "coldP50": 23,
+      "coldP90": 29,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-dinkus-commerce",
+      "shape": "real",
+      "bytes": 117068,
+      "cpuMs": 30000,
+      "coldP50": 24,
+      "coldP90": 29,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-dinkus-inventory",
+      "shape": "real",
+      "bytes": 131060,
+      "cpuMs": 50,
+      "coldP50": 59,
+      "coldP90": 75,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-dinkus-inventory",
+      "shape": "real",
+      "bytes": 131060,
+      "cpuMs": 30000,
+      "coldP50": 63,
+      "coldP90": 76,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-combo-commerce-inventory-zodmini",
+      "shape": "real",
+      "bytes": 193731,
+      "cpuMs": 50,
+      "coldP50": 46,
+      "coldP90": 56,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-combo-commerce-inventory-zodmini",
+      "shape": "real",
+      "bytes": 193731,
+      "cpuMs": 30000,
+      "coldP50": 49,
+      "coldP90": 56,
+      "warmP50": 3,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-combo-commerce-inventory",
+      "shape": "real",
+      "bytes": 248704,
+      "cpuMs": 50,
+      "coldP50": 67,
+      "coldP90": 77,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-combo-commerce-inventory",
+      "shape": "real",
+      "bytes": 248704,
+      "cpuMs": 30000,
+      "coldP50": 68,
+      "coldP90": 75,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-combo-x2",
+      "shape": "real",
+      "bytes": 498232,
+      "cpuMs": 50,
+      "coldP50": 112,
+      "coldP90": 134,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-combo-x2",
+      "shape": "real",
+      "bytes": 498232,
+      "cpuMs": 30000,
+      "coldP50": 110,
+      "coldP90": 136,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-combo-x4",
+      "shape": "real",
+      "bytes": 1001334,
+      "cpuMs": 50,
+      "coldP50": 195,
+      "coldP90": 225,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "real-combo-x4",
+      "shape": "real",
+      "bytes": 1001334,
+      "cpuMs": 30000,
+      "coldP50": 209,
+      "coldP90": 231,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "tiny",
+      "shape": "tiny",
+      "bytes": 71,
+      "cpuMs": 50,
+      "coldP50": 14,
+      "coldP90": 19,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    },
+    {
+      "payload": "tiny",
+      "shape": "tiny",
+      "bytes": 71,
+      "cpuMs": 30000,
+      "coldP50": 14,
+      "coldP90": 16,
+      "warmP50": 2,
+      "failed": 0,
+      "total": 15,
+      "firstError": null,
+      "colos": [
+        "ATL"
+      ]
+    }
+  ],
+  "edgeBisect": [
+    {
+      "payload": "eager-16k",
+      "shape": "eager",
+      "bytes": 16420,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-32k",
+      "shape": "eager",
+      "bytes": 32906,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-64k",
+      "shape": "eager",
+      "bytes": 65544,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-96k",
+      "shape": "eager",
+      "bytes": 98307,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-128k",
+      "shape": "eager",
+      "bytes": 131102,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-192k",
+      "shape": "eager",
+      "bytes": 196660,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-256k",
+      "shape": "eager",
+      "bytes": 262258,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-384k",
+      "shape": "eager",
+      "bytes": 393292,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-512k",
+      "shape": "eager",
+      "bytes": 524396,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-768k",
+      "shape": "eager",
+      "bytes": 786673,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-1024k",
+      "shape": "eager",
+      "bytes": 1048682,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-1536k",
+      "shape": "eager",
+      "bytes": 1572959,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "eager-2048k",
+      "shape": "eager",
+      "bytes": 2097349,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-16k",
+      "shape": "lazy",
+      "bytes": 16462,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-32k",
+      "shape": "lazy",
+      "bytes": 32776,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-64k",
+      "shape": "lazy",
+      "bytes": 65586,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-96k",
+      "shape": "lazy",
+      "bytes": 98349,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-128k",
+      "shape": "lazy",
+      "bytes": 131144,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-192k",
+      "shape": "lazy",
+      "bytes": 196702,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-256k",
+      "shape": "lazy",
+      "bytes": 262300,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-384k",
+      "shape": "lazy",
+      "bytes": 393334,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-512k",
+      "shape": "lazy",
+      "bytes": 524438,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-768k",
+      "shape": "lazy",
+      "bytes": 786540,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-1024k",
+      "shape": "lazy",
+      "bytes": 1048724,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-1536k",
+      "shape": "lazy",
+      "bytes": 1573001,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "lazy-2048k",
+      "shape": "lazy",
+      "bytes": 2097391,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "real-audit-log",
+      "shape": "real",
+      "bytes": 4905,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "real-webhook-notifier",
+      "shape": "real",
+      "bytes": 9911,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "real-atproto",
+      "shape": "real",
+      "bytes": 20310,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "real-dinkus-inventory-zodmini",
+      "shape": "real",
+      "bytes": 76051,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "real-dinkus-commerce",
+      "shape": "real",
+      "bytes": 117068,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "real-dinkus-inventory",
+      "shape": "real",
+      "bytes": 131060,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "real-combo-commerce-inventory-zodmini",
+      "shape": "real",
+      "bytes": 193731,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "real-combo-commerce-inventory",
+      "shape": "real",
+      "bytes": 248704,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "real-combo-x2",
+      "shape": "real",
+      "bytes": 498232,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "real-combo-x4",
+      "shape": "real",
+      "bytes": 1001334,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    },
+    {
+      "payload": "tiny",
+      "shape": "tiny",
+      "bytes": 71,
+      "minCpuMs": 1,
+      "colo": "ATL",
+      "note": null
+    }
+  ]
+}
