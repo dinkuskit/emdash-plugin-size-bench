@@ -1,0 +1,9 @@
+{
+  "platform": "darwin",
+  "architecture": "arm64",
+  "node": "v22.23.1",
+  "vitest": "4.1.11",
+  "base": "d2f1d07b40986f181e51888f12116c0844d57345",
+  "dedicated": false,
+  "remoteBindings": false
+}

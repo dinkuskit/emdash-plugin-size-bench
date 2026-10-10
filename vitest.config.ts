@@ -58,9 +58,14 @@ export default defineConfig({
 				serviceBindings: {
 					PAYLOADS: async (request: Request) => {
 						const name = new URL(request.url).pathname.slice(1);
-						if (name.includes("/") || name.includes("..")) return new Response("bad", { status: 400 });
+						const realBackends: Record<string, string> = {
+							"operation-commerce.js": resolve("real/dinkus-commerce-backend.js"),
+							"operation-inventory.js": resolve("real/dinkus-inventory-backend.js"),
+						};
+						const file = realBackends[name] ?? (name.includes("/") || name.includes("..") ? null : resolve(payloadDir, name));
+						if (!file) return new Response("bad", { status: 400 });
 						try {
-							return new Response(readFileSync(resolve(payloadDir, name)));
+							return new Response(readFileSync(file));
 						} catch {
 							return new Response("missing", { status: 404 });
 						}

@@ -32,6 +32,27 @@ Each call is timed two ways. `Date.now()` inside workerd only advances on I/O an
 
 Every cold load in the size matrix is paired with a cold load of the smallest possible plugin, taken right next to it, alternating which goes first. The difference ("extra over the tiny plugin") cancels the isolate's fixed start-up cost, the round trip and slow drift in the machine, which leaves the cost that size adds. `analyze.mjs` reports its median with a 95% bootstrap range.
 
+### Successful real operations
+
+The opt-in suite exercises unmodified tracked backend bundles through EmDash 1.2.0's production `CloudflareSandboxRunner`, generated wrapper, Worker Loader and `PluginBridge`. Commerce `catalog/public/item` returns one seeded, priced, sellable product. Inventory `store-proof` returns a matching seeded public connection proof. Every call asserts the complete output; Inventory also asserts HTTP status and JSON content type. Its workload is connection-proof validation, not a stock query.
+
+After the usual frozen dependency installation, run the focused proof without fetching the corpus or running a size sweep:
+
+```sh
+node --test test/real-operation-unit.test.mjs
+node scripts/run-real-operation.mjs
+# Optional bounded counts and separate output file:
+REAL_COLD=3 REAL_WARM=5 BENCH_RESULTS=results/my-local-operation/raw.jsonl node scripts/run-real-operation.mjs
+```
+
+Use Node 22 or another runtime compatible with the installed native Vite/Rolldown binaries. `pnpm bench:real-operation` invokes the same driver. Counts must be integers from 1 to 20; defaults are 3 cold isolates and 5 warm calls on the first successful isolate. The driver selects only this suite, creates the output directory and appends JSONL rows; use a new output path to separate runs. Existing size suites and their result formats remain unchanged, and this suite is disabled in their usual runs. Backend files have a separate allowlisted fixture namespace, so existing generated payload resolution is preserved.
+
+Fixtures are synthetic local D1 rows, seeded outside timing, with an unchanged-database assertion around reads. The bridge is production code; there is no HTTP capability, allowed host or outbound network. Missing product, missing/mismatched proof and wrong-route controls stay separate from successful latency samples. Failures and output mismatches are counted and fail the run; successful sample timing is never inferred from absence of an exception.
+
+Cold timing combines runner loading, wrapper generation, lazy module initialization and the first business operation. Each cold isolate gets unique source text, with its nonce/hash recorded; warm calls reuse that isolate. No isolated module-loading stage is claimed. Rows contain millisecond wall-clock samples from the inside timer and Node's high-resolution probe (which includes a small clock RPC cost), sample counts, observed results and SHA-256 identities for the source, generated wrapper, manifest and seeded fixture. Validation is outside timing. The configured 50 ms CPU budget is metadata: local workerd does not enforce it, and these rows contain no measured CPU time or claim of live compliance.
+
+A modest local run and its limitations are in [`results/real-operation-local/NOTES.md`](results/real-operation-local/NOTES.md). This proof does not measure production D1, network, R2, checkout or physical stock-ledger work. The broader report/analyzer continues to describe the original loading suites; the operation rows are intentionally separate.
+
 `run-all.mjs` runs the CPU-limit check, then five passes of the size matrix with payload order shuffled in each pass to spread drift, then the memory and ten-plugin suites. Each pass starts a fresh workerd process for every four payloads (`CHUNK`), because one process that has loaded more than about a thousand plugin isolates eventually runs out of heap and crashes; a chunk that dies is retried once in a new process. `analyze.mjs` pools the samples (100 cold loads per payload by default; the first published run used 21) and writes `summary.md` and `summary.json` next to the raw rows. `RESULTS_DIR` picks the folder (default `results/`), so runs on different machines sit side by side, each with a `machine.json`.
 
 ```sh
