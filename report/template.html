@@ -438,6 +438,16 @@ if (DATA.bisect?.length) {
 }
 if (DATA.edge?.length) {
 	document.getElementById("sec-edge").hidden = false;
-	table("t-edge", ["Plugin", "Size", "CPU limit", "First call, median", "90th pct", "Later calls", "Failed loads"], DATA.edge.map((d) => [label(d.n), size(d.b), `${d.cpu} ms`, d.p50, d.p90, d.w, `${d.failed} of ${d.total}`]), { hot: (r, i) => i === 6 && !r[6].startsWith("0 ") });
+	// One row per plugin: EmDash's 50 ms limit next to the high limit.
+	const order = ["real", "eager", "lazy", "data"];
+	const rows = [...new Set(DATA.edge.map((d) => d.n))].map((n) => {
+		const lo = DATA.edge.find((d) => d.n === n && d.cpu === 50), hi = DATA.edge.find((d) => d.n === n && d.cpu !== 50);
+		return { n, s: (lo ?? hi).s, b: (lo ?? hi).b, lo, hi };
+	}).sort((a, c) => order.indexOf(a.s) - order.indexOf(c.s) || a.b - c.b);
+	const hiCpu = DATA.edge.find((d) => d.cpu !== 50)?.cpu;
+	const limitText = (cpu) => (cpu >= 1000 ? `${cpu / 1000} s` : `${cpu} ms`);
+	const first = (d) => (d?.p50 == null ? "n/a" : `${d.p50} ms`);
+	const failed = (d) => (d ? `${d.failed} of ${d.total}` : "n/a");
+	table("t-edge", ["Plugin", "Shape", "Size", "First call at 50 ms", "Failed at 50 ms", `First call at ${hiCpu ? limitText(hiCpu) : "high limit"}`, `Failed at ${hiCpu ? limitText(hiCpu) : "high limit"}`], rows.map((r) => [label(r.n), shapeName[r.s], size(r.b), first(r.lo), failed(r.lo), first(r.hi), failed(r.hi)]), { hot: (r, i) => (i === 4 || i === 6) && !String(r[i]).startsWith("0 ") && r[i] !== "n/a" });
 }
 </script>
