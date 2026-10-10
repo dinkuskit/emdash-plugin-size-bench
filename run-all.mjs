@@ -5,15 +5,23 @@
 //
 // Env: PASSES (default 5) x COLD (default 20) cold loads per payload,
 // SEED for the shuffle, SUITES to pick suites (default all),
-// RESULTS_DIR for the output folder.
+// RESULTS_DIR for the output folder, CHUNK payloads per workerd process.
+//
+// One workerd process that loads a whole pass (about 2,300 isolates at 20
+// samples) runs out of memory and crashes: segfaults and aborts after 1,100 to
+// 1,600 isolates on a Hetzner CCX33, a V8 heap out-of-memory on a smaller VM.
+// Each pass is therefore split into chunks of CHUNK payloads (default 4), each
+// in a fresh workerd, and payloads a crashed chunk did not finish are retried
+// once in another fresh process.
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import { join, resolve } from "node:path";
 
 const PASSES = Number(process.env.PASSES ?? 5);
 const COLD = Number(process.env.COLD ?? 20);
 const SUITES = (process.env.SUITES ?? "limits,matrix,memory,multi").split(",");
+const CHUNK = Number(process.env.CHUNK ?? 4);
 const resultsDir = resolve(process.env.RESULTS_DIR ?? "results");
 mkdirSync(resultsDir, { recursive: true });
 const index = JSON.parse(readFileSync("payloads/index.json", "utf8"));
@@ -51,12 +59,25 @@ writeFileSync(
 			lscpu: sh("lscpu", []),
 			passes: PASSES,
 			coldPerPass: COLD,
+			chunk: CHUNK,
 			seed,
 		},
 		null,
 		2,
 	),
 );
+
+const rawFile = join(resultsDir, "raw.jsonl");
+function finished(runId) {
+	if (!existsSync(rawFile)) return new Set();
+	const done = new Set();
+	for (const line of readFileSync(rawFile, "utf8").split("\n")) {
+		if (!line) continue;
+		const r = JSON.parse(line);
+		if (r.runId === runId && r.suite === "matrix") done.add(r.payload);
+	}
+	return done;
+}
 
 function vitest(config, label) {
 	console.log(`\n=== ${label} ===`);
@@ -68,13 +89,26 @@ function vitest(config, label) {
 	});
 	const lines = (r.stdout + r.stderr).split("\n").filter((l) => /cold median|^memory |^multi |^limits /.test(l.trim()));
 	console.log(lines.join("\n"));
-	if (r.status !== 0) console.log(`(exit ${r.status})\n${(r.stdout + r.stderr).split("\n").slice(-40).join("\n")}`);
+	if (r.status !== 0) console.log(`(exit ${r.status})\n${(r.stdout + r.stderr).split("\n").filter((l) => /signal|Fatal|fatal|memory|Error:/.test(l)).slice(-15).join("\n")}`);
+	return r.status;
 }
 
 if (SUITES.includes("limits")) vitest({ suites: ["limits"], runId: "limits" }, "limits");
 if (SUITES.includes("matrix")) {
 	for (let pass = 1; pass <= PASSES; pass++) {
-		vitest({ suites: ["matrix"], only: shuffle(index.map((p) => p.name)), cold: COLD, warm: 5, runId: `matrix-pass-${pass}` }, `matrix pass ${pass}`);
+		const runId = `matrix-pass-${pass}`;
+		const order = shuffle(index.map((p) => p.name));
+		for (let c = 0; c < order.length; c += CHUNK) {
+			const chunk = order.slice(c, c + CHUNK);
+			const label = `matrix pass ${pass}, payloads ${c + 1}-${c + chunk.length} of ${order.length}`;
+			if (vitest({ suites: ["matrix"], only: chunk, cold: COLD, warm: 5, runId }, label) === 0) continue;
+			const done = finished(runId);
+			const left = chunk.filter((n) => !done.has(n));
+			if (left.length) {
+				console.log(`retrying ${left.join(", ")} in a fresh process`);
+				vitest({ suites: ["matrix"], only: left, cold: COLD, warm: 5, runId }, `${label} (retry)`);
+			}
+		}
 	}
 }
 if (SUITES.includes("memory")) vitest({ suites: ["memory"], memK: 8, runId: "memory" }, "memory");
