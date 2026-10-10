@@ -190,3 +190,41 @@ EmDash's default is 50 ms. Each step is three fresh loads; a limit counts as eno
 | real-combo-x2 | 487 KB | 1 |  |
 | real-combo-x4 | 978 KB | 1 |  |
 | tiny | 0 KB | 1 |  |
+
+## Real Cloudflare: is the limit enforced?
+
+Busy-loop plugins: n million steps of the local limits suite's loop, in the route or at import.
+
+| Payload | Where | Steps (M) | CPU limit | Cold p50 | Cold failed | Warm p50 | Warm failed | First error |
+|---|---|---:|---:|---:|---:|---:|---:|---|
+| spin-import-2 | import | 2 | 50 | 29 | 0/3 | 2 | 0/2 |  |
+| spin-import-2 | import | 2 | 30000 | 27 | 0/3 | 2 | 0/2 |  |
+| spin-import-10 | import | 10 | 50 | 86 | 0/3 | 2 | 0/2 |  |
+| spin-import-10 | import | 10 | 30000 | 86 | 0/3 | 2 | 0/2 |  |
+| spin-import-30 | import | 30 | 50 | 262 | 0/3 | 2 | 0/2 |  |
+| spin-import-30 | import | 30 | 30000 | 267 | 0/3 | 2 | 0/2 |  |
+| spin-import-100 | import | 100 | 50 | 846 | 0/3 | 0 | 0/2 |  |
+| spin-import-100 | import | 100 | 30000 | 745 | 0/3 | 2 | 0/2 |  |
+| spin-import-300 | import | 300 | 50 | 2605 | 0/3 | 1 | 0/2 |  |
+| spin-import-300 | import | 300 | 30000 | 2582 | 0/3 | 3 | 0/2 |  |
+| spin-import-1000 | import | 1000 | 50 | 8154 | 0/3 | 2 | 0/2 |  |
+| spin-import-1000 | import | 1000 | 30000 | 8201 | 0/3 | 1 | 0/2 |  |
+| spin-route-2 | route | 2 | 50 | 21 | 0/3 | 13 | 0/2 |  |
+| spin-route-2 | route | 2 | 30000 | 22 | 0/3 | 12 | 0/2 |  |
+| spin-route-10 | route | 10 | 50 | 65 | 0/3 | 52 | 0/2 |  |
+| spin-route-10 | route | 10 | 30000 | 62 | 0/3 | 54 | 0/2 |  |
+| spin-route-30 | route | 30 | 50 | 166 | 0/3 | 138 | 0/2 |  |
+| spin-route-30 | route | 30 | 30000 | 169 | 0/3 | 137 | 0/2 |  |
+| spin-route-100 | route | 100 | 50 | 482 | 0/3 | 459 | 0/2 |  |
+| spin-route-100 | route | 100 | 30000 | 483 | 0/3 | 446 | 0/2 |  |
+| spin-route-300 | route | 300 | 50 | 1535 | 0/3 | 1581 | 1/2 | Worker exceeded CPU time limit. |
+| spin-route-300 | route | 300 | 30000 | 1457 | 0/3 | 1611 | 0/2 |  |
+
+## Real Cloudflare: smallest CPU limit for the busy loops
+
+| Payload | Smallest cpuMs | Note |
+|---|---:|---|
+| spin-import-30 | 1 |  |
+| spin-import-300 | 1 |  |
+| spin-route-30 | 1 |  |
+| spin-route-300 | 1 |  |
