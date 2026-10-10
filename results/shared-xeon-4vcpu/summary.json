@@ -1,0 +1,1474 @@
+{
+  "generatedAt": "2026-10-10T00:49:55.626Z",
+  "machine": {
+    "startedAt": "2026-10-10T00:35:39.331Z",
+    "hostLabel": null,
+    "platform": "linux 6.18.44-fc-v114 x64",
+    "cpuModel": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpus": 4,
+    "memGb": 16,
+    "node": "v22.22.0",
+    "governor": null,
+    "pinnedCpus": null,
+    "lscpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           52 bits physical, 57 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  4\nOn-line CPU(s) list:                     0-3\nVendor ID:                               GenuineIntel\nModel name:                              Intel(R) Xeon(R) Processor @ 2.10GHz\nCPU family:                              6\nModel:                                   207\nThread(s) per core:                      1\nCore(s) per socket:                      4\nSocket(s):                               1\nStepping:                                2\nBogoMIPS:                                4200.00\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx_vnni avx512_bf16 wbnoinvd arat avx512vbmi umip avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid cldemote movdiri movdir64b fsrm md_clear serialize tsxldtrk amx_bf16 avx512_fp16 amx_tile amx_int8 arch_capabilities\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               192 KiB (4 instances)\nL1i cache:                               128 KiB (4 instances)\nL2 cache:                                8 MiB (4 instances)\nL3 cache:                                260 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-3\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI Vulnerable\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected",
+    "passes": 3,
+    "coldPerPass": 10,
+    "chunk": 4,
+    "seed": 42
+  },
+  "baselineColdMs": 6,
+  "fits": [
+    {
+      "shape": "real",
+      "msPerMB": 97.5,
+      "interceptMs": 2.4
+    },
+    {
+      "shape": "eager",
+      "msPerMB": 83.7,
+      "interceptMs": 16.7
+    },
+    {
+      "shape": "lazy",
+      "msPerMB": 30.6,
+      "interceptMs": 0.6
+    },
+    {
+      "shape": "data",
+      "msPerMB": 5.6,
+      "interceptMs": -0.5
+    }
+  ],
+  "table": [
+    {
+      "payload": "data-16k",
+      "shape": "data",
+      "bytes": 16384,
+      "samples": 30,
+      "coldP50": 4,
+      "coldP90": 5,
+      "coldMin": 4,
+      "outerP50": 5.4,
+      "outerP90": 6,
+      "outerMin": 4.7,
+      "outerRange": [
+        5.3,
+        5.6
+      ],
+      "extraP50": -0.1,
+      "extraRange": [
+        -0.2,
+        0.2
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 4,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-32k",
+      "shape": "data",
+      "bytes": 32768,
+      "samples": 30,
+      "coldP50": 5,
+      "coldP90": 12,
+      "coldMin": 4,
+      "outerP50": 6,
+      "outerP90": 13.5,
+      "outerMin": 5.1,
+      "outerRange": [
+        5.9,
+        7.2
+      ],
+      "extraP50": 0.2,
+      "extraRange": [
+        -0.1,
+        0.4
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 7,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-64k",
+      "shape": "data",
+      "bytes": 65536,
+      "samples": 30,
+      "coldP50": 4,
+      "coldP90": 5,
+      "coldMin": 4,
+      "outerP50": 5.5,
+      "outerP90": 5.9,
+      "outerMin": 5.1,
+      "outerRange": [
+        5.5,
+        5.7
+      ],
+      "extraP50": 0.3,
+      "extraRange": [
+        0.2,
+        0.4
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 5,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-96k",
+      "shape": "data",
+      "bytes": 98304,
+      "samples": 30,
+      "coldP50": 5,
+      "coldP90": 6,
+      "coldMin": 4,
+      "outerP50": 5.9,
+      "outerP90": 6.8,
+      "outerMin": 5.3,
+      "outerRange": [
+        5.6,
+        6.1
+      ],
+      "extraP50": 0.3,
+      "extraRange": [
+        0.1,
+        0.7
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 5,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-128k",
+      "shape": "data",
+      "bytes": 131072,
+      "samples": 30,
+      "coldP50": 5,
+      "coldP90": 6,
+      "coldMin": 4,
+      "outerP50": 6.1,
+      "outerP90": 7.1,
+      "outerMin": 5.7,
+      "outerRange": [
+        6,
+        6.4
+      ],
+      "extraP50": 0.7,
+      "extraRange": [
+        0.5,
+        0.8
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 5,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-192k",
+      "shape": "data",
+      "bytes": 196608,
+      "samples": 30,
+      "coldP50": 5,
+      "coldP90": 7,
+      "coldMin": 4,
+      "outerP50": 6.2,
+      "outerP90": 7.7,
+      "outerMin": 5.6,
+      "outerRange": [
+        6.1,
+        6.4
+      ],
+      "extraP50": 1,
+      "extraRange": [
+        0.8,
+        1.2
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 5,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-256k",
+      "shape": "data",
+      "bytes": 262144,
+      "samples": 30,
+      "coldP50": 6,
+      "coldP90": 8,
+      "coldMin": 4,
+      "outerP50": 7.5,
+      "outerP90": 9.4,
+      "outerMin": 5.9,
+      "outerRange": [
+        6.7,
+        8.8
+      ],
+      "extraP50": 1.4,
+      "extraRange": [
+        1,
+        1.6
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 6,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-384k",
+      "shape": "data",
+      "bytes": 393216,
+      "samples": 30,
+      "coldP50": 6,
+      "coldP90": 25,
+      "coldMin": 5,
+      "outerP50": 7.6,
+      "outerP90": 28.1,
+      "outerMin": 6.5,
+      "outerRange": [
+        7.1,
+        21.3
+      ],
+      "extraP50": 2,
+      "extraRange": [
+        1.8,
+        9.2
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 7,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-512k",
+      "shape": "data",
+      "bytes": 524288,
+      "samples": 30,
+      "coldP50": 7,
+      "coldP90": 9,
+      "coldMin": 5,
+      "outerP50": 8.1,
+      "outerP90": 10.3,
+      "outerMin": 6.9,
+      "outerRange": [
+        7.8,
+        8.7
+      ],
+      "extraP50": 2.8,
+      "extraRange": [
+        2.4,
+        3.1
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 6,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-768k",
+      "shape": "data",
+      "bytes": 786432,
+      "samples": 30,
+      "coldP50": 8,
+      "coldP90": 11,
+      "coldMin": 7,
+      "outerP50": 9.2,
+      "outerP90": 12.9,
+      "outerMin": 7.7,
+      "outerRange": [
+        9,
+        10.8
+      ],
+      "extraP50": 4.1,
+      "extraRange": [
+        3.8,
+        4.5
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 7,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-1024k",
+      "shape": "data",
+      "bytes": 1048576,
+      "samples": 30,
+      "coldP50": 8,
+      "coldP90": 11,
+      "coldMin": 7,
+      "outerP50": 9.5,
+      "outerP90": 12.4,
+      "outerMin": 8.8,
+      "outerRange": [
+        9.2,
+        10
+      ],
+      "extraP50": 4,
+      "extraRange": [
+        3.7,
+        4.3
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 8,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-1536k",
+      "shape": "data",
+      "bytes": 1572864,
+      "samples": 30,
+      "coldP50": 11,
+      "coldP90": 15,
+      "coldMin": 9,
+      "outerP50": 12.4,
+      "outerP90": 16.8,
+      "outerMin": 10.3,
+      "outerRange": [
+        11.6,
+        15.4
+      ],
+      "extraP50": 6.8,
+      "extraRange": [
+        6.1,
+        8.6
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 10,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-2048k",
+      "shape": "data",
+      "bytes": 2097152,
+      "samples": 30,
+      "coldP50": 13,
+      "coldP90": 16,
+      "coldMin": 11,
+      "outerP50": 14.2,
+      "outerP90": 17.1,
+      "outerMin": 12.4,
+      "outerRange": [
+        13.4,
+        14.8
+      ],
+      "extraP50": 8.7,
+      "extraRange": [
+        8.3,
+        9.4
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 10,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-4096k",
+      "shape": "data",
+      "bytes": 4194304,
+      "samples": 30,
+      "coldP50": 23,
+      "coldP90": 27,
+      "coldMin": 20,
+      "outerP50": 24.9,
+      "outerP90": 28.6,
+      "outerMin": 21,
+      "outerRange": [
+        23.6,
+        26.5
+      ],
+      "extraP50": 19.3,
+      "extraRange": [
+        18,
+        20.4
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 20,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-8192k",
+      "shape": "data",
+      "bytes": 8388608,
+      "samples": 30,
+      "coldP50": 51,
+      "coldP90": 150,
+      "coldMin": 39,
+      "outerP50": 52.5,
+      "outerP90": 152,
+      "outerMin": 40.8,
+      "outerRange": [
+        47.7,
+        57.2
+      ],
+      "extraP50": 46.4,
+      "extraRange": [
+        42,
+        51.3
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 60,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-16k",
+      "shape": "eager",
+      "bytes": 16420,
+      "samples": 30,
+      "coldP50": 6,
+      "coldP90": 8,
+      "coldMin": 5,
+      "outerP50": 6.8,
+      "outerP90": 9.4,
+      "outerMin": 5.9,
+      "outerRange": [
+        6.7,
+        7
+      ],
+      "extraP50": 1.3,
+      "extraRange": [
+        0.9,
+        1.5
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 8,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-32k",
+      "shape": "eager",
+      "bytes": 32906,
+      "samples": 30,
+      "coldP50": 9,
+      "coldP90": 15,
+      "coldMin": 6,
+      "outerP50": 10.3,
+      "outerP90": 15.9,
+      "outerMin": 7,
+      "outerRange": [
+        10,
+        13.9
+      ],
+      "extraP50": 2.6,
+      "extraRange": [
+        2.3,
+        3
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 9,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-64k",
+      "shape": "eager",
+      "bytes": 65544,
+      "samples": 30,
+      "coldP50": 12,
+      "coldP90": 14,
+      "coldMin": 10,
+      "outerP50": 13.5,
+      "outerP90": 16.3,
+      "outerMin": 11.1,
+      "outerRange": [
+        12.3,
+        14.9
+      ],
+      "extraP50": 7.2,
+      "extraRange": [
+        6.7,
+        8.5
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 11,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-96k",
+      "shape": "eager",
+      "bytes": 98307,
+      "samples": 30,
+      "coldP50": 13,
+      "coldP90": 18,
+      "coldMin": 12,
+      "outerP50": 14.5,
+      "outerP90": 18.9,
+      "outerMin": 12.7,
+      "outerRange": [
+        14,
+        16.1
+      ],
+      "extraP50": 8.5,
+      "extraRange": [
+        7.9,
+        9.5
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 13,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-128k",
+      "shape": "eager",
+      "bytes": 131102,
+      "samples": 30,
+      "coldP50": 15,
+      "coldP90": 18,
+      "coldMin": 14,
+      "outerP50": 16.1,
+      "outerP90": 19.1,
+      "outerMin": 15,
+      "outerRange": [
+        15.6,
+        16.9
+      ],
+      "extraP50": 10.5,
+      "extraRange": [
+        9.9,
+        11
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 16,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-192k",
+      "shape": "eager",
+      "bytes": 196660,
+      "samples": 30,
+      "coldP50": 52,
+      "coldP90": 76,
+      "coldMin": 37,
+      "outerP50": 54.2,
+      "outerP90": 78.4,
+      "outerMin": 38.7,
+      "outerRange": [
+        47,
+        58.5
+      ],
+      "extraP50": 45.9,
+      "extraRange": [
+        40.2,
+        49.8
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 47,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-256k",
+      "shape": "eager",
+      "bytes": 262258,
+      "samples": 30,
+      "coldP50": 41,
+      "coldP90": 58,
+      "coldMin": 39,
+      "outerP50": 43.2,
+      "outerP90": 59.6,
+      "outerMin": 40.9,
+      "outerRange": [
+        42.7,
+        43.6
+      ],
+      "extraP50": 37.3,
+      "extraRange": [
+        37,
+        37.9
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 41,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-384k",
+      "shape": "eager",
+      "bytes": 393292,
+      "samples": 30,
+      "coldP50": 53,
+      "coldP90": 81,
+      "coldMin": 48,
+      "outerP50": 54.6,
+      "outerP90": 85.9,
+      "outerMin": 50.2,
+      "outerRange": [
+        54.1,
+        60.3
+      ],
+      "extraP50": 48.8,
+      "extraRange": [
+        47.1,
+        54.6
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 51,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-512k",
+      "shape": "eager",
+      "bytes": 524396,
+      "samples": 30,
+      "coldP50": 72,
+      "coldP90": 90,
+      "coldMin": 61,
+      "outerP50": 73.5,
+      "outerP90": 91.4,
+      "outerMin": 62.8,
+      "outerRange": [
+        67.1,
+        77.5
+      ],
+      "extraP50": 65.4,
+      "extraRange": [
+        60.8,
+        71.2
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 69,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-768k",
+      "shape": "eager",
+      "bytes": 786673,
+      "samples": 30,
+      "coldP50": 95,
+      "coldP90": 119,
+      "coldMin": 86,
+      "outerP50": 96.6,
+      "outerP90": 120.6,
+      "outerMin": 87.3,
+      "outerRange": [
+        91.6,
+        104.2
+      ],
+      "extraP50": 89.8,
+      "extraRange": [
+        84.5,
+        97.5
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 96,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-1024k",
+      "shape": "eager",
+      "bytes": 1048682,
+      "samples": 30,
+      "coldP50": 126,
+      "coldP90": 145,
+      "coldMin": 115,
+      "outerP50": 128,
+      "outerP90": 147.3,
+      "outerMin": 116.3,
+      "outerRange": [
+        125.4,
+        136.9
+      ],
+      "extraP50": 121.9,
+      "extraRange": [
+        119.3,
+        130.7
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 125,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-1536k",
+      "shape": "eager",
+      "bytes": 1572959,
+      "samples": 30,
+      "coldP50": 153,
+      "coldP90": 205,
+      "coldMin": 144,
+      "outerP50": 154.8,
+      "outerP90": 206.6,
+      "outerMin": 145.5,
+      "outerRange": [
+        150.3,
+        157.9
+      ],
+      "extraP50": 149.3,
+      "extraRange": [
+        144.6,
+        151.6
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 161,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-2048k",
+      "shape": "eager",
+      "bytes": 2097349,
+      "samples": 30,
+      "coldP50": 219,
+      "coldP90": 274,
+      "coldMin": 182,
+      "outerP50": 220.6,
+      "outerP90": 275.7,
+      "outerMin": 182.6,
+      "outerRange": [
+        207.6,
+        228.1
+      ],
+      "extraP50": 213,
+      "extraRange": [
+        201.8,
+        222
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 278,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-4096k",
+      "shape": "eager",
+      "bytes": 4194652,
+      "samples": 30,
+      "coldP50": 366,
+      "coldP90": 442,
+      "coldMin": 324,
+      "outerP50": 367.4,
+      "outerP90": 443.9,
+      "outerMin": 326.4,
+      "outerRange": [
+        359.7,
+        409.6
+      ],
+      "extraP50": 361.5,
+      "extraRange": [
+        353.3,
+        402.5
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 360,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-8192k",
+      "shape": "eager",
+      "bytes": 8389137,
+      "samples": 30,
+      "coldP50": 674,
+      "coldP90": 856,
+      "coldMin": 591,
+      "outerP50": 676.4,
+      "outerP90": 857.6,
+      "outerMin": 592.7,
+      "outerRange": [
+        640,
+        770.2
+      ],
+      "extraP50": 669.5,
+      "extraRange": [
+        634.6,
+        764.8
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 788,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-16k",
+      "shape": "lazy",
+      "bytes": 16462,
+      "samples": 30,
+      "coldP50": 6,
+      "coldP90": 7,
+      "coldMin": 4,
+      "outerP50": 7.5,
+      "outerP90": 8.1,
+      "outerMin": 5.6,
+      "outerRange": [
+        6.1,
+        7.7
+      ],
+      "extraP50": 0.7,
+      "extraRange": [
+        0.5,
+        0.9
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 5,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-32k",
+      "shape": "lazy",
+      "bytes": 32776,
+      "samples": 30,
+      "coldP50": 5,
+      "coldP90": 7,
+      "coldMin": 4,
+      "outerP50": 6.6,
+      "outerP90": 7.9,
+      "outerMin": 6,
+      "outerRange": [
+        6.4,
+        6.9
+      ],
+      "extraP50": 0.9,
+      "extraRange": [
+        0.8,
+        1.2
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 5,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-64k",
+      "shape": "lazy",
+      "bytes": 65586,
+      "samples": 30,
+      "coldP50": 7,
+      "coldP90": 9,
+      "coldMin": 5,
+      "outerP50": 8,
+      "outerP90": 10.1,
+      "outerMin": 6.7,
+      "outerRange": [
+        7.5,
+        8.8
+      ],
+      "extraP50": 2,
+      "extraRange": [
+        1.5,
+        2.4
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 6,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-96k",
+      "shape": "lazy",
+      "bytes": 98349,
+      "samples": 30,
+      "coldP50": 7,
+      "coldP90": 8,
+      "coldMin": 6,
+      "outerP50": 8.2,
+      "outerP90": 9.6,
+      "outerMin": 7.5,
+      "outerRange": [
+        7.9,
+        8.3
+      ],
+      "extraP50": 2.9,
+      "extraRange": [
+        2.5,
+        3
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 7,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-128k",
+      "shape": "lazy",
+      "bytes": 131144,
+      "samples": 30,
+      "coldP50": 8,
+      "coldP90": 10,
+      "coldMin": 7,
+      "outerP50": 9,
+      "outerP90": 10.5,
+      "outerMin": 8.5,
+      "outerRange": [
+        8.9,
+        9.2
+      ],
+      "extraP50": 3.7,
+      "extraRange": [
+        3.6,
+        4
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 8,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-192k",
+      "shape": "lazy",
+      "bytes": 196702,
+      "samples": 30,
+      "coldP50": 11,
+      "coldP90": 13,
+      "coldMin": 9,
+      "outerP50": 12,
+      "outerP90": 14.6,
+      "outerMin": 10.8,
+      "outerRange": [
+        11.6,
+        13.2
+      ],
+      "extraP50": 6.1,
+      "extraRange": [
+        5.7,
+        6.8
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 10,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-256k",
+      "shape": "lazy",
+      "bytes": 262300,
+      "samples": 30,
+      "coldP50": 13,
+      "coldP90": 17,
+      "coldMin": 12,
+      "outerP50": 13.6,
+      "outerP90": 18.5,
+      "outerMin": 12.9,
+      "outerRange": [
+        13.5,
+        13.9
+      ],
+      "extraP50": 8.2,
+      "extraRange": [
+        8.1,
+        8.5
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 13,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-384k",
+      "shape": "lazy",
+      "bytes": 393334,
+      "samples": 30,
+      "coldP50": 18,
+      "coldP90": 24,
+      "coldMin": 15,
+      "outerP50": 19.1,
+      "outerP90": 25.5,
+      "outerMin": 16.7,
+      "outerRange": [
+        17.8,
+        22.1
+      ],
+      "extraP50": 13.3,
+      "extraRange": [
+        12.4,
+        16.1
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 21,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-512k",
+      "shape": "lazy",
+      "bytes": 524438,
+      "samples": 30,
+      "coldP50": 21,
+      "coldP90": 30,
+      "coldMin": 18,
+      "outerP50": 22.6,
+      "outerP90": 31.6,
+      "outerMin": 19.8,
+      "outerRange": [
+        21.8,
+        27.9
+      ],
+      "extraP50": 16.5,
+      "extraRange": [
+        16.3,
+        21.3
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 19,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-768k",
+      "shape": "lazy",
+      "bytes": 786540,
+      "samples": 30,
+      "coldP50": 35,
+      "coldP90": 40,
+      "coldMin": 26,
+      "outerP50": 36.8,
+      "outerP90": 41.9,
+      "outerMin": 27.2,
+      "outerRange": [
+        31.5,
+        38.9
+      ],
+      "extraP50": 29.7,
+      "extraRange": [
+        25.4,
+        32.5
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 31,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-1024k",
+      "shape": "lazy",
+      "bytes": 1048724,
+      "samples": 30,
+      "coldP50": 48,
+      "coldP90": 69,
+      "coldMin": 33,
+      "outerP50": 50.9,
+      "outerP90": 71.1,
+      "outerMin": 35.1,
+      "outerRange": [
+        38.3,
+        59.6
+      ],
+      "extraP50": 43.9,
+      "extraRange": [
+        32,
+        50.3
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 35,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-1536k",
+      "shape": "lazy",
+      "bytes": 1573001,
+      "samples": 30,
+      "coldP50": 48,
+      "coldP90": 95,
+      "coldMin": 44,
+      "outerP50": 49.6,
+      "outerP90": 97.3,
+      "outerMin": 45.5,
+      "outerRange": [
+        47.3,
+        67.4
+      ],
+      "extraP50": 42.9,
+      "extraRange": [
+        41.5,
+        59
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 44,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-2048k",
+      "shape": "lazy",
+      "bytes": 2097391,
+      "samples": 30,
+      "coldP50": 61,
+      "coldP90": 82,
+      "coldMin": 56,
+      "outerP50": 62.4,
+      "outerP90": 83.7,
+      "outerMin": 58.7,
+      "outerRange": [
+        61,
+        67.5
+      ],
+      "extraP50": 56.4,
+      "extraRange": [
+        55.6,
+        62.4
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 59,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-4096k",
+      "shape": "lazy",
+      "bytes": 4194694,
+      "samples": 30,
+      "coldP50": 110,
+      "coldP90": 117,
+      "coldMin": 101,
+      "outerP50": 111.6,
+      "outerP90": 118.8,
+      "outerMin": 103.3,
+      "outerRange": [
+        109.5,
+        114.2
+      ],
+      "extraP50": 105.7,
+      "extraRange": [
+        103.8,
+        108.6
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 104,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-8192k",
+      "shape": "lazy",
+      "bytes": 8388997,
+      "samples": 30,
+      "coldP50": 257,
+      "coldP90": 300,
+      "coldMin": 212,
+      "outerP50": 259.6,
+      "outerP90": 301.7,
+      "outerMin": 213.5,
+      "outerRange": [
+        227.2,
+        280.5
+      ],
+      "extraP50": 253.7,
+      "extraRange": [
+        221.7,
+        273.7
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 243,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-audit-log",
+      "shape": "real",
+      "bytes": 4905,
+      "samples": 30,
+      "coldP50": 6,
+      "coldP90": 8,
+      "coldMin": 4,
+      "outerP50": 7.1,
+      "outerP90": 8.7,
+      "outerMin": 5.3,
+      "outerRange": [
+        6.7,
+        7.3
+      ],
+      "extraP50": 0.6,
+      "extraRange": [
+        0.5,
+        1.1
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 5,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-webhook-notifier",
+      "shape": "real",
+      "bytes": 9911,
+      "samples": 30,
+      "coldP50": 5,
+      "coldP90": 7,
+      "coldMin": 4,
+      "outerP50": 5.9,
+      "outerP90": 8,
+      "outerMin": 5.3,
+      "outerRange": [
+        5.8,
+        6.5
+      ],
+      "extraP50": 0.6,
+      "extraRange": [
+        0.5,
+        0.8
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 5,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-atproto",
+      "shape": "real",
+      "bytes": 20310,
+      "samples": 30,
+      "coldP50": 7,
+      "coldP90": 8,
+      "coldMin": 5,
+      "outerP50": 8.4,
+      "outerP90": 9.4,
+      "outerMin": 6,
+      "outerRange": [
+        6.6,
+        8.7
+      ],
+      "extraP50": 1.3,
+      "extraRange": [
+        1.1,
+        1.6
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 5,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-dinkus-inventory-zodmini",
+      "shape": "real",
+      "bytes": 76051,
+      "samples": 30,
+      "coldP50": 16,
+      "coldP90": 21,
+      "coldMin": 15,
+      "outerP50": 17.6,
+      "outerP90": 22.5,
+      "outerMin": 15.7,
+      "outerRange": [
+        16.8,
+        18.2
+      ],
+      "extraP50": 12.1,
+      "extraRange": [
+        11.1,
+        12.6
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 17,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-dinkus-commerce",
+      "shape": "real",
+      "bytes": 117068,
+      "samples": 30,
+      "coldP50": 10,
+      "coldP90": 13,
+      "coldMin": 8,
+      "outerP50": 11.4,
+      "outerP90": 14.3,
+      "outerMin": 9.6,
+      "outerRange": [
+        10.8,
+        12.1
+      ],
+      "extraP50": 5.5,
+      "extraRange": [
+        4.4,
+        6.2
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 10,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-dinkus-inventory",
+      "shape": "real",
+      "bytes": 131060,
+      "samples": 30,
+      "coldP50": 27,
+      "coldP90": 42,
+      "coldMin": 23,
+      "outerP50": 28.3,
+      "outerP90": 43.4,
+      "outerMin": 24.5,
+      "outerRange": [
+        26.6,
+        35.6
+      ],
+      "extraP50": 22.1,
+      "extraRange": [
+        20.6,
+        29.1
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 27,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-combo-commerce-inventory-zodmini",
+      "shape": "real",
+      "bytes": 193731,
+      "samples": 30,
+      "coldP50": 20,
+      "coldP90": 24,
+      "coldMin": 18,
+      "outerP50": 21.6,
+      "outerP90": 25.8,
+      "outerMin": 19.2,
+      "outerRange": [
+        20.6,
+        22.3
+      ],
+      "extraP50": 15.7,
+      "extraRange": [
+        15,
+        15.9
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 22,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-combo-commerce-inventory",
+      "shape": "real",
+      "bytes": 248704,
+      "samples": 30,
+      "coldP50": 33,
+      "coldP90": 42,
+      "coldMin": 27,
+      "outerP50": 34.8,
+      "outerP90": 43.9,
+      "outerMin": 28.4,
+      "outerRange": [
+        31.9,
+        40.6
+      ],
+      "extraP50": 28.5,
+      "extraRange": [
+        25.3,
+        32.8
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 31,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-combo-x2",
+      "shape": "real",
+      "bytes": 498232,
+      "samples": 30,
+      "coldP50": 68,
+      "coldP90": 81,
+      "coldMin": 50,
+      "outerP50": 70.3,
+      "outerP90": 82.5,
+      "outerMin": 52,
+      "outerRange": [
+        61,
+        73.2
+      ],
+      "extraP50": 63.8,
+      "extraRange": [
+        55.4,
+        66.2
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 60,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-combo-x4",
+      "shape": "real",
+      "bytes": 1001334,
+      "samples": 30,
+      "coldP50": 92,
+      "coldP90": 119,
+      "coldMin": 88,
+      "outerP50": 94.1,
+      "outerP90": 120.6,
+      "outerMin": 89.5,
+      "outerRange": [
+        92.9,
+        103.3
+      ],
+      "extraP50": 88.1,
+      "extraRange": [
+        87.2,
+        94.2
+      ],
+      "warmP50": 0,
+      "sameSourceP50": 121,
+      "errors": 0,
+      "passes": 3
+    }
+  ],
+  "memory": [],
+  "multi": [],
+  "limits": [
+    {
+      "payload": "quick",
+      "limits": "prod",
+      "coldMs": 6,
+      "coldError": null,
+      "warmMs": 0,
+      "warmError": null
+    },
+    {
+      "payload": "quick",
+      "limits": "no-cpu-limit",
+      "coldMs": 6,
+      "coldError": null,
+      "warmMs": 0,
+      "warmError": null
+    },
+    {
+      "payload": "spin-at-import",
+      "limits": "prod",
+      "coldMs": 3598,
+      "coldError": null,
+      "warmMs": 1,
+      "warmError": null
+    },
+    {
+      "payload": "spin-at-import",
+      "limits": "no-cpu-limit",
+      "coldMs": 3316,
+      "coldError": null,
+      "warmMs": 1,
+      "warmError": null
+    },
+    {
+      "payload": "spin-in-route",
+      "limits": "prod",
+      "coldMs": 265,
+      "coldError": null,
+      "warmMs": 180,
+      "warmError": null
+    },
+    {
+      "payload": "spin-in-route",
+      "limits": "no-cpu-limit",
+      "coldMs": 2485,
+      "coldError": null,
+      "warmMs": 2460,
+      "warmError": null
+    }
+  ],
+  "nodeHost": [],
+  "edge": [],
+  "edgeBisect": []
+}

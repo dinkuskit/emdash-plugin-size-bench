@@ -128,7 +128,7 @@ footer { color: var(--ink-3); font-size: 13px; }
 
 	<section class="callout prose">
 		<h3>The open question: does start-up count against the 50 ms CPU limit?</h3>
-		<p>EmDash gives each sandboxed call <span class="num">cpuMs: 50</span> through Worker Loader (<code>packages/cloudflare/src/sandbox/runner.ts</code>, <code>DEFAULT_LIMITS</code>). Local workerd does not enforce it: a plugin that spins for 3 seconds at import, or inside a route, still succeeds under the production limits (table below).</p>
+		<p>EmDash gives each sandboxed call <span class="num">cpuMs: 50</span> through Worker Loader (<code>packages/cloudflare/src/sandbox/runner.ts</code>, <code>DEFAULT_LIMITS</code>). Local workerd does not enforce it: a plugin that runs a busy loop for hundreds of milliseconds to many seconds at import, or inside a route, still succeeds under the production limits (table below).</p>
 		<p id="cross-50">On the edge, if parsing and running a module's top level count toward the first call's 50 ms, then run-at-import code past roughly 192 KB on this machine's speed would fail on its first call. Lazy code would reach that point near 1 MB. The edge folder in the benchmark measures exactly this on real Cloudflare.</p>
 	</section>
 
@@ -209,6 +209,19 @@ const fmt1 = (v) => (v == null ? null : OUTER ? v.toFixed(1) : String(v));
 const extra = (d) => (d.x == null ? null : `${fmt1(d.x)}${d.xr ? ` (${fmt1(d.xr[0])} to ${fmt1(d.xr[1])})` : ""}`);
 const byName = Object.fromEntries(DATA.matrix.map((m) => [m.n, m]));
 const fit = Object.fromEntries(DATA.fits.map((f) => [f.shape, f]));
+// The comparison run, like with like: the outside clock when both runs have it, otherwise workerd's own clock.
+const CMP = DATA.compare
+	? (() => {
+			const other = Object.fromEntries(DATA.compare.rows.map((r) => [r.n, r]));
+			const common = DATA.matrix.filter((d) => other[d.n]);
+			const outer = common.length > 0 && common.every((d) => d.o != null && other[d.n].o != null);
+			const here = (n) => (outer ? byName[n].o : byName[n].p50);
+			const there = (n) => (outer ? other[n].o : other[n].p50);
+			const ratios = common.map((d) => here(d.n) / there(d.n)).sort((a, b) => a - b);
+			return { outer, here, there, has: (n) => !!(byName[n] && other[n]), n: ratios.length, lo: ratios[0], hi: ratios[ratios.length - 1], mid: ratios[ratios.length >> 1] };
+		})()
+	: null;
+const thereName = DATA.compare ? `on the ${DATA.compare.short[0].toLowerCase()}${DATA.compare.short.slice(1)}` : "";
 
 const setNum = (id, v) => { document.getElementById(id).textContent = v ?? "n/a"; };
 const perMB = (shape) => (fit[shape] ? Math.round(fit[shape].msPerMB) : null);
@@ -231,11 +244,11 @@ if (DATA.machine) {
 }
 // Where each shape first crosses 50 ms on this machine, and on the comparison machine when there is one.
 {
-	const other = DATA.compare ? Object.fromEntries(DATA.compare.rows.map((r) => [r.n, r.o ?? r.p50])) : null;
-	const there = DATA.compare ? `on the ${DATA.compare.short[0].toLowerCase()}${DATA.compare.short.slice(1)}` : "";
+	const other = CMP;
+	const there = thereName;
 	const sorted = (shape) => DATA.matrix.filter((d) => d.s === shape).sort((a, b) => a.b - b.b);
 	const cross = (shape, v) => sorted(shape).find((d) => v(d) != null && v(d) > 50);
-	const vOther = (d) => (other ? other[d.n] ?? null : null);
+	const vOther = (d) => (CMP && CMP.has(d.n) ? CMP.there(d.n) : null);
 	const e = cross("eager", val), l = cross("lazy", val), realOver = cross("real", val);
 	const eo = other && cross("eager", vOther), lo = other && cross("lazy", vOther), ro = other && cross("real", vOther);
 	const bits = [];
@@ -294,23 +307,20 @@ function table(id, head, rows, opts = {}) {
 	const parts = [["real-dinkus-commerce", "Commerce"], ["real-combo-commerce-inventory", "the 243 KB real plugin"], ["eager-1024k", "a 1 MB plugin"]].map(([n, name]) => (m10(n) ? `${m10(n).sequentialMs} ms for ten copies of ${name}` : null)).filter(Boolean);
 	if (parts.length) li("Plugins woken together still load one after another.", `On a cold site, ten fresh plugins called at once took about as long as ten called in a row (for example ten save hooks on one content save): ${parts.join(", ")}.`);
 
+	if (CMP?.n) {
+		const c1 = "real-combo-commerce-inventory";
+		li("The machine changes every number.", `The same plugins took ${CMP.lo.toFixed(1)} to ${CMP.hi.toFixed(1)} times as long here as on ${DATA.compare.label}, ${CMP.mid.toFixed(1)} times at the median${CMP.has(c1) ? `. Commerce and Inventory bundled (${size(byName[c1].b)}) took ${fmt(CMP.here(c1))} ms here and ${fmt(CMP.there(c1))} ms there` : ""}. Read these times as costs relative to each other.`);
+	}
 	if (DATA.bisect?.length) li("Cloudflare's own CPU limit was measured directly.", "The table below gives, for each plugin, the smallest CPU limit it still loads under on the edge.");
 	else li("Local workerd ignores the 50 ms CPU limit,", "so whether a big plugin's first call would fail in production is still open. The callout below explains why.");
 })();
 
 // ---- the same plugins on another machine, when the report was built with one
-if (DATA.compare) {
-	const other = Object.fromEntries(DATA.compare.rows.map((r) => [r.n, r]));
-	const rows = ["real-audit-log", "real-dinkus-commerce", "real-dinkus-inventory", "real-combo-commerce-inventory", "eager-256k", "eager-1024k", "lazy-1024k", "data-1024k"].filter((n) => byName[n] && other[n]);
-	// Like with like: the outside clock when both runs have it, otherwise workerd's own clock.
-	const both = rows.every((n) => byName[n].o != null && other[n].o != null);
-	const here = (n) => (both ? byName[n].o : byName[n].p50);
-	const there = (n) => (both ? other[n].o : other[n].p50);
-	const ratio = (n) => here(n) / there(n);
-	const rs = rows.map(ratio).sort((a, b) => a - b);
+if (CMP) {
+	const rows = ["real-audit-log", "real-dinkus-commerce", "real-dinkus-inventory", "real-combo-commerce-inventory", "eager-256k", "eager-1024k", "lazy-1024k", "data-1024k"].filter(CMP.has);
 	document.getElementById("sec-compare").hidden = false;
-	document.getElementById("compare-note").textContent = `This machine took ${rs[0].toFixed(1)} to ${rs[rs.length - 1].toFixed(1)} times as long as ${DATA.compare.label} to load the same plugins, so read the times on this page as costs relative to each other and to an almost empty plugin. What production pays depends on the machine, and only a run on Cloudflare measures that.${both ? "" : " Both columns here use workerd's own 1 ms clock, the only one the other run recorded."}`;
-	table("t-compare", ["Plugin", "Size", "This machine", DATA.compare.short, "Ratio"], rows.map((n) => [niceName(n), size(byName[n].b), `${fmt(here(n))} ms`, `${fmt(there(n))} ms`, `${ratio(n).toFixed(1)}×`]));
+	document.getElementById("compare-note").textContent = `Across all ${CMP.n} plugins, this machine took ${CMP.lo.toFixed(1)} to ${CMP.hi.toFixed(1)} times as long as ${DATA.compare.label}, ${CMP.mid.toFixed(1)} times at the median, so read the times on this page as costs relative to each other and to an almost empty plugin. What production pays depends on the machine, and only a run on Cloudflare measures that.${CMP.outer ? "" : " Both columns here use workerd's own 1 ms clock, the only one the other run recorded."}`;
+	table("t-compare", ["Plugin", "Size", "This machine", DATA.compare.short, "Ratio"], rows.map((n) => [niceName(n), size(byName[n].b), `${CMP.outer ? CMP.here(n).toFixed(1) : CMP.here(n)} ms`, `${CMP.outer ? CMP.there(n).toFixed(1) : CMP.there(n)} ms`, `${(CMP.here(n) / CMP.there(n)).toFixed(1)}×`]));
 }
 
 // ---- chart
@@ -402,7 +412,7 @@ const real = DATA.matrix.filter((d) => d.s === "real").sort((a, b) => a.b - b.b)
 if (OUTER) table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Extra over a tiny plugin (95% range)", "Later calls"], real.map((d) => [label(d.n), size(d.b), fmt1(val(d)), fmt1(val90(d)), extra(d), d.w]));
 else table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Later calls"], real.map((d) => [label(d.n), size(d.b), d.p50, d.p90, d.w]));
 
-const limLabel = { quick: "Returns at once", "spin-at-import": "Spins 3 s at import", "spin-in-route": "Spins 2 s in the route" };
+const limLabel = { quick: "Returns at once", "spin-at-import": "Busy loop at import", "spin-in-route": "Busy loop in the route" };
 table("t-limits", ["Test plugin", "Limits", "First call", "Error", "Second call", "Error"], DATA.limits.map((l) => [limLabel[l.payload] ?? l.payload, l.limits === "prod" ? "EmDash default (50 ms)" : "120 s", l.coldMs, l.coldError ?? "none", l.warmMs, l.warmError ?? "none"]));
 
 const memName = niceName;

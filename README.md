@@ -56,7 +56,7 @@ The script installs everything, builds the payloads, sets the CPU governor to `p
 
 ### Real Cloudflare
 
-Local workerd does **not** enforce Worker Loader's `cpuMs` limit: a plugin that spins for 3 seconds at import passes under EmDash's 50 ms default (see the limits table). Only the edge can show where the production limit bites.
+Local workerd does **not** enforce Worker Loader's `cpuMs` limit: a plugin whose busy loop at import runs for seconds still loads under EmDash's 50 ms default (see the limits table). Only the edge can show where the production limit bites.
 
 ```sh
 cd edge
@@ -71,15 +71,18 @@ cd .. && node analyze.mjs                # adds the "Real Cloudflare" tables
 
 ## Results
 
-- `results/hetzner-ccx33-ash/`: a dedicated Hetzner CCX33 server (8 AMD EPYC-Milan vCPUs), 20 to 100 cold loads per payload with the outside clock and paired tiny-plugin loads. Its `NOTES.md` explains the uneven sample counts.
-- `results/`: the first run, on a shared 4-vCPU Intel Xeon VM, 21 cold loads per payload with the inside clock only.
+- `results/hetzner-ccx33-ash/`: a dedicated Hetzner CCX33 server (8 AMD EPYC-Milan vCPUs), every suite, 20 to 100 cold loads per payload with the outside clock and paired tiny-plugin loads. Its `NOTES.md` explains the uneven sample counts.
+- `results/shared-xeon-4vcpu/`: a shared 4-vCPU Intel Xeon VM measured the same way, 30 cold loads per payload, size matrix and CPU-limit check only.
+- `results/`: the first run, on a VM of the same Xeon kind with the older method (one workerd per pass, inside clock only, 21 cold loads per payload).
 
-Everything, even an almost empty plugin, loaded several times slower on the Hetzner server than on the Xeon VM, so read the times for shape and for costs relative to an almost empty plugin; only the Real Cloudflare run gives production times.
+With the same method, the Hetzner server took 2.8 to 5.1 times as long as the Xeon VM for every payload, 4.1 times at the median, even for an almost empty plugin. So read the times for shape and for costs relative to an almost empty plugin; only the Real Cloudflare run gives production times.
 
-`report/plugin-size-benchmark.html` shows the Hetzner run. `COMPARE_DIR` adds a second machine's first-call times next to it, and `EDGE_DIR` takes the Cloudflare tables from an edge run analysed in its own folder:
+`report/plugin-size-benchmark.html` shows the Hetzner run with the Xeon VM alongside. `COMPARE_DIR` adds a second machine's first-call times, and `EDGE_DIR` takes the Cloudflare tables from an edge run analysed in its own folder:
 
 ```sh
-RESULTS_DIR=results/hetzner-ccx33-ash node report/build-report.mjs
+RESULTS_DIR=results/hetzner-ccx33-ash COMPARE_DIR=results/shared-xeon-4vcpu \
+  COMPARE_LABEL="a shared 4-vCPU Intel Xeon cloud VM measured the same way" COMPARE_SHORT="Shared Xeon VM" \
+  node report/build-report.mjs
 ```
 
 ## Caveats
