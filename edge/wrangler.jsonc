@@ -5,9 +5,7 @@
 	"name": "emdash-plugin-size-bench",
 	"main": "src/index.js",
 	"compatibility_date": "2026-08-20",
-	// enable_ctx_exports: the plugin bridge is made from this Worker's own exports,
-	// as EmDash does; a deploy without the flag had no callable BenchBridge.
-	"compatibility_flags": ["nodejs_compat", "enable_ctx_exports"],
+	"compatibility_flags": ["nodejs_compat"],
 	"worker_loaders": [{ "binding": "LOADER" }],
 	"assets": { "directory": "../payloads", "binding": "ASSETS", "run_worker_first": true },
 	"limits": { "cpu_ms": 300000 },

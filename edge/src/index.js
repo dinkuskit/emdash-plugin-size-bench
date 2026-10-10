@@ -2,14 +2,15 @@
 // and limits EmDash's CloudflareSandboxRunner uses (wrapper.js is EmDash's
 // generated wrapper, saved by the local harness's "wrapper" suite).
 //
-// The bridge binding is made the way EmDash's runner makes it (getPluginBridge
-// in @emdash-cms/cloudflare: exports.PluginBridge({ props })). Cloudflare's docs
-// tie these exports to the enable_ctx_exports compatibility flag, and a deploy
-// without it had no callable BenchBridge, so wrangler.jsonc sets it. If the
-// runtime still offers no callable entrypoint, the plugin gets a plain
-// placeholder instead: the benchmark routes never call the bridge, so load
-// times are unaffected. Every /run response says which one was used, and
-// /diag shows what the runtime offered.
+// The bridge binding is made the way EmDash's runner makes it: from the
+// Worker's own exports (getPluginBridge in @emdash-cms/cloudflare:
+// exports.PluginBridge({ props })), once per request in the request itself,
+// and handed to Worker Loader's callback ready-made. Making it inside the
+// callback worked under wrangler dev but not on deployed Workers. If the
+// runtime offers no callable entrypoint, the plugin gets a plain placeholder
+// instead: the benchmark routes never call the bridge, so load times are
+// unaffected. Every /run response says which one was used, and /diag shows
+// what the runtime offered.
 import { WorkerEntrypoint, exports } from "cloudflare:workers";
 import WRAPPER from "./wrapper.js.txt";
 
