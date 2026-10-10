@@ -1,7 +1,10 @@
-// Builds report/plugin-size-benchmark.html from results/summary.json.
+// Builds report/plugin-size-benchmark.html from $RESULTS_DIR/summary.json
+// (default results/). COMPARE_DIR names a second results folder whose first-call
+// times are shown next to these, labelled COMPARE_LABEL / COMPARE_SHORT.
 import { readFileSync, writeFileSync } from "node:fs";
 
-const s = JSON.parse(readFileSync(new URL(`../${process.env.RESULTS_DIR ?? "results"}/summary.json`, import.meta.url), "utf8"));
+const load = (dir) => JSON.parse(readFileSync(new URL(`../${dir}/summary.json`, import.meta.url), "utf8"));
+const s = load(process.env.RESULTS_DIR ?? "results");
 const tpl = readFileSync(new URL("./template.html", import.meta.url), "utf8");
 
 // o/o90/omin: outside high-resolution clock; x/xr: extra over the paired tiny
@@ -18,6 +21,16 @@ const data = {
 	machine: s.machine ? { label: s.machine.hostLabel, cpu: s.machine.cpuModel, cpus: s.machine.cpus, memGb: s.machine.memGb, platform: s.machine.platform, passes: s.machine.passes, cold: s.machine.coldPerPass } : null,
 	bisect: (s.edgeBisect ?? []).map((r) => ({ n: r.payload, s: r.shape, b: r.bytes, cpu: r.minCpuMs, note: r.note })),
 	edge: (s.edge ?? []).map((r) => ({ n: r.payload, s: r.shape, b: r.bytes, cpu: r.cpuMs, p50: r.coldP50, p90: r.coldP90, w: r.warmP50, failed: r.failed, total: r.total, err: r.firstError })),
+	compare: process.env.COMPARE_DIR
+		? (() => {
+				const c = load(process.env.COMPARE_DIR);
+				return {
+					label: process.env.COMPARE_LABEL ?? c.machine?.hostLabel ?? process.env.COMPARE_DIR,
+					short: process.env.COMPARE_SHORT ?? "Other machine",
+					rows: c.table.map((t) => ({ n: t.payload, p50: t.coldP50, o: t.outerP50 ?? null })),
+				};
+			})()
+		: null,
 };
 writeFileSync(new URL("./plugin-size-benchmark.html", import.meta.url), tpl.replace("/*__DATA__*/null", JSON.stringify(data)));
 console.log("ok", JSON.stringify(data).length);

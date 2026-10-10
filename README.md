@@ -32,7 +32,7 @@ Each call is timed two ways. `Date.now()` inside workerd only advances on I/O an
 
 Every cold load in the size matrix is paired with a cold load of the smallest possible plugin, taken right next to it, alternating which goes first. The difference ("extra over the tiny plugin") cancels the isolate's fixed start-up cost, the round trip and slow drift in the machine, which leaves the cost that size adds. `analyze.mjs` reports its median with a 95% bootstrap range.
 
-`run-all.mjs` runs the CPU-limit check, then five passes of the size matrix, each in a fresh workerd process with payload order shuffled to spread drift, then the memory and ten-plugin suites. `analyze.mjs` pools the samples (100 cold loads per payload by default; the first published run used 21) and writes `summary.md` and `summary.json` next to the raw rows. `RESULTS_DIR` picks the folder (default `results/`), so runs on different machines sit side by side, each with a `machine.json`.
+`run-all.mjs` runs the CPU-limit check, then five passes of the size matrix with payload order shuffled in each pass to spread drift, then the memory and ten-plugin suites. Each pass starts a fresh workerd process for every four payloads (`CHUNK`), because one process that has loaded more than about a thousand plugin isolates eventually runs out of heap and crashes; a chunk that dies is retried once in a new process. `analyze.mjs` pools the samples (100 cold loads per payload by default; the first published run used 21) and writes `summary.md` and `summary.json` next to the raw rows. `RESULTS_DIR` picks the folder (default `results/`), so runs on different machines sit side by side, each with a `machine.json`.
 
 ```sh
 pnpm install
@@ -49,10 +49,10 @@ node analyze.mjs
 For numbers with less noise, use a Linux box with dedicated cores (for example a Hetzner CCX server, which has AMD EPYC cores like many of Cloudflare's machines) and nothing else running:
 
 ```sh
-RESULTS_DIR=results/hetzner-ccx33-fsn1 ./scripts/run-dedicated.sh
+RESULTS_DIR=results/hetzner-ccx33-ash ./scripts/run-dedicated.sh
 ```
 
-The script installs everything, builds the payloads, sets the CPU governor to `performance` and turns off turbo boost when it has passwordless sudo, keeps CPU 0 free for the operating system, runs every local suite pinned to the other cores, and writes the raw rows, `summary.md`, `machine.json`, a `progress.log` and a `report.html` into `RESULTS_DIR`. Expect one to two hours.
+The script installs everything, builds the payloads, sets the CPU governor to `performance` and turns off turbo boost when it has passwordless sudo, keeps CPU 0 free for the operating system, runs every local suite pinned to the other cores, and writes the raw rows, `summary.md`, `machine.json`, a `progress.log` and a `report.html` into `RESULTS_DIR`. Expect about an hour.
 
 ### Real Cloudflare
 
@@ -69,9 +69,24 @@ cd .. && node analyze.mjs                # adds the "Real Cloudflare" tables
 
 `edge/src/wrapper.js.txt` is EmDash 1.2.0's generated wrapper. It was exported by the harness's `wrapper` suite, so the edge worker loads exactly the module pair the runner loads, at limits of 50 ms (production) and 30 s.
 
+## Results
+
+- `results/hetzner-ccx33-ash/`: a dedicated Hetzner CCX33 server (8 AMD EPYC-Milan vCPUs), 20 to 100 cold loads per payload with the outside clock and paired tiny-plugin loads. Its `NOTES.md` explains the uneven sample counts.
+- `results/`: the first run, on a shared 4-vCPU Intel Xeon VM, 21 cold loads per payload with the inside clock only.
+
+Loading code took 2.2 to 2.9 times as long on the Hetzner server as on the Xeon VM, while a plugin that is one long string took the same time on both. The curves rise the same way on both machines, so read them for shape and for costs relative to an almost empty plugin; only the Real Cloudflare run gives production times.
+
+`report/plugin-size-benchmark.html` shows the Hetzner run with the first run alongside:
+
+```sh
+RESULTS_DIR=results/hetzner-ccx33-ash COMPARE_DIR=results \
+  COMPARE_LABEL="a shared 4-vCPU Intel Xeon cloud VM (the first run)" COMPARE_SHORT="Shared Xeon VM" \
+  node report/build-report.mjs
+```
+
 ## Caveats
 
-- The first published numbers (`results/`) come from one shared 4-vCPU cloud VM (Intel Xeon 2.1 GHz) with 21 samples per payload and only the inside clock. Read them for shape and ratios, not as absolute production latency. Below about 30 ms, run-to-run noise (5 to 20 ms) is as large as the size effect there. Dedicated-machine runs live in their own `results/<machine>/` folders.
+- Absolute times depend heavily on the machine (see Results). In the first run (`results/`), below about 30 ms, run-to-run noise (5 to 20 ms) is as large as the size effect; the Hetzner run's paired loads bring its 95% ranges to within a few percent.
 - RSS per isolate is the workerd process growth divided by eight loaded isolates, so it includes allocator slack.
 - The Node-hosting harness uses a minimal stand-in wrapper and shim module instead of EmDash's generated ones. Those are the same few KB for every plugin, so they do not change the size trend.
 - Network and storage costs that also grow with size are not measured here: downloading the bundle from the Registry at install, and reading `backend.js` from R2 on every host cold start (`loadBundleFromR2`).

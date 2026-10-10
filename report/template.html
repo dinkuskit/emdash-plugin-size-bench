@@ -44,7 +44,8 @@ h1 { font-size: clamp(28px, 5vw, 40px); font-weight: 700; letter-spacing: -0.01e
 h2 { font-size: 22px; font-weight: 600; }
 h3 { font-size: 16px; font-weight: 600; }
 p { margin: 0; }
-section { display: grid; gap: 14px; min-width: 0; }
+section { display: grid; gap: 14px; min-width: 0; align-content: start; }
+[hidden] { display: none !important; }
 .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
 .lede { color: var(--ink-2); font-size: 17px; }
 .meta { font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); }
@@ -87,6 +88,7 @@ pre { font-family: var(--font-mono); font-size: 12px; background: var(--bg); bor
 ol, .prose ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
 .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px; }
 .two > * { min-width: 0; }
+.two td:first-child { white-space: normal; min-width: 9em; }
 footer { color: var(--ink-3); font-size: 13px; }
 </style>
 
@@ -100,14 +102,7 @@ footer { color: var(--ink-3); font-size: 13px; }
 
 	<section>
 		<h2>What we found</h2>
-		<ul class="findings prose">
-			<li><strong>Size only costs on the first call into a new isolate.</strong> Every later call took 0 to 1 ms at every size up to 8 MB.</li>
-			<li><strong>What the code does at load matters more than its bytes.</strong> Code that runs at import costs about <span class="num" id="f-eager"></span> ms per extra MB on this machine. The same code wrapped so it runs later costs about <span class="num" id="f-lazy"></span> ms per MB, and plain data about <span class="num" id="f-data"></span> ms per MB. DinkusKit Commerce (114 KB) loads faster than Inventory's 74 KB build.</li>
-			<li><strong>Up to 256 KB, the first call stays under about 70 ms</strong> even for worst-case code that runs everything at import. 1 MB costs about <span class="num" id="f-1m"></span> ms and 8 MB about <span class="num" id="f-8m"></span> ms.</li>
-			<li><strong>Memory grows about 9 MB per MB of run-at-import code</strong>, on top of about 1.2 MB for an empty isolate. That puts a single plugin near the 128 MB isolate ceiling at roughly 12 to 14 MB of code.</li>
-			<li><strong>Several plugins add up.</strong> On a cold site, ten 1 MB plugins woken one after another (for example, ten save hooks on one content save) took about <span class="num" id="f-10x1m"></span> ms. Ten copies of today's Commerce took <span class="num" id="f-10xc"></span> ms.</li>
-			<li><strong>Local workerd ignores the 50 ms CPU limit</strong>, so whether a big plugin's first call would fail in production is still open. The callout below explains why.</li>
-		</ul>
+		<ul class="findings prose" id="findings"></ul>
 	</section>
 
 	<section>
@@ -123,6 +118,12 @@ footer { color: var(--ink-3); font-size: 13px; }
 		<h2>Real plugins</h2>
 		<p class="prose" id="real-note">Unmodified published bundles. At this size, run-to-run noise (5 to 20 ms) is as large as the size effect, so these mostly show that today's plugins are cheap to load.</p>
 		<div class="table-wrap"><table id="t-real"></table></div>
+	</section>
+
+	<section id="sec-compare" hidden>
+		<h2>Same plugins, two machines</h2>
+		<p class="prose" id="compare-note"></p>
+		<div class="table-wrap"><table id="t-compare"></table></div>
 	</section>
 
 	<section class="callout prose">
@@ -193,34 +194,31 @@ footer { color: var(--ink-3); font-size: 13px; }
 const DATA = /*__DATA__*/null;
 const el = (tag, attrs = {}, text) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
 const svgEl = (tag, attrs = {}) => { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; };
-const size = (b) => b >= 1048576 ? `${+(b / 1048576).toFixed(1)} MB` : `${Math.round(b / 1024)} KB`;
+const size = (b) => b >= 1000 * 1024 ? `${+(b / 1048576).toFixed(1)} MB` : `${Math.round(b / 1024)} KB`;
 const SHAPES = [["eager", "Run at import", "--series-1"], ["lazy", "Run later", "--series-2"], ["data", "Plain data", "--series-3"]];
 const NAMES = { "real-audit-log": "audit-log (upstream)", "real-webhook-notifier": "webhook-notifier (upstream)", "real-atproto": "atproto (upstream)", "real-dinkus-inventory-zodmini": "DinkusKit Inventory, zod/mini", "real-dinkus-commerce": "DinkusKit Commerce", "real-dinkus-inventory": "DinkusKit Inventory, full zod", "real-combo-commerce-inventory-zodmini": "Commerce + Inventory zod/mini, one plugin", "real-combo-commerce-inventory": "Commerce + Inventory, one plugin", "real-combo-x2": "Commerce + Inventory ×2, one plugin", "real-combo-x4": "Commerce + Inventory ×4, one plugin" };
 const label = (n) => NAMES[n] ?? n;
+const niceName = (n) => NAMES[n] ?? (n.startsWith("eager") ? "Run at import" : n.startsWith("lazy") ? "Run later" : n.startsWith("data") ? "Plain data" : n);
 // Runs with the outside high-resolution clock report it (one decimal); older runs only have workerd's 1 ms clock.
 const OUTER = DATA.matrix.some((d) => d.o != null);
 const val = (d) => (OUTER ? d.o : d.p50);
 const val90 = (d) => (OUTER ? d.o90 : d.p90);
 const fmt = (v) => (v == null ? null : Number.isInteger(v) ? String(v) : v.toFixed(1));
-const extra = (d) => (d.x == null ? null : `${fmt(d.x)}${d.xr ? ` (${fmt(d.xr[0])} to ${fmt(d.xr[1])})` : ""}`);
+// Tables keep one decimal throughout when the high-resolution clock is there.
+const fmt1 = (v) => (v == null ? null : OUTER ? v.toFixed(1) : String(v));
+const extra = (d) => (d.x == null ? null : `${fmt1(d.x)}${d.xr ? ` (${fmt1(d.xr[0])} to ${fmt1(d.xr[1])})` : ""}`);
 const byName = Object.fromEntries(DATA.matrix.map((m) => [m.n, m]));
 const fit = Object.fromEntries(DATA.fits.map((f) => [f.shape, f]));
 
 const setNum = (id, v) => { document.getElementById(id).textContent = v ?? "n/a"; };
 const perMB = (shape) => (fit[shape] ? Math.round(fit[shape].msPerMB) : null);
 const at = (name) => (byName[name] ? fmt(val(byName[name])) : null);
-setNum("f-eager", perMB("eager"));
-setNum("f-lazy", perMB("lazy"));
-setNum("f-data", perMB("data"));
-setNum("f-1m", at("eager-1024k"));
-setNum("f-8m", at("eager-8192k"));
-const m10 = (n) => DATA.multi.find((m) => m.payload === n);
-document.getElementById("f-10x1m").textContent = m10("eager-1024k")?.sequentialMs ?? "n/a";
-document.getElementById("f-10xc").textContent = m10("real-dinkus-commerce")?.sequentialMs ?? "n/a";
 document.getElementById("meta").append(` · results ${DATA.generatedAt.slice(0, 10)}`);
 const samples = Math.max(...DATA.matrix.map((d) => d.k));
+const samplesMin = Math.min(...DATA.matrix.map((d) => d.k));
+const samplesText = samplesMin === samples ? String(samples) : `${samplesMin} to ${samples}`;
 document.getElementById("n-plugins").textContent = DATA.matrix.length;
-document.getElementById("n-samples").textContent = samples;
+document.getElementById("n-samples").textContent = samplesText;
 document.getElementById("n-all").textContent = DATA.matrix.length;
 if (OUTER) {
 	document.getElementById("timer-note").textContent = "Each call is timed from outside the sandbox with Node's high-resolution clock, read just before and after the awaited call, and also with Date.now() inside workerd, which only has 1 ms resolution. Every cold load is paired with a cold load of the smallest possible plugin taken right next to it, alternating which goes first; the difference is reported as \"extra over a tiny plugin\" with a 95% bootstrap range of its median. It removes the isolate's fixed start-up cost, the clock round trip and slow drift in the machine.";
@@ -229,7 +227,7 @@ if (OUTER) {
 if (DATA.machine) {
 	const mc = DATA.machine;
 	document.getElementById("machine").textContent = `${mc.label ? `${mc.label}, ` : ""}${mc.cpus} × ${mc.cpu}, ${mc.memGb} GB`;
-	document.getElementById("chart-note").textContent = `Median of ${samples} cold loads per point (${mc.passes} passes × ${mc.cold}, each pass in a fresh workerd with shuffled order)${OUTER ? ", timed from outside the sandbox with a high-resolution clock" : ""}. Log scale across, linear up. Hover or tab through the sizes for exact values.`;
+	document.getElementById("chart-note").textContent = `Median of ${samplesText} cold loads per point (${samplesMin === samples ? "" : "up to "}${mc.passes} passes × ${mc.cold}, in fresh workerd processes with shuffled order${samplesMin === samples ? "" : "; some passes stopped early, see the sample counts at the bottom"})${OUTER ? ", timed from outside the sandbox with a high-resolution clock" : ""}. Log scale across, linear up. Hover or tab through the sizes for exact values.`;
 }
 // Where each shape first crosses 50 ms on this machine.
 {
@@ -240,7 +238,8 @@ if (DATA.machine) {
 	bits.push(e ? `run-at-import code from about ${size(e.b)} would fail on its first call at this machine's speed` : "run-at-import code stayed under 50 ms at every size measured");
 	bits.push(l ? `lazy code would reach that point near ${size(l.b)}` : "lazy code stayed under 50 ms at every size measured");
 	if (realOver) bits.push(`the smallest real plugin over 50 ms here is ${label(realOver.n)} at ${size(realOver.b)} (${fmt(val(realOver))} ms)`);
-	document.getElementById("cross-50").textContent = `On the edge, if parsing and running a module's top level count toward the first call's 50 ms, then ${bits.join("; ")}. ${DATA.bisect?.length ? "The Cloudflare measurements below answer it directly." : "The edge folder in the benchmark measures exactly this on real Cloudflare."}`;
+	const tinyD = byName["real-audit-log"];
+	document.getElementById("cross-50").textContent = `On the edge, if everything the first call does counts toward its 50 ms${tinyD ? `, including the ${fmt(val(tinyD))} ms that even an almost empty plugin needs on this machine` : ""}, then ${bits.join("; ")}. ${DATA.bisect?.length ? "The Cloudflare measurements below answer it directly." : "The edge folder in the benchmark measures exactly this on real Cloudflare."}`;
 }
 
 function table(id, head, rows, opts = {}) {
@@ -257,6 +256,59 @@ function table(id, head, rows, opts = {}) {
 	t.append(tb);
 }
 
+// ---- findings, computed from this run's numbers
+(function findings() {
+	const ul = document.getElementById("findings");
+	const li = (strong, rest) => { const l = el("li"); l.append(el("strong", {}, strong), document.createTextNode(` ${rest}`)); ul.append(l); };
+	const ms = (d) => (d ? `${fmt(val(d))} ms` : "n/a");
+	const warms = DATA.matrix.map((d) => d.w).filter((v) => v != null);
+	li("Size only costs on the first call into a new isolate.", `Every later call took ${Math.min(...warms)} to ${Math.max(...warms)} ms at every size up to 8 MB.`);
+
+	const com = byName["real-dinkus-commerce"], inv = byName["real-dinkus-inventory"], tiny = byName["real-audit-log"];
+	let t = `On this machine, code that runs at import costs about ${perMB("eager")} ms per MB on the first call, the same code wrapped to run later about ${perMB("lazy")} ms per MB, and plain data about ${perMB("data")} ms per MB.`;
+	if (fit.real && DATA.matrix.some((d) => d.n.startsWith("real-combo"))) t += ` Real DinkusKit plugin code costs about ${perMB("real")} ms per MB.`;
+	if (com && inv) t += ` Inventory with full zod (${size(inv.b)}) takes ${ms(inv)} against ${ms(com)} for Commerce (${size(com.b)}), because it builds its validation schemas as it loads.`;
+	li("What the code does as it loads matters more than its size.", t);
+
+	const c1 = byName["real-combo-commerce-inventory"], c2 = byName["real-combo-x2"], c4 = byName["real-combo-x4"];
+	const e256 = byName["eager-256k"], e1m = byName["eager-1024k"], e8m = byName["eager-8192k"];
+	if (c1) li(`Real plugin code at ${size(c1.b)} takes ${ms(c1)} on its first call here.`, `That is Commerce and Inventory bundled into one plugin${tiny ? `, against ${ms(tiny)} for an almost empty plugin` : ""}.${c2 ? ` About ${size(c2.b)} of real code takes ${ms(c2)}` : ""}${c4 ? ` and ${size(c4.b)} takes ${ms(c4)}` : ""}. Code that runs everything at import takes ${ms(e256)} at 256 KB, ${ms(e1m)} at 1 MB and ${ms(e8m)} at 8 MB.`);
+	else li(`Code that runs everything at import takes ${ms(e256)} at 256 KB.`, `1 MB takes ${ms(e1m)} and 8 MB ${ms(e8m)}.`);
+
+	const memEager = DATA.memory.filter((m) => m.payload.startsWith("eager"));
+	if (memEager.length > 1) {
+		const pts = memEager.map((m) => [m.bytes / 1048576, m.perIsolateKb / 1024]);
+		const mx = pts.reduce((a, p) => a + p[0], 0) / pts.length, my = pts.reduce((a, p) => a + p[1], 0) / pts.length;
+		const slope = pts.reduce((a, p) => a + (p[0] - mx) * (p[1] - my), 0) / pts.reduce((a, p) => a + (p[0] - mx) ** 2, 0);
+		const empty = DATA.memory.find((m) => m.payload === "real-audit-log");
+		const memC1 = DATA.memory.find((m) => m.payload === "real-combo-commerce-inventory");
+		li(`Memory grows about ${Math.round(slope)} MB per MB of code that runs at import,`, `on top of about ${empty ? (empty.perIsolateKb / 1024).toFixed(1) : "1"} MB for an empty isolate.${memC1 ? ` Commerce and Inventory bundled (${size(memC1.bytes)}) use ${(memC1.perIsolateKb / 1024).toFixed(1)} MB per isolate.` : ""}`);
+	}
+
+	const m10 = (n) => DATA.multi.find((m) => m.payload === n);
+	const parts = [["real-dinkus-commerce", "Commerce"], ["real-combo-commerce-inventory", "the 243 KB real plugin"], ["eager-1024k", "a 1 MB plugin"]].map(([n, name]) => (m10(n) ? `${m10(n).sequentialMs} ms for ten copies of ${name}` : null)).filter(Boolean);
+	if (parts.length) li("Plugins woken together still load one after another.", `On a cold site, ten fresh plugins called at once took about as long as ten called in a row (for example ten save hooks on one content save): ${parts.join(", ")}.`);
+
+	if (DATA.bisect?.length) li("Cloudflare's own CPU limit was measured directly.", "The table below gives, for each plugin, the smallest CPU limit it still loads under on the edge.");
+	else li("Local workerd ignores the 50 ms CPU limit,", "so whether a big plugin's first call would fail in production is still open. The callout below explains why.");
+})();
+
+// ---- the same plugins on another machine, when the report was built with one
+if (DATA.compare) {
+	const other = Object.fromEntries(DATA.compare.rows.map((r) => [r.n, r]));
+	const rows = ["real-audit-log", "real-dinkus-commerce", "eager-256k", "eager-1024k", "lazy-1024k", "data-1024k"].filter((n) => byName[n] && other[n]);
+	// Like with like: the outside clock when both runs have it, otherwise workerd's own clock.
+	const both = rows.every((n) => byName[n].o != null && other[n].o != null);
+	const here = (n) => (both ? byName[n].o : byName[n].p50);
+	const there = (n) => (both ? other[n].o : other[n].p50);
+	const ratio = (n) => here(n) / there(n);
+	const code = rows.filter((n) => !n.startsWith("data")).map(ratio).sort((a, b) => a - b);
+	const dataR = rows.includes("data-1024k") ? ratio("data-1024k") : null;
+	document.getElementById("sec-compare").hidden = false;
+	document.getElementById("compare-note").textContent = `This machine took ${code[0].toFixed(1)} to ${code[code.length - 1].toFixed(1)} times as long as ${DATA.compare.label} to load the same plugins${dataR != null && dataR < 1.5 ? `, while the plain-data plugin, which mostly parses one long string, took about the same (${dataR.toFixed(1)}×)` : ""}. Every curve keeps its shape, so read the times on this page as relative costs. What production pays depends on the machine, and only a run on Cloudflare measures that.${both ? "" : " Both columns here use workerd's own 1 ms clock, the only one the other run recorded."}`;
+	table("t-compare", ["Plugin", "Size", "This machine", DATA.compare.short, "Ratio"], rows.map((n) => [niceName(n), size(byName[n].b), `${fmt(here(n))} ms`, `${fmt(there(n))} ms`, `${ratio(n).toFixed(1)}×`]));
+}
+
 // ---- chart
 (function chart() {
 	const host = document.getElementById("chart-cold");
@@ -265,7 +317,7 @@ function table(id, head, rows, opts = {}) {
 	{ const s = el("span"); s.append(el("i", { class: "dot" }), document.createTextNode("Real plugin")); leg.append(s); }
 	{ const s = el("span"); s.append(el("i", { class: "ref" }), document.createTextNode("50 ms CPU limit per call")); leg.append(s); }
 
-	const W = 800, H = 380, m = { l: 52, r: 118, t: 14, b: 40 };
+	const W = 800, H = 380, m = { l: 64, r: 118, t: 14, b: 40 };
 	const xs = (b) => m.l + (Math.log2(b / 4096) / Math.log2(8388608 / 4096)) * (W - m.l - m.r);
 	const yMax = Math.max(100, Math.ceil(Math.max(...DATA.matrix.map(val)) / 100) * 100);
 	const ys = (v) => H - m.b - (v / yMax) * (H - m.t - m.b);
@@ -343,15 +395,15 @@ function table(id, head, rows, opts = {}) {
 
 // ---- tables
 const real = DATA.matrix.filter((d) => d.s === "real").sort((a, b) => a.b - b.b);
-if (OUTER) table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Extra over a tiny plugin (95% range)", "Later calls"], real.map((d) => [label(d.n), size(d.b), fmt(val(d)), fmt(val90(d)), extra(d), d.w]));
+if (OUTER) table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Extra over a tiny plugin (95% range)", "Later calls"], real.map((d) => [label(d.n), size(d.b), fmt1(val(d)), fmt1(val90(d)), extra(d), d.w]));
 else table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Later calls"], real.map((d) => [label(d.n), size(d.b), d.p50, d.p90, d.w]));
 
 const limLabel = { quick: "Returns at once", "spin-at-import": "Spins 3 s at import", "spin-in-route": "Spins 2 s in the route" };
 table("t-limits", ["Test plugin", "Limits", "First call", "Error", "Second call", "Error"], DATA.limits.map((l) => [limLabel[l.payload] ?? l.payload, l.limits === "prod" ? "EmDash default (50 ms)" : "120 s", l.coldMs, l.coldError ?? "none", l.warmMs, l.warmError ?? "none"]));
 
-const memName = (n) => NAMES[n] ?? `${n.startsWith("eager") ? "Run at import" : n.startsWith("lazy") ? "Run later" : "Plain data"}`;
+const memName = niceName;
 table("t-mem", ["Plugin", "Size", "Per isolate"], DATA.memory.map((m) => [memName(m.payload), size(m.bytes), `${(m.perIsolateKb / 1024).toFixed(1)} MB`]));
-table("t-multi", ["Plugin", "Size each", "In a row", "At once"], DATA.multi.map((m) => [m.payload.startsWith("eager") ? "Run at import" : label(m.payload), size(m.bytes), `${m.sequentialMs} ms`, `${m.parallelMs} ms`]));
+table("t-multi", ["Plugin", "Size each", "In a row", "At once"], DATA.multi.map((m) => [niceName(m.payload), size(m.bytes), `${m.sequentialMs} ms`, `${m.parallelMs} ms`]));
 
 const counts = [...new Set(DATA.node.map((n) => n.c))].sort((a, b) => a - b);
 const nodeRows = [...new Set(DATA.node.map((n) => n.n))].map((name) => {
@@ -362,7 +414,7 @@ table("t-node", ["Plugin", "Size each", ...counts.map((c) => `${c} plugin${c > 1
 
 const shapeName = { eager: "Run at import", lazy: "Run later", data: "Plain data", real: "Real" };
 const all = [...DATA.matrix].sort((a, b) => ["real", "eager", "lazy", "data"].indexOf(a.s) - ["real", "eager", "lazy", "data"].indexOf(b.s) || a.b - b.b);
-if (OUTER) table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Extra over a tiny plugin (95% range)", "Inside clock, median", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), fmt(d.o), fmt(d.o90), fmt(d.omin), extra(d), d.p50, d.same, d.w, d.k]), { mono: [0] });
+if (OUTER) table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Extra over a tiny plugin (95% range)", "Inside clock, median", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), fmt1(d.o), fmt1(d.o90), fmt1(d.omin), extra(d), d.p50, d.same, d.w, d.k]), { mono: [0] });
 else table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), d.p50, d.p90, d.min, d.same, d.w, d.k]), { mono: [0] });
 
 if (DATA.bisect?.length) {

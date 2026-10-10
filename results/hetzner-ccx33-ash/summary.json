@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-10T00:11:22.500Z",
+  "generatedAt": "2026-10-10T00:20:19.272Z",
   "machine": {
     "startedAt": "2026-10-09T23:40:39.793Z",
     "hostLabel": "hetzner-ccx33-ash",
@@ -48,6 +48,8 @@
       "coldP90": 24,
       "coldMin": 20,
       "outerP50": 24.8,
+      "outerP90": 28.3,
+      "outerMin": 23.9,
       "outerRange": [
         24.4,
         25.2
@@ -71,6 +73,8 @@
       "coldP90": 25,
       "coldMin": 20,
       "outerP50": 27.3,
+      "outerP90": 28.5,
+      "outerMin": 22.9,
       "outerRange": [
         24.1,
         27.8
@@ -94,6 +98,8 @@
       "coldP90": 26,
       "coldMin": 21,
       "outerP50": 27.8,
+      "outerP90": 30.2,
+      "outerMin": 25.8,
       "outerRange": [
         27.4,
         28
@@ -117,6 +123,8 @@
       "coldP90": 25,
       "coldMin": 20,
       "outerP50": 26,
+      "outerP90": 28.7,
+      "outerMin": 24.3,
       "outerRange": [
         25.7,
         26.3
@@ -140,6 +148,8 @@
       "coldP90": 26,
       "coldMin": 23,
       "outerP50": 27.6,
+      "outerP90": 28.6,
+      "outerMin": 25.8,
       "outerRange": [
         27.3,
         27.9
@@ -163,6 +173,8 @@
       "coldP90": 29,
       "coldMin": 24,
       "outerP50": 31.6,
+      "outerP90": 32.9,
+      "outerMin": 29.3,
       "outerRange": [
         31,
         31.9
@@ -186,6 +198,8 @@
       "coldP90": 29,
       "coldMin": 24,
       "outerP50": 30.7,
+      "outerP90": 32.9,
+      "outerMin": 27.1,
       "outerRange": [
         30.4,
         30.9
@@ -209,6 +223,8 @@
       "coldP90": 33,
       "coldMin": 28,
       "outerP50": 34.6,
+      "outerP90": 36.4,
+      "outerMin": 31.6,
       "outerRange": [
         34.2,
         35.1
@@ -232,6 +248,8 @@
       "coldP90": 35,
       "coldMin": 29,
       "outerP50": 36.6,
+      "outerP90": 38.8,
+      "outerMin": 32.7,
       "outerRange": [
         34.9,
         37.3
@@ -255,6 +273,8 @@
       "coldP90": 40,
       "coldMin": 32,
       "outerP50": 40.9,
+      "outerP90": 43.3,
+      "outerMin": 35.6,
       "outerRange": [
         37.8,
         42.1
@@ -278,6 +298,8 @@
       "coldP90": 43,
       "coldMin": 35,
       "outerP50": 43.6,
+      "outerP90": 46.8,
+      "outerMin": 38.5,
       "outerRange": [
         42.7,
         45.1
@@ -301,6 +323,8 @@
       "coldP90": 51,
       "coldMin": 44,
       "outerP50": 52.1,
+      "outerP90": 54.8,
+      "outerMin": 47.7,
       "outerRange": [
         51,
         53.1
@@ -324,6 +348,8 @@
       "coldP90": 62,
       "coldMin": 46,
       "outerP50": 59.1,
+      "outerP90": 66.8,
+      "outerMin": 48.6,
       "outerRange": [
         57.6,
         60
@@ -347,6 +373,8 @@
       "coldP90": 94,
       "coldMin": 75,
       "outerP50": 86.2,
+      "outerP90": 98.3,
+      "outerMin": 78.5,
       "outerRange": [
         84.5,
         93.9
@@ -370,6 +398,8 @@
       "coldP90": 190,
       "coldMin": 135,
       "outerP50": 144.5,
+      "outerP90": 194.9,
+      "outerMin": 138.8,
       "outerRange": [
         142.8,
         147.9
@@ -393,6 +423,8 @@
       "coldP90": 28,
       "coldMin": 23,
       "outerP50": 29.5,
+      "outerP90": 31.4,
+      "outerMin": 27.3,
       "outerRange": [
         29.2,
         29.8
@@ -416,6 +448,8 @@
       "coldP90": 30,
       "coldMin": 25,
       "outerP50": 30.7,
+      "outerP90": 32.9,
+      "outerMin": 28.8,
       "outerRange": [
         30.1,
         31.6
@@ -439,6 +473,8 @@
       "coldP90": 52,
       "coldMin": 48,
       "outerP50": 53.9,
+      "outerP90": 56.1,
+      "outerMin": 51.4,
       "outerRange": [
         53.6,
         54.7
@@ -462,6 +498,8 @@
       "coldP90": 61,
       "coldMin": 54,
       "outerP50": 61.6,
+      "outerP90": 65.2,
+      "outerMin": 58.4,
       "outerRange": [
         61.1,
         62
@@ -485,6 +523,8 @@
       "coldP90": 65,
       "coldMin": 64,
       "outerP50": 68.4,
+      "outerP90": 69.4,
+      "outerMin": 67.3,
       "outerRange": [
         68.1,
         68.7
@@ -508,6 +548,8 @@
       "coldP90": 170,
       "coldMin": 155,
       "outerP50": 168.4,
+      "outerP90": 173.3,
+      "outerMin": 159.4,
       "outerRange": [
         164.9,
         170.2
@@ -531,6 +573,8 @@
       "coldP90": 194,
       "coldMin": 185,
       "outerP50": 194.5,
+      "outerP90": 200.5,
+      "outerMin": 189.2,
       "outerRange": [
         192.1,
         197.8
@@ -554,6 +598,8 @@
       "coldP90": 229,
       "coldMin": 218,
       "outerP50": 226.4,
+      "outerP90": 232.7,
+      "outerMin": 222.1,
       "outerRange": [
         225.9,
         227.3
@@ -577,6 +623,8 @@
       "coldP90": 284,
       "coldMin": 267,
       "outerP50": 280.7,
+      "outerP90": 288.1,
+      "outerMin": 271.7,
       "outerRange": [
         278.2,
         282.3
@@ -600,6 +648,8 @@
       "coldP90": 389,
       "coldMin": 360,
       "outerP50": 385.4,
+      "outerP90": 393.2,
+      "outerMin": 363.6,
       "outerRange": [
         375.9,
         387.7
@@ -623,6 +673,8 @@
       "coldP90": 514,
       "coldMin": 490,
       "outerP50": 505.8,
+      "outerP90": 517.9,
+      "outerMin": 494.3,
       "outerRange": [
         502.7,
         510.4
@@ -646,6 +698,8 @@
       "coldP90": 643,
       "coldMin": 599,
       "outerP50": 629.7,
+      "outerP90": 646.6,
+      "outerMin": 603.3,
       "outerRange": [
         619.3,
         632.4
@@ -669,6 +723,8 @@
       "coldP90": 826,
       "coldMin": 770,
       "outerP50": 803.6,
+      "outerP90": 830.1,
+      "outerMin": 775.1,
       "outerRange": [
         787.4,
         806.7
@@ -692,6 +748,8 @@
       "coldP90": 1431,
       "coldMin": 1356,
       "outerP50": 1384.3,
+      "outerP90": 1435,
+      "outerMin": 1359.1,
       "outerRange": [
         1377.7,
         1390.5
@@ -715,6 +773,8 @@
       "coldP90": 2397,
       "coldMin": 2350,
       "outerP50": 2384.2,
+      "outerP90": 2400.7,
+      "outerMin": 2353.9,
       "outerRange": [
         2371.5,
         2385.8
@@ -738,6 +798,8 @@
       "coldP90": 24,
       "coldMin": 21,
       "outerP50": 26.8,
+      "outerP90": 27.8,
+      "outerMin": 24.4,
       "outerRange": [
         26.6,
         27.1
@@ -761,6 +823,8 @@
       "coldP90": 27,
       "coldMin": 24,
       "outerP50": 29,
+      "outerP90": 30.6,
+      "outerMin": 27.1,
       "outerRange": [
         28.6,
         29.3
@@ -784,6 +848,8 @@
       "coldP90": 31,
       "coldMin": 28,
       "outerP50": 33.2,
+      "outerP90": 35,
+      "outerMin": 31.6,
       "outerRange": [
         32.6,
         33.9
@@ -807,6 +873,8 @@
       "coldP90": 35,
       "coldMin": 31,
       "outerP50": 36.9,
+      "outerP90": 40.1,
+      "outerMin": 35.3,
       "outerRange": [
         36.4,
         37.4
@@ -830,6 +898,8 @@
       "coldP90": 39,
       "coldMin": 33,
       "outerP50": 39.8,
+      "outerP90": 42.8,
+      "outerMin": 37,
       "outerRange": [
         39.5,
         40.1
@@ -853,6 +923,8 @@
       "coldP90": 49,
       "coldMin": 43,
       "outerP50": 50.3,
+      "outerP90": 52.9,
+      "outerMin": 45.7,
       "outerRange": [
         50.1,
         50.6
@@ -876,6 +948,8 @@
       "coldP90": 61,
       "coldMin": 54,
       "outerP50": 61.5,
+      "outerP90": 64.7,
+      "outerMin": 58.7,
       "outerRange": [
         60.4,
         62.5
@@ -899,6 +973,8 @@
       "coldP90": 76,
       "coldMin": 71,
       "outerP50": 76.5,
+      "outerP90": 79.8,
+      "outerMin": 74.7,
       "outerRange": [
         76.1,
         77.2
@@ -922,6 +998,8 @@
       "coldP90": 92,
       "coldMin": 83,
       "outerP50": 93.1,
+      "outerP90": 95.3,
+      "outerMin": 87.2,
       "outerRange": [
         92.1,
         93.7
@@ -945,6 +1023,8 @@
       "coldP90": 118,
       "coldMin": 109,
       "outerP50": 118.1,
+      "outerP90": 122.6,
+      "outerMin": 112.2,
       "outerRange": [
         117,
         118.7
@@ -968,6 +1048,8 @@
       "coldP90": 147,
       "coldMin": 138,
       "outerP50": 145.8,
+      "outerP90": 151.2,
+      "outerMin": 142,
       "outerRange": [
         145,
         147.1
@@ -991,6 +1073,8 @@
       "coldP90": 193,
       "coldMin": 176,
       "outerP50": 191.9,
+      "outerP90": 197.7,
+      "outerMin": 180.2,
       "outerRange": [
         188,
         192.8
@@ -1014,6 +1098,8 @@
       "coldP90": 253,
       "coldMin": 235,
       "outerP50": 247.1,
+      "outerP90": 256.5,
+      "outerMin": 238.7,
       "outerRange": [
         245.2,
         248.2
@@ -1037,6 +1123,8 @@
       "coldP90": 483,
       "coldMin": 434,
       "outerP50": 463.5,
+      "outerP90": 488.1,
+      "outerMin": 438.4,
       "outerRange": [
         458.6,
         469
@@ -1060,6 +1148,8 @@
       "coldP90": 922,
       "coldMin": 837,
       "outerP50": 882,
+      "outerP90": 926,
+      "outerMin": 841.3,
       "outerRange": [
         871.3,
         892.3
@@ -1083,6 +1173,8 @@
       "coldP90": 25,
       "coldMin": 22,
       "outerP50": 26.8,
+      "outerP90": 28.8,
+      "outerMin": 25.8,
       "outerRange": [
         26.6,
         27.5
@@ -1106,6 +1198,8 @@
       "coldP90": 26,
       "coldMin": 22,
       "outerP50": 27.2,
+      "outerP90": 29.5,
+      "outerMin": 25.7,
       "outerRange": [
         26.9,
         28.3
@@ -1129,6 +1223,8 @@
       "coldP90": 28,
       "coldMin": 24,
       "outerP50": 30,
+      "outerP90": 32.1,
+      "outerMin": 27.6,
       "outerRange": [
         29.1,
         30.7
@@ -1152,6 +1248,8 @@
       "coldP90": 76,
       "coldMin": 72,
       "outerP50": 77.5,
+      "outerP90": 79.3,
+      "outerMin": 75.4,
       "outerRange": [
         76.5,
         78.2
@@ -1175,6 +1273,8 @@
       "coldP90": 46,
       "coldMin": 41,
       "outerP50": 46.6,
+      "outerP90": 48.9,
+      "outerMin": 45,
       "outerRange": [
         46.1,
         46.8
@@ -1198,6 +1298,8 @@
       "coldP90": 116,
       "coldMin": 102,
       "outerP50": 111.8,
+      "outerP90": 121.9,
+      "outerMin": 105.2,
       "outerRange": [
         110.7,
         115
@@ -1221,6 +1323,8 @@
       "coldP90": 100,
       "coldMin": 81,
       "outerP50": 90.6,
+      "outerP90": 103.5,
+      "outerMin": 84.7,
       "outerRange": [
         90.3,
         91.3
@@ -1244,6 +1348,8 @@
       "coldP90": 135,
       "coldMin": 119,
       "outerP50": 130.8,
+      "outerP90": 139.1,
+      "outerMin": 123.4,
       "outerRange": [
         127.3,
         133.8
@@ -1267,6 +1373,8 @@
       "coldP90": 221,
       "coldMin": 199,
       "outerP50": 217.9,
+      "outerP90": 224.5,
+      "outerMin": 202.6,
       "outerRange": [
         215.9,
         220.2
@@ -1290,6 +1398,8 @@
       "coldP90": 400,
       "coldMin": 363,
       "outerP50": 385,
+      "outerP90": 403.8,
+      "outerMin": 367.8,
       "outerRange": [
         377.9,
         391.2

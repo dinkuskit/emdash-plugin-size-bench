@@ -44,7 +44,8 @@ h1 { font-size: clamp(28px, 5vw, 40px); font-weight: 700; letter-spacing: -0.01e
 h2 { font-size: 22px; font-weight: 600; }
 h3 { font-size: 16px; font-weight: 600; }
 p { margin: 0; }
-section { display: grid; gap: 14px; min-width: 0; }
+section { display: grid; gap: 14px; min-width: 0; align-content: start; }
+[hidden] { display: none !important; }
 .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
 .lede { color: var(--ink-2); font-size: 17px; }
 .meta { font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); }
@@ -87,6 +88,7 @@ pre { font-family: var(--font-mono); font-size: 12px; background: var(--bg); bor
 ol, .prose ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
 .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px; }
 .two > * { min-width: 0; }
+.two td:first-child { white-space: normal; min-width: 9em; }
 footer { color: var(--ink-3); font-size: 13px; }
 </style>
 
@@ -94,20 +96,13 @@ footer { color: var(--ink-3); font-size: 13px; }
 	<header style="display:grid;gap:12px">
 		<div class="eyebrow">EmDash 1.2.0 · sandboxed plugins</div>
 		<h1>Plugin Size Benchmark</h1>
-		<p class="lede prose">How much does a bigger sandboxed (Registry) plugin cost to load? We loaded 57 plugins, from 5 KB to 8 MB, through EmDash's own <code>CloudflareSandboxRunner</code> and Worker Loader, 21 times each in fresh isolates, and measured the first call, later calls, memory, sites with ten plugins, and Node hosting.</p>
-		<p class="meta" id="meta">Prepared by DinkusKit for the EmDash maintainers · local workerd 1.20261006.1 on a 4-vCPU Xeon VM</p>
+		<p class="lede prose">How much does a bigger sandboxed (Registry) plugin cost to load? We loaded <span id="n-plugins">57</span> plugins, from 5 KB to 8 MB, through EmDash's own <code>CloudflareSandboxRunner</code> and Worker Loader, <span id="n-samples">21</span> times each in fresh isolates, and measured the first call, later calls, memory, sites with ten plugins, and Node hosting.</p>
+		<p class="meta" id="meta">Prepared by DinkusKit for the EmDash maintainers · local workerd 1.20261006.1 on <span id="machine">a 4-vCPU Xeon VM</span></p>
 	</header>
 
 	<section>
 		<h2>What we found</h2>
-		<ul class="findings prose">
-			<li><strong>Size only costs on the first call into a new isolate.</strong> Every later call took 0 to 1 ms at every size up to 8 MB.</li>
-			<li><strong>What the code does at load matters more than its bytes.</strong> Code that runs at import costs about <span class="num" id="f-eager"></span> ms per extra MB on this machine. The same code wrapped so it runs later costs about <span class="num" id="f-lazy"></span> ms per MB, and plain data about <span class="num" id="f-data"></span> ms per MB. DinkusKit Commerce (114 KB) loads faster than Inventory's 74 KB build.</li>
-			<li><strong>Up to 256 KB, the first call stays under about 70 ms</strong> even for worst-case code that runs everything at import. 1 MB costs about <span class="num" id="f-1m"></span> ms and 8 MB about <span class="num" id="f-8m"></span> ms.</li>
-			<li><strong>Memory grows about 9 MB per MB of run-at-import code</strong>, on top of about 1.2 MB for an empty isolate. That puts a single plugin near the 128 MB isolate ceiling at roughly 12 to 14 MB of code.</li>
-			<li><strong>Several plugins add up.</strong> On a cold site, ten 1 MB plugins woken one after another (for example, ten save hooks on one content save) took about <span class="num" id="f-10x1m"></span> ms. Ten copies of today's Commerce took <span class="num" id="f-10xc"></span> ms.</li>
-			<li><strong>Local workerd ignores the 50 ms CPU limit</strong>, so whether a big plugin's first call would fail in production is still open. The callout below explains why.</li>
-		</ul>
+		<ul class="findings prose" id="findings"></ul>
 	</section>
 
 	<section>
@@ -115,20 +110,37 @@ footer { color: var(--ink-3); font-size: 13px; }
 		<div class="figure" id="fig-cold">
 			<div class="legend" id="legend-cold"></div>
 			<div id="chart-cold"></div>
-			<p class="meta">Median of 21 cold loads per point (3 passes × 7, each pass in a fresh workerd with shuffled order). Log scale across, linear up. Hover or tab through the sizes for exact values.</p>
+			<p class="meta" id="chart-note">Median of 21 cold loads per point (3 passes × 7, each pass in a fresh workerd with shuffled order). Log scale across, linear up. Hover or tab through the sizes for exact values.</p>
 		</div>
 	</section>
 
 	<section>
 		<h2>Real plugins</h2>
-		<p class="prose">Unmodified published bundles. At this size, run-to-run noise (5 to 20 ms) is as large as the size effect, so these mostly show that today's plugins are cheap to load.</p>
+		<p class="prose" id="real-note">Unmodified published bundles. At this size, run-to-run noise (5 to 20 ms) is as large as the size effect, so these mostly show that today's plugins are cheap to load.</p>
 		<div class="table-wrap"><table id="t-real"></table></div>
+	</section>
+
+	<section id="sec-compare" hidden>
+		<h2>Same plugins, two machines</h2>
+		<p class="prose" id="compare-note"></p>
+		<div class="table-wrap"><table id="t-compare"></table></div>
 	</section>
 
 	<section class="callout prose">
 		<h3>The open question: does start-up count against the 50 ms CPU limit?</h3>
 		<p>EmDash gives each sandboxed call <span class="num">cpuMs: 50</span> through Worker Loader (<code>packages/cloudflare/src/sandbox/runner.ts</code>, <code>DEFAULT_LIMITS</code>). Local workerd does not enforce it: a plugin that spins for 3 seconds at import, or inside a route, still succeeds under the production limits (table below).</p>
-		<p>On the edge, if parsing and running a module's top level count toward the first call's 50 ms, then run-at-import code past roughly 192 KB on this machine's speed would fail on its first call. Lazy code would reach that point near 1 MB. The edge folder in the benchmark measures exactly this on real Cloudflare.</p>
+		<p id="cross-50">On the edge, if parsing and running a module's top level count toward the first call's 50 ms, then run-at-import code past roughly 192 KB on this machine's speed would fail on its first call. Lazy code would reach that point near 1 MB. The edge folder in the benchmark measures exactly this on real Cloudflare.</p>
+	</section>
+
+	<section id="sec-bisect" hidden>
+		<h2>On Cloudflare: the smallest CPU limit each plugin loads under</h2>
+		<p class="prose">Measured on Cloudflare's edge through Worker Loader. For each plugin, the CPU limit was lowered step by step until a fresh isolate could no longer load it and answer (two of three fresh loads at each step). EmDash's default is 50 ms.</p>
+		<div class="table-wrap"><table id="t-bisect"></table></div>
+	</section>
+
+	<section id="sec-edge" hidden>
+		<h2>On Cloudflare: first call by size</h2>
+		<div class="table-wrap"><table id="t-edge"></table></div>
 	</section>
 
 	<section>
@@ -160,7 +172,7 @@ footer { color: var(--ink-3); font-size: 13px; }
 			<li>Each plugin goes through <code>CloudflareSandboxRunner.load()</code> from <code>@emdash-cms/cloudflare@1.2.0</code>, then one <code>invokeRoute()</code>. That is the same Worker Loader binding, generated wrapper and <code>PluginBridge</code> a Cloudflare-hosted site uses. The harness runs inside workerd through <code>@cloudflare/vitest-plugin</code>.</li>
 			<li>Every cold load gets a new isolate key and a unique source comment, so nothing is reused. Loading the same source twice gave the same times, so we saw no compile cache.</li>
 			<li>Synthetic plugins are built from real minified libraries (dayjs, marked, moment, lodash, luxon, rxjs, handlebars, date-fns, acorn, three, typescript) in three shapes. <em>Run at import</em> initialises every library on load, which is what a bundled ESM plugin does. <em>Run later</em> wraps the same code in functions called only on demand. <em>Plain data</em> puts the same bytes in one string.</li>
-			<li>The timer is <code>Date.now()</code> inside workerd around the awaited call. A Node-side clock agreed with it.</li>
+			<li id="timer-note">The timer is <code>Date.now()</code> inside workerd around the awaited call. A Node-side clock agreed with it.</li>
 		</ol>
 		<h3 style="margin-top:8px">Not covered</h3>
 		<ul>
@@ -171,7 +183,7 @@ footer { color: var(--ink-3); font-size: 13px; }
 	</section>
 
 	<details>
-		<summary>Every measurement (57 plugins)</summary>
+		<summary>Every measurement (<span id="n-all">57</span> plugins)</summary>
 		<div class="inner"><div class="table-wrap"><table id="t-all"></table></div></div>
 	</details>
 
@@ -179,25 +191,56 @@ footer { color: var(--ink-3); font-size: 13px; }
 </main>
 
 <script>
-const DATA = {"matrix":[{"n":"data-16k","s":"data","b":16384,"p50":5,"p90":13,"min":4,"w":0,"same":7,"k":21},{"n":"data-32k","s":"data","b":32768,"p50":10,"p90":16,"min":5,"w":0,"same":13,"k":21},{"n":"data-64k","s":"data","b":65536,"p50":5,"p90":6,"min":5,"w":0,"same":5,"k":21},{"n":"data-96k","s":"data","b":98304,"p50":12,"p90":15,"min":4,"w":0,"same":11,"k":21},{"n":"data-128k","s":"data","b":131072,"p50":12,"p90":21,"min":5,"w":0,"same":14,"k":21},{"n":"data-192k","s":"data","b":196608,"p50":12,"p90":17,"min":6,"w":0,"same":14,"k":21},{"n":"data-256k","s":"data","b":262144,"p50":13,"p90":21,"min":4,"w":0,"same":13,"k":21},{"n":"data-384k","s":"data","b":393216,"p50":8,"p90":24,"min":5,"w":0,"same":8,"k":21},{"n":"data-512k","s":"data","b":524288,"p50":7,"p90":31,"min":6,"w":0,"same":6,"k":21},{"n":"data-768k","s":"data","b":786432,"p50":32,"p90":46,"min":5,"w":0,"same":33,"k":21},{"n":"data-1024k","s":"data","b":1048576,"p50":39,"p90":49,"min":9,"w":0,"same":33,"k":21},{"n":"data-1536k","s":"data","b":1572864,"p50":17,"p90":56,"min":9,"w":0,"same":45,"k":21},{"n":"data-2048k","s":"data","b":2097152,"p50":55,"p90":84,"min":10,"w":0,"same":58,"k":21},{"n":"data-4096k","s":"data","b":4194304,"p50":75,"p90":129,"min":21,"w":0,"same":76,"k":21},{"n":"data-8192k","s":"data","b":8388608,"p50":48,"p90":181,"min":39,"w":0,"same":175,"k":21},{"n":"eager-16k","s":"eager","b":16420,"p50":12,"p90":14,"min":6,"w":0,"same":14,"k":21},{"n":"eager-32k","s":"eager","b":32906,"p50":9,"p90":14,"min":6,"w":0,"same":8,"k":21},{"n":"eager-64k","s":"eager","b":65544,"p50":19,"p90":32,"min":9,"w":0,"same":20,"k":21},{"n":"eager-96k","s":"eager","b":98307,"p50":22,"p90":25,"min":19,"w":0,"same":23,"k":21},{"n":"eager-128k","s":"eager","b":131102,"p50":22,"p90":28,"min":15,"w":0,"same":24,"k":21},{"n":"eager-192k","s":"eager","b":196660,"p50":54,"p90":73,"min":31,"w":1,"same":55,"k":21},{"n":"eager-256k","s":"eager","b":262258,"p50":66,"p90":80,"min":60,"w":0,"same":64,"k":21},{"n":"eager-384k","s":"eager","b":393292,"p50":50,"p90":98,"min":41,"w":0,"same":51,"k":21},{"n":"eager-512k","s":"eager","b":524396,"p50":98,"p90":118,"min":59,"w":0,"same":97,"k":21},{"n":"eager-768k","s":"eager","b":786673,"p50":136,"p90":171,"min":87,"w":0,"same":117,"k":21},{"n":"eager-1024k","s":"eager","b":1048682,"p50":172,"p90":222,"min":109,"w":1,"same":139,"k":21},{"n":"eager-1536k","s":"eager","b":1572959,"p50":196,"p90":232,"min":120,"w":0,"same":170,"k":21},{"n":"eager-2048k","s":"eager","b":2097349,"p50":199,"p90":280,"min":132,"w":0,"same":227,"k":21},{"n":"eager-4096k","s":"eager","b":4194652,"p50":421,"p90":550,"min":270,"w":0,"same":471,"k":21},{"n":"eager-8192k","s":"eager","b":8389137,"p50":813,"p90":931,"min":612,"w":0,"same":843,"k":21},{"n":"lazy-16k","s":"lazy","b":16462,"p50":12,"p90":16,"min":10,"w":0,"same":13,"k":21},{"n":"lazy-32k","s":"lazy","b":32776,"p50":13,"p90":17,"min":6,"w":1,"same":12,"k":21},{"n":"lazy-64k","s":"lazy","b":65586,"p50":14,"p90":18,"min":5,"w":0,"same":16,"k":21},{"n":"lazy-96k","s":"lazy","b":98349,"p50":7,"p90":8,"min":6,"w":0,"same":7,"k":21},{"n":"lazy-128k","s":"lazy","b":131144,"p50":15,"p90":21,"min":7,"w":0,"same":11,"k":21},{"n":"lazy-192k","s":"lazy","b":196702,"p50":20,"p90":23,"min":8,"w":0,"same":19,"k":21},{"n":"lazy-256k","s":"lazy","b":262300,"p50":15,"p90":27,"min":13,"w":0,"same":14,"k":21},{"n":"lazy-384k","s":"lazy","b":393334,"p50":24,"p90":42,"min":15,"w":0,"same":19,"k":21},{"n":"lazy-512k","s":"lazy","b":524438,"p50":23,"p90":47,"min":18,"w":1,"same":23,"k":21},{"n":"lazy-768k","s":"lazy","b":786540,"p50":56,"p90":75,"min":27,"w":0,"same":57,"k":21},{"n":"lazy-1024k","s":"lazy","b":1048724,"p50":61,"p90":74,"min":38,"w":0,"same":38,"k":21},{"n":"lazy-1536k","s":"lazy","b":1573001,"p50":55,"p90":86,"min":40,"w":0,"same":60,"k":21},{"n":"lazy-2048k","s":"lazy","b":2097391,"p50":98,"p90":141,"min":52,"w":0,"same":97,"k":21},{"n":"lazy-4096k","s":"lazy","b":4194694,"p50":125,"p90":184,"min":97,"w":0,"same":181,"k":21},{"n":"lazy-8192k","s":"lazy","b":8388997,"p50":371,"p90":450,"min":273,"w":0,"same":348,"k":21},{"n":"real-audit-log","s":"real","b":4905,"p50":11,"p90":21,"min":5,"w":1,"same":11,"k":21},{"n":"real-webhook-notifier","s":"real","b":9911,"p50":13,"p90":17,"min":4,"w":1,"same":12,"k":21},{"n":"real-atproto","s":"real","b":20310,"p50":13,"p90":16,"min":9,"w":1,"same":14,"k":21},{"n":"real-dinkus-inventory-zodmini","s":"real","b":76051,"p50":33,"p90":43,"min":13,"w":1,"same":32,"k":21},{"n":"real-dinkus-commerce","s":"real","b":117068,"p50":19,"p90":44,"min":10,"w":1,"same":18,"k":21},{"n":"real-dinkus-inventory","s":"real","b":131060,"p50":24,"p90":35,"min":21,"w":0,"same":25,"k":21}],"fits":[{"shape":"eager","msPerMB":98.7,"interceptMs":28.3},{"shape":"lazy","msPerMB":42.4,"interceptMs":7.2},{"shape":"data","msPerMB":7.1,"interceptMs":14.4}],"memory":[{"payload":"real-audit-log","bytes":4905,"perIsolateKb":1242,"isolates":8,"errors":0},{"payload":"eager-64k","bytes":65544,"perIsolateKb":1568,"isolates":8,"errors":0},{"payload":"eager-128k","bytes":131102,"perIsolateKb":2185,"isolates":8,"errors":0},{"payload":"eager-256k","bytes":262162,"perIsolateKb":5365,"isolates":8,"errors":0},{"payload":"eager-512k","bytes":524300,"perIsolateKb":5616,"isolates":8,"errors":0},{"payload":"eager-1024k","bytes":1048490,"perIsolateKb":13680,"isolates":8,"errors":0},{"payload":"eager-2048k","bytes":2097157,"perIsolateKb":18700,"isolates":8,"errors":0},{"payload":"eager-4096k","bytes":4194364,"perIsolateKb":36269,"isolates":8,"errors":0},{"payload":"lazy-1024k","bytes":1048532,"perIsolateKb":6402,"isolates":8,"errors":0},{"payload":"lazy-4096k","bytes":4194406,"perIsolateKb":20331,"isolates":8,"errors":0},{"payload":"data-1024k","bytes":1048576,"perIsolateKb":5844,"isolates":8,"errors":0},{"payload":"data-4096k","bytes":4194304,"perIsolateKb":17901,"isolates":8,"errors":0}],"multi":[{"payload":"real-audit-log","bytes":4905,"n":10,"sequentialMs":61,"parallelMs":62,"errors":0},{"payload":"real-dinkus-commerce","bytes":117062,"n":10,"sequentialMs":109,"parallelMs":108,"errors":0},{"payload":"eager-128k","bytes":131102,"n":10,"sequentialMs":172,"parallelMs":169,"errors":0},{"payload":"eager-256k","bytes":262162,"n":10,"sequentialMs":418,"parallelMs":649,"errors":0},{"payload":"eager-512k","bytes":524300,"n":10,"sequentialMs":656,"parallelMs":815,"errors":0},{"payload":"eager-1024k","bytes":1048490,"n":10,"sequentialMs":1052,"parallelMs":1132,"errors":0}],"limits":[{"payload":"quick","limits":"prod","coldMs":7,"coldError":null,"warmMs":1,"warmError":null},{"payload":"quick","limits":"no-cpu-limit","coldMs":6,"coldError":null,"warmMs":0,"warmError":null},{"payload":"spin-at-import","limits":"prod","coldMs":3155,"coldError":null,"warmMs":1,"warmError":null},{"payload":"spin-at-import","limits":"no-cpu-limit","coldMs":2943,"coldError":null,"warmMs":0,"warmError":null},{"payload":"spin-in-route","limits":"prod","coldMs":2087,"coldError":null,"warmMs":2001,"warmError":null},{"payload":"spin-in-route","limits":"no-cpu-limit","coldMs":2125,"coldError":null,"warmMs":2120,"warmError":null}],"node":[{"n":"real-audit-log","s":"real","b":4905,"c":1,"ms":27,"mb":42},{"n":"real-audit-log","s":"real","b":4905,"c":5,"ms":42,"mb":48},{"n":"real-audit-log","s":"real","b":4905,"c":10,"ms":62,"mb":55},{"n":"real-audit-log","s":"real","b":4905,"c":20,"ms":106,"mb":70},{"n":"real-dinkus-commerce","s":"real","b":117068,"c":1,"ms":31,"mb":44},{"n":"real-dinkus-commerce","s":"real","b":117068,"c":5,"ms":56,"mb":54},{"n":"real-dinkus-commerce","s":"real","b":117068,"c":10,"ms":104,"mb":65},{"n":"real-dinkus-commerce","s":"real","b":117068,"c":20,"ms":168,"mb":86},{"n":"eager-128k","s":"eager","b":131102,"c":1,"ms":35,"mb":45},{"n":"eager-128k","s":"eager","b":131102,"c":5,"ms":82,"mb":54},{"n":"eager-128k","s":"eager","b":131102,"c":10,"ms":163,"mb":67},{"n":"eager-128k","s":"eager","b":131102,"c":20,"ms":361,"mb":93},{"n":"eager-256k","s":"eager","b":262258,"c":1,"ms":63,"mb":50},{"n":"eager-256k","s":"eager","b":262258,"c":5,"ms":214,"mb":75},{"n":"eager-256k","s":"eager","b":262258,"c":10,"ms":467,"mb":107},{"n":"eager-256k","s":"eager","b":262258,"c":20,"ms":895,"mb":156},{"n":"eager-512k","s":"eager","b":524396,"c":1,"ms":99,"mb":54},{"n":"eager-512k","s":"eager","b":524396,"c":5,"ms":313,"mb":91},{"n":"eager-512k","s":"eager","b":524396,"c":10,"ms":641,"mb":127},{"n":"eager-512k","s":"eager","b":524396,"c":20,"ms":1411,"mb":213},{"n":"eager-1024k","s":"eager","b":1048682,"c":1,"ms":126,"mb":62},{"n":"eager-1024k","s":"eager","b":1048682,"c":5,"ms":676,"mb":122},{"n":"eager-1024k","s":"eager","b":1048682,"c":10,"ms":1298,"mb":203},{"n":"eager-1024k","s":"eager","b":1048682,"c":20,"ms":2179,"mb":357},{"n":"eager-2048k","s":"eager","b":2097349,"c":1,"ms":190,"mb":78},{"n":"eager-2048k","s":"eager","b":2097349,"c":5,"ms":882,"mb":177},{"n":"eager-2048k","s":"eager","b":2097349,"c":10,"ms":1994,"mb":298},{"n":"eager-2048k","s":"eager","b":2097349,"c":20,"ms":3565,"mb":543},{"n":"eager-4096k","s":"eager","b":4194652,"c":1,"ms":332,"mb":94},{"n":"eager-4096k","s":"eager","b":4194652,"c":5,"ms":1667,"mb":276},{"n":"eager-4096k","s":"eager","b":4194652,"c":10,"ms":3274,"mb":502},{"n":"eager-4096k","s":"eager","b":4194652,"c":20,"ms":6825,"mb":949},{"n":"lazy-1024k","s":"lazy","b":1048724,"c":1,"ms":60,"mb":52},{"n":"lazy-1024k","s":"lazy","b":1048724,"c":5,"ms":187,"mb":85},{"n":"lazy-1024k","s":"lazy","b":1048724,"c":10,"ms":346,"mb":132},{"n":"lazy-1024k","s":"lazy","b":1048724,"c":20,"ms":694,"mb":217},{"n":"data-1024k","s":"data","b":1048576,"c":1,"ms":34,"mb":51},{"n":"data-1024k","s":"data","b":1048576,"c":5,"ms":81,"mb":83},{"n":"data-1024k","s":"data","b":1048576,"c":10,"ms":176,"mb":130},{"n":"data-1024k","s":"data","b":1048576,"c":20,"ms":325,"mb":213}],"generatedAt":"2026-10-09T22:21:51.695Z"};
+const DATA = {"matrix":[{"n":"data-16k","s":"data","b":16384,"p50":21,"p90":24,"min":20,"o":24.8,"o90":28.3,"omin":23.9,"x":0.6,"xr":[0,0.7],"w":1,"same":21,"k":20},{"n":"data-32k","s":"data","b":32768,"p50":23,"p90":25,"min":20,"o":27.3,"o90":28.5,"omin":22.9,"x":0.8,"xr":[0.5,1.3],"w":1,"same":24,"k":40},{"n":"data-64k","s":"data","b":65536,"p50":24,"p90":26,"min":21,"o":27.8,"o90":30.2,"omin":25.8,"x":1.8,"xr":[1.4,2],"w":2,"same":24,"k":60},{"n":"data-96k","s":"data","b":98304,"p50":23,"p90":25,"min":20,"o":26,"o90":28.7,"omin":24.3,"x":2.1,"xr":[1.9,2.2],"w":1,"same":22,"k":60},{"n":"data-128k","s":"data","b":131072,"p50":25,"p90":26,"min":23,"o":27.6,"o90":28.6,"omin":25.8,"x":3.2,"xr":[3.1,3.5],"w":1,"same":24,"k":60},{"n":"data-192k","s":"data","b":196608,"p50":27,"p90":29,"min":24,"o":31.6,"o90":32.9,"omin":29.3,"x":4.6,"xr":[4.4,4.9],"w":2,"same":27,"k":40},{"n":"data-256k","s":"data","b":262144,"p50":27,"p90":29,"min":24,"o":30.7,"o90":32.9,"omin":27.1,"x":6.1,"xr":[5.9,6.4],"w":1,"same":26,"k":100},{"n":"data-384k","s":"data","b":393216,"p50":31,"p90":33,"min":28,"o":34.6,"o90":36.4,"omin":31.6,"x":10,"xr":[9.3,10.3],"w":1,"same":30,"k":60},{"n":"data-512k","s":"data","b":524288,"p50":33,"p90":35,"min":29,"o":36.6,"o90":38.8,"omin":32.7,"x":11.2,"xr":[10.7,13.3],"w":1,"same":31,"k":20},{"n":"data-768k","s":"data","b":786432,"p50":38,"p90":40,"min":32,"o":40.9,"o90":43.3,"omin":35.6,"x":16.8,"xr":[14.3,18.9],"w":1,"same":33,"k":40},{"n":"data-1024k","s":"data","b":1048576,"p50":40,"p90":43,"min":35,"o":43.6,"o90":46.8,"omin":38.5,"x":20.2,"xr":[19.7,21.6],"w":1,"same":37,"k":60},{"n":"data-1536k","s":"data","b":1572864,"p50":49,"p90":51,"min":44,"o":52.1,"o90":54.8,"omin":47.7,"x":29.3,"xr":[27,30],"w":1,"same":47,"k":40},{"n":"data-2048k","s":"data","b":2097152,"p50":56,"p90":62,"min":46,"o":59.1,"o90":66.8,"omin":48.6,"x":35.8,"xr":[34.9,37],"w":1,"same":53,"k":60},{"n":"data-4096k","s":"data","b":4194304,"p50":83,"p90":94,"min":75,"o":86.2,"o90":98.3,"omin":78.5,"x":62.3,"xr":[61.1,67.6],"w":2,"same":94,"k":40},{"n":"data-8192k","s":"data","b":8388608,"p50":140,"p90":190,"min":135,"o":144.5,"o90":194.9,"omin":138.8,"x":120.8,"xr":[119.2,122.7],"w":1,"same":138,"k":60},{"n":"eager-16k","s":"eager","b":16420,"p50":26,"p90":28,"min":23,"o":29.5,"o90":31.4,"omin":27.3,"x":4.5,"xr":[4.3,4.8],"w":1,"same":25,"k":100},{"n":"eager-32k","s":"eager","b":32906,"p50":28,"p90":30,"min":25,"o":30.7,"o90":32.9,"omin":28.8,"x":7.1,"xr":[6.7,8],"w":1,"same":27,"k":20},{"n":"eager-64k","s":"eager","b":65544,"p50":50,"p90":52,"min":48,"o":53.9,"o90":56.1,"omin":51.4,"x":28.3,"xr":[28,28.7],"w":1,"same":50,"k":80},{"n":"eager-96k","s":"eager","b":98307,"p50":58,"p90":61,"min":54,"o":61.6,"o90":65.2,"omin":58.4,"x":35.6,"xr":[35.3,36.1],"w":1,"same":59,"k":80},{"n":"eager-128k","s":"eager","b":131102,"p50":64,"p90":65,"min":64,"o":68.4,"o90":69.4,"omin":67.3,"x":43.7,"xr":[43.6,43.9],"w":1,"same":64,"k":40},{"n":"eager-192k","s":"eager","b":196660,"p50":164,"p90":170,"min":155,"o":168.4,"o90":173.3,"omin":159.4,"x":142.4,"xr":[140.5,144.6],"w":1,"same":163,"k":80},{"n":"eager-256k","s":"eager","b":262258,"p50":190,"p90":194,"min":185,"o":194.5,"o90":200.5,"omin":189.2,"x":167.6,"xr":[165.2,170.4],"w":2,"same":187,"k":20},{"n":"eager-384k","s":"eager","b":393292,"p50":222,"p90":229,"min":218,"o":226.4,"o90":232.7,"omin":222.1,"x":201.7,"xr":[200.9,202.7],"w":1,"same":221,"k":80},{"n":"eager-512k","s":"eager","b":524396,"p50":276,"p90":284,"min":267,"o":280.7,"o90":288.1,"omin":271.7,"x":255,"xr":[252.8,256.3],"w":1,"same":276,"k":80},{"n":"eager-768k","s":"eager","b":786673,"p50":381,"p90":389,"min":360,"o":385.4,"o90":393.2,"omin":363.6,"x":358.9,"xr":[351.6,360.9],"w":1,"same":373,"k":60},{"n":"eager-1024k","s":"eager","b":1048682,"p50":501,"p90":514,"min":490,"o":505.8,"o90":517.9,"omin":494.3,"x":480.4,"xr":[477.4,484.6],"w":1,"same":498,"k":60},{"n":"eager-1536k","s":"eager","b":1572959,"p50":625,"p90":643,"min":599,"o":629.7,"o90":646.6,"omin":603.3,"x":603.3,"xr":[595,606.5],"w":2,"same":625,"k":40},{"n":"eager-2048k","s":"eager","b":2097349,"p50":799,"p90":826,"min":770,"o":803.6,"o90":830.1,"omin":775.1,"x":778,"xr":[762.9,781.3],"w":1,"same":826,"k":40},{"n":"eager-4096k","s":"eager","b":4194652,"p50":1380,"p90":1431,"min":1356,"o":1384.3,"o90":1435,"omin":1359.1,"x":1358.6,"xr":[1353.5,1365.3],"w":1,"same":1370,"k":60},{"n":"eager-8192k","s":"eager","b":8389137,"p50":2379,"p90":2397,"min":2350,"o":2384.2,"o90":2400.7,"omin":2353.9,"x":2361.4,"xr":[2348.3,2363.7],"w":1,"same":2364,"k":20},{"n":"lazy-16k","s":"lazy","b":16462,"p50":23,"p90":24,"min":21,"o":26.8,"o90":27.8,"omin":24.4,"x":2,"xr":[1.8,2.4],"w":1,"same":24,"k":40},{"n":"lazy-32k","s":"lazy","b":32776,"p50":25,"p90":27,"min":24,"o":29,"o90":30.6,"omin":27.1,"x":3.6,"xr":[3.4,3.8],"w":1,"same":25,"k":60},{"n":"lazy-64k","s":"lazy","b":65586,"p50":30,"p90":31,"min":28,"o":33.2,"o90":35,"omin":31.6,"x":7.7,"xr":[7.5,8.1],"w":1,"same":30,"k":40},{"n":"lazy-96k","s":"lazy","b":98349,"p50":33,"p90":35,"min":31,"o":36.9,"o90":40.1,"omin":35.3,"x":11.5,"xr":[11.4,11.8],"w":1,"same":33,"k":80},{"n":"lazy-128k","s":"lazy","b":131144,"p50":36,"p90":39,"min":33,"o":39.8,"o90":42.8,"omin":37,"x":15.3,"xr":[15.2,15.5],"w":1,"same":36,"k":80},{"n":"lazy-192k","s":"lazy","b":196702,"p50":46,"p90":49,"min":43,"o":50.3,"o90":52.9,"omin":45.7,"x":25.3,"xr":[25,25.7],"w":1,"same":46,"k":80},{"n":"lazy-256k","s":"lazy","b":262300,"p50":57,"p90":61,"min":54,"o":61.5,"o90":64.7,"omin":58.7,"x":34.9,"xr":[34.4,36.3],"w":2,"same":58,"k":40},{"n":"lazy-384k","s":"lazy","b":393334,"p50":73,"p90":76,"min":71,"o":76.5,"o90":79.8,"omin":74.7,"x":51,"xr":[50.7,52],"w":2,"same":72,"k":40},{"n":"lazy-512k","s":"lazy","b":524438,"p50":89,"p90":92,"min":83,"o":93.1,"o90":95.3,"omin":87.2,"x":66.8,"xr":[66.5,67.6],"w":1,"same":87,"k":40},{"n":"lazy-768k","s":"lazy","b":786540,"p50":114,"p90":118,"min":109,"o":118.1,"o90":122.6,"omin":112.2,"x":91.5,"xr":[90.7,92.3],"w":1,"same":114,"k":60},{"n":"lazy-1024k","s":"lazy","b":1048724,"p50":142,"p90":147,"min":138,"o":145.8,"o90":151.2,"omin":142,"x":120.6,"xr":[120.2,121.2],"w":1,"same":143,"k":80},{"n":"lazy-1536k","s":"lazy","b":1573001,"p50":188,"p90":193,"min":176,"o":191.9,"o90":197.7,"omin":180.2,"x":165.4,"xr":[162.9,167.5],"w":1,"same":178,"k":60},{"n":"lazy-2048k","s":"lazy","b":2097391,"p50":243,"p90":253,"min":235,"o":247.1,"o90":256.5,"omin":238.7,"x":221.6,"xr":[219.2,222.5],"w":1,"same":237,"k":60},{"n":"lazy-4096k","s":"lazy","b":4194694,"p50":460,"p90":483,"min":434,"o":463.5,"o90":488.1,"omin":438.4,"x":438.9,"xr":[434.5,442.8],"w":1,"same":437,"k":60},{"n":"lazy-8192k","s":"lazy","b":8388997,"p50":878,"p90":922,"min":837,"o":882,"o90":926,"omin":841.3,"x":857.1,"xr":[843.2,867.4],"w":1,"same":886,"k":80},{"n":"real-audit-log","s":"real","b":4905,"p50":24,"p90":25,"min":22,"o":26.8,"o90":28.8,"omin":25.8,"x":2.1,"xr":[2,2.2],"w":2,"same":23,"k":60},{"n":"real-webhook-notifier","s":"real","b":9911,"p50":24,"p90":26,"min":22,"o":27.2,"o90":29.5,"omin":25.7,"x":2.5,"xr":[2.4,2.6],"w":2,"same":24,"k":60},{"n":"real-atproto","s":"real","b":20310,"p50":27,"p90":28,"min":24,"o":30,"o90":32.1,"omin":27.6,"x":4.3,"xr":[4.2,4.4],"w":2,"same":26,"k":100},{"n":"real-dinkus-inventory-zodmini","s":"real","b":76051,"p50":74,"p90":76,"min":72,"o":77.5,"o90":79.3,"omin":75.4,"x":51.3,"xr":[50.3,51.9],"w":2,"same":74,"k":20},{"n":"real-dinkus-commerce","s":"real","b":117068,"p50":43,"p90":46,"min":41,"o":46.6,"o90":48.9,"omin":45,"x":21.2,"xr":[21.1,21.6],"w":2,"same":43,"k":60},{"n":"real-dinkus-inventory","s":"real","b":131060,"p50":108,"p90":116,"min":102,"o":111.8,"o90":121.9,"omin":105.2,"x":86.7,"xr":[86,89.7],"w":2,"same":105,"k":60},{"n":"real-combo-commerce-inventory-zodmini","s":"real","b":193731,"p50":87,"p90":100,"min":81,"o":90.6,"o90":103.5,"omin":84.7,"x":65,"xr":[64.6,65.4],"w":2,"same":86,"k":60},{"n":"real-combo-commerce-inventory","s":"real","b":248704,"p50":126,"p90":135,"min":119,"o":130.8,"o90":139.1,"omin":123.4,"x":104.1,"xr":[102,107.2],"w":2,"same":126,"k":80},{"n":"real-combo-x2","s":"real","b":498232,"p50":214,"p90":221,"min":199,"o":217.9,"o90":224.5,"omin":202.6,"x":192.7,"xr":[190.5,194.1],"w":2,"same":212,"k":80},{"n":"real-combo-x4","s":"real","b":1001334,"p50":381,"p90":400,"min":363,"o":385,"o90":403.8,"omin":367.8,"x":360.4,"xr":[351.9,365.9],"w":2,"same":386,"k":40}],"fits":[{"shape":"real","msPerMB":376.9,"interceptMs":6.3},{"shape":"eager","msPerMB":297.8,"interceptMs":80},{"shape":"lazy","msPerMB":106.9,"interceptMs":6.2},{"shape":"data","msPerMB":15,"interceptMs":2.8}],"memory":[{"payload":"real-audit-log","bytes":4905,"perIsolateKb":1247,"isolates":8,"errors":0},{"payload":"real-dinkus-commerce","bytes":117062,"perIsolateKb":2216,"isolates":8,"errors":0},{"payload":"real-combo-commerce-inventory","bytes":248704,"perIsolateKb":3926,"isolates":8,"errors":0},{"payload":"real-combo-x2","bytes":498232,"perIsolateKb":8544,"isolates":8,"errors":0},{"payload":"real-combo-x4","bytes":1001334,"perIsolateKb":13770,"isolates":8,"errors":0},{"payload":"eager-64k","bytes":65544,"perIsolateKb":1631,"isolates":8,"errors":0},{"payload":"eager-128k","bytes":131102,"perIsolateKb":2208,"isolates":8,"errors":0},{"payload":"eager-256k","bytes":262162,"perIsolateKb":5394,"isolates":8,"errors":0},{"payload":"eager-512k","bytes":524300,"perIsolateKb":7441,"isolates":8,"errors":0},{"payload":"eager-1024k","bytes":1048490,"perIsolateKb":11132,"isolates":8,"errors":0},{"payload":"eager-2048k","bytes":2097157,"perIsolateKb":18615,"isolates":8,"errors":0},{"payload":"eager-4096k","bytes":4194364,"perIsolateKb":33664,"isolates":8,"errors":0},{"payload":"lazy-1024k","bytes":1048532,"perIsolateKb":6474,"isolates":8,"errors":0},{"payload":"lazy-4096k","bytes":4194406,"perIsolateKb":21344,"isolates":8,"errors":0},{"payload":"data-1024k","bytes":1048576,"perIsolateKb":5824,"isolates":8,"errors":0},{"payload":"data-4096k","bytes":4194304,"perIsolateKb":19383,"isolates":8,"errors":0}],"multi":[{"payload":"real-audit-log","bytes":4905,"n":10,"sequentialMs":315,"parallelMs":275,"errors":0},{"payload":"real-dinkus-commerce","bytes":117062,"n":10,"sequentialMs":493,"parallelMs":448,"errors":0},{"payload":"real-combo-commerce-inventory","bytes":248704,"n":10,"sequentialMs":1320,"parallelMs":1309,"errors":0},{"payload":"real-combo-x2","bytes":498232,"n":10,"sequentialMs":2136,"parallelMs":2091,"errors":0},{"payload":"eager-128k","bytes":131102,"n":10,"sequentialMs":725,"parallelMs":680,"errors":0},{"payload":"eager-256k","bytes":262162,"n":10,"sequentialMs":1957,"parallelMs":1896,"errors":0},{"payload":"eager-512k","bytes":524300,"n":10,"sequentialMs":2908,"parallelMs":2806,"errors":0},{"payload":"eager-1024k","bytes":1048490,"n":10,"sequentialMs":5245,"parallelMs":5062,"errors":0}],"limits":[{"payload":"quick","limits":"prod","coldMs":23,"coldError":null,"warmMs":1,"warmError":null},{"payload":"quick","limits":"no-cpu-limit","coldMs":20,"coldError":null,"warmMs":1,"warmError":null},{"payload":"spin-at-import","limits":"prod","coldMs":15733,"coldError":null,"warmMs":2,"warmError":null},{"payload":"spin-at-import","limits":"no-cpu-limit","coldMs":15729,"coldError":null,"warmMs":1,"warmError":null},{"payload":"spin-in-route","limits":"prod","coldMs":720,"coldError":null,"warmMs":696,"warmError":null},{"payload":"spin-in-route","limits":"no-cpu-limit","coldMs":725,"coldError":null,"warmMs":698,"warmError":null}],"node":[{"n":"real-audit-log","s":"real","b":4905,"c":1,"ms":89,"mb":42},{"n":"real-audit-log","s":"real","b":4905,"c":5,"ms":162,"mb":48},{"n":"real-audit-log","s":"real","b":4905,"c":10,"ms":247,"mb":55},{"n":"real-audit-log","s":"real","b":4905,"c":20,"ms":436,"mb":70},{"n":"real-dinkus-commerce","s":"real","b":117068,"c":1,"ms":111,"mb":45},{"n":"real-dinkus-commerce","s":"real","b":117068,"c":5,"ms":254,"mb":54},{"n":"real-dinkus-commerce","s":"real","b":117068,"c":10,"ms":451,"mb":66},{"n":"real-dinkus-commerce","s":"real","b":117068,"c":20,"ms":819,"mb":87},{"n":"real-combo-commerce-inventory","s":"real","b":248704,"c":1,"ms":205,"mb":55},{"n":"real-combo-commerce-inventory","s":"real","b":248704,"c":5,"ms":701,"mb":79},{"n":"real-combo-commerce-inventory","s":"real","b":248704,"c":10,"ms":1337,"mb":109},{"n":"real-combo-commerce-inventory","s":"real","b":248704,"c":20,"ms":2662,"mb":160},{"n":"real-combo-x2","s":"real","b":498232,"c":1,"ms":307,"mb":58},{"n":"real-combo-x2","s":"real","b":498232,"c":5,"ms":1148,"mb":99},{"n":"real-combo-x2","s":"real","b":498232,"c":10,"ms":2342,"mb":140},{"n":"real-combo-x2","s":"real","b":498232,"c":20,"ms":4559,"mb":225},{"n":"eager-128k","s":"eager","b":131102,"c":1,"ms":143,"mb":46},{"n":"eager-128k","s":"eager","b":131102,"c":5,"ms":390,"mb":55},{"n":"eager-128k","s":"eager","b":131102,"c":10,"ms":693,"mb":68},{"n":"eager-128k","s":"eager","b":131102,"c":20,"ms":1383,"mb":95},{"n":"eager-256k","s":"eager","b":262258,"c":1,"ms":261,"mb":50},{"n":"eager-256k","s":"eager","b":262258,"c":5,"ms":989,"mb":76},{"n":"eager-256k","s":"eager","b":262258,"c":10,"ms":1964,"mb":108},{"n":"eager-256k","s":"eager","b":262258,"c":20,"ms":3793,"mb":157},{"n":"eager-512k","s":"eager","b":524396,"c":1,"ms":367,"mb":54},{"n":"eager-512k","s":"eager","b":524396,"c":5,"ms":1490,"mb":92},{"n":"eager-512k","s":"eager","b":524396,"c":10,"ms":2959,"mb":128},{"n":"eager-512k","s":"eager","b":524396,"c":20,"ms":6096,"mb":215},{"n":"eager-1024k","s":"eager","b":1048682,"c":1,"ms":616,"mb":63},{"n":"eager-1024k","s":"eager","b":1048682,"c":5,"ms":2702,"mb":123},{"n":"eager-1024k","s":"eager","b":1048682,"c":10,"ms":5513,"mb":204},{"n":"eager-1024k","s":"eager","b":1048682,"c":20,"ms":11223,"mb":358},{"n":"eager-2048k","s":"eager","b":2097349,"c":1,"ms":974,"mb":80},{"n":"eager-2048k","s":"eager","b":2097349,"c":5,"ms":4339,"mb":178},{"n":"eager-2048k","s":"eager","b":2097349,"c":10,"ms":8386,"mb":300},{"n":"eager-2048k","s":"eager","b":2097349,"c":20,"ms":16910,"mb":533},{"n":"eager-4096k","s":"eager","b":4194652,"c":1,"ms":1580,"mb":95},{"n":"eager-4096k","s":"eager","b":4194652,"c":5,"ms":7833,"mb":277},{"n":"eager-4096k","s":"eager","b":4194652,"c":10,"ms":15546,"mb":492},{"n":"eager-4096k","s":"eager","b":4194652,"c":20,"ms":31251,"mb":755},{"n":"lazy-1024k","s":"lazy","b":1048724,"c":1,"ms":245,"mb":54},{"n":"lazy-1024k","s":"lazy","b":1048724,"c":5,"ms":887,"mb":85},{"n":"lazy-1024k","s":"lazy","b":1048724,"c":10,"ms":1761,"mb":133},{"n":"lazy-1024k","s":"lazy","b":1048724,"c":20,"ms":3448,"mb":218},{"n":"data-1024k","s":"data","b":1048576,"c":1,"ms":137,"mb":52},{"n":"data-1024k","s":"data","b":1048576,"c":5,"ms":406,"mb":84},{"n":"data-1024k","s":"data","b":1048576,"c":10,"ms":774,"mb":131},{"n":"data-1024k","s":"data","b":1048576,"c":20,"ms":1534,"mb":215}],"generatedAt":"2026-10-10T00:20:19.272Z","machine":{"label":"hetzner-ccx33-ash","cpu":"AMD EPYC-Milan Processor","cpus":8,"memGb":31,"platform":"linux 6.8.0-139-generic x64","passes":5,"cold":20},"bisect":[],"edge":[],"compare":{"label":"a shared 4-vCPU Intel Xeon cloud VM (the first run)","short":"Shared Xeon VM","rows":[{"n":"data-16k","p50":5,"o":null},{"n":"data-32k","p50":10,"o":null},{"n":"data-64k","p50":5,"o":null},{"n":"data-96k","p50":12,"o":null},{"n":"data-128k","p50":12,"o":null},{"n":"data-192k","p50":12,"o":null},{"n":"data-256k","p50":13,"o":null},{"n":"data-384k","p50":8,"o":null},{"n":"data-512k","p50":7,"o":null},{"n":"data-768k","p50":32,"o":null},{"n":"data-1024k","p50":39,"o":null},{"n":"data-1536k","p50":17,"o":null},{"n":"data-2048k","p50":55,"o":null},{"n":"data-4096k","p50":75,"o":null},{"n":"data-8192k","p50":48,"o":null},{"n":"eager-16k","p50":12,"o":null},{"n":"eager-32k","p50":9,"o":null},{"n":"eager-64k","p50":19,"o":null},{"n":"eager-96k","p50":22,"o":null},{"n":"eager-128k","p50":22,"o":null},{"n":"eager-192k","p50":54,"o":null},{"n":"eager-256k","p50":66,"o":null},{"n":"eager-384k","p50":50,"o":null},{"n":"eager-512k","p50":98,"o":null},{"n":"eager-768k","p50":136,"o":null},{"n":"eager-1024k","p50":172,"o":null},{"n":"eager-1536k","p50":196,"o":null},{"n":"eager-2048k","p50":199,"o":null},{"n":"eager-4096k","p50":421,"o":null},{"n":"eager-8192k","p50":813,"o":null},{"n":"lazy-16k","p50":12,"o":null},{"n":"lazy-32k","p50":13,"o":null},{"n":"lazy-64k","p50":14,"o":null},{"n":"lazy-96k","p50":7,"o":null},{"n":"lazy-128k","p50":15,"o":null},{"n":"lazy-192k","p50":20,"o":null},{"n":"lazy-256k","p50":15,"o":null},{"n":"lazy-384k","p50":24,"o":null},{"n":"lazy-512k","p50":23,"o":null},{"n":"lazy-768k","p50":56,"o":null},{"n":"lazy-1024k","p50":61,"o":null},{"n":"lazy-1536k","p50":55,"o":null},{"n":"lazy-2048k","p50":98,"o":null},{"n":"lazy-4096k","p50":125,"o":null},{"n":"lazy-8192k","p50":371,"o":null},{"n":"real-audit-log","p50":11,"o":null},{"n":"real-webhook-notifier","p50":13,"o":null},{"n":"real-atproto","p50":13,"o":null},{"n":"real-dinkus-inventory-zodmini","p50":33,"o":null},{"n":"real-dinkus-commerce","p50":19,"o":null},{"n":"real-dinkus-inventory","p50":24,"o":null}]}};
 const el = (tag, attrs = {}, text) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
 const svgEl = (tag, attrs = {}) => { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; };
-const size = (b) => b >= 1048576 ? `${+(b / 1048576).toFixed(1)} MB` : `${Math.round(b / 1024)} KB`;
+const size = (b) => b >= 1000 * 1024 ? `${+(b / 1048576).toFixed(1)} MB` : `${Math.round(b / 1024)} KB`;
 const SHAPES = [["eager", "Run at import", "--series-1"], ["lazy", "Run later", "--series-2"], ["data", "Plain data", "--series-3"]];
-const NAMES = { "real-audit-log": "audit-log (upstream)", "real-webhook-notifier": "webhook-notifier (upstream)", "real-atproto": "atproto (upstream)", "real-dinkus-inventory-zodmini": "DinkusKit Inventory, zod/mini", "real-dinkus-commerce": "DinkusKit Commerce", "real-dinkus-inventory": "DinkusKit Inventory, full zod" };
+const NAMES = { "real-audit-log": "audit-log (upstream)", "real-webhook-notifier": "webhook-notifier (upstream)", "real-atproto": "atproto (upstream)", "real-dinkus-inventory-zodmini": "DinkusKit Inventory, zod/mini", "real-dinkus-commerce": "DinkusKit Commerce", "real-dinkus-inventory": "DinkusKit Inventory, full zod", "real-combo-commerce-inventory-zodmini": "Commerce + Inventory zod/mini, one plugin", "real-combo-commerce-inventory": "Commerce + Inventory, one plugin", "real-combo-x2": "Commerce + Inventory ×2, one plugin", "real-combo-x4": "Commerce + Inventory ×4, one plugin" };
 const label = (n) => NAMES[n] ?? n;
+const niceName = (n) => NAMES[n] ?? (n.startsWith("eager") ? "Run at import" : n.startsWith("lazy") ? "Run later" : n.startsWith("data") ? "Plain data" : n);
+// Runs with the outside high-resolution clock report it (one decimal); older runs only have workerd's 1 ms clock.
+const OUTER = DATA.matrix.some((d) => d.o != null);
+const val = (d) => (OUTER ? d.o : d.p50);
+const val90 = (d) => (OUTER ? d.o90 : d.p90);
+const fmt = (v) => (v == null ? null : Number.isInteger(v) ? String(v) : v.toFixed(1));
+// Tables keep one decimal throughout when the high-resolution clock is there.
+const fmt1 = (v) => (v == null ? null : OUTER ? v.toFixed(1) : String(v));
+const extra = (d) => (d.x == null ? null : `${fmt1(d.x)}${d.xr ? ` (${fmt1(d.xr[0])} to ${fmt1(d.xr[1])})` : ""}`);
 const byName = Object.fromEntries(DATA.matrix.map((m) => [m.n, m]));
 const fit = Object.fromEntries(DATA.fits.map((f) => [f.shape, f]));
 
-document.getElementById("f-eager").textContent = Math.round(fit.eager.msPerMB);
-document.getElementById("f-lazy").textContent = Math.round(fit.lazy.msPerMB);
-document.getElementById("f-data").textContent = Math.round(fit.data.msPerMB);
-document.getElementById("f-1m").textContent = byName["eager-1024k"].p50;
-document.getElementById("f-8m").textContent = byName["eager-8192k"].p50;
-const m10 = (n) => DATA.multi.find((m) => m.payload === n);
-document.getElementById("f-10x1m").textContent = m10("eager-1024k")?.sequentialMs ?? "n/a";
-document.getElementById("f-10xc").textContent = m10("real-dinkus-commerce")?.sequentialMs ?? "n/a";
-document.getElementById("meta").textContent += ` · results ${DATA.generatedAt.slice(0, 10)}`;
+const setNum = (id, v) => { document.getElementById(id).textContent = v ?? "n/a"; };
+const perMB = (shape) => (fit[shape] ? Math.round(fit[shape].msPerMB) : null);
+const at = (name) => (byName[name] ? fmt(val(byName[name])) : null);
+document.getElementById("meta").append(` · results ${DATA.generatedAt.slice(0, 10)}`);
+const samples = Math.max(...DATA.matrix.map((d) => d.k));
+const samplesMin = Math.min(...DATA.matrix.map((d) => d.k));
+const samplesText = samplesMin === samples ? String(samples) : `${samplesMin} to ${samples}`;
+document.getElementById("n-plugins").textContent = DATA.matrix.length;
+document.getElementById("n-samples").textContent = samplesText;
+document.getElementById("n-all").textContent = DATA.matrix.length;
+if (OUTER) {
+	document.getElementById("timer-note").textContent = "Each call is timed from outside the sandbox with Node's high-resolution clock, read just before and after the awaited call, and also with Date.now() inside workerd, which only has 1 ms resolution. Every cold load is paired with a cold load of the smallest possible plugin taken right next to it, alternating which goes first; the difference is reported as \"extra over a tiny plugin\" with a 95% bootstrap range of its median. It removes the isolate's fixed start-up cost, the clock round trip and slow drift in the machine.";
+	if (DATA.matrix.some((d) => d.n.startsWith("real-combo"))) document.getElementById("real-note").textContent = "Unmodified published bundles, plus DinkusKit's Commerce and Inventory Registry backends bundled together into single plugins of about 190 KB to 1 MB, so sizes above today's cap are measured on real plugin code. Copies repeated inside one plugin are separate code, so each copy is parsed and run.";
+}
+if (DATA.machine) {
+	const mc = DATA.machine;
+	document.getElementById("machine").textContent = `${mc.label ? `${mc.label}, ` : ""}${mc.cpus} × ${mc.cpu}, ${mc.memGb} GB`;
+	document.getElementById("chart-note").textContent = `Median of ${samplesText} cold loads per point (${samplesMin === samples ? "" : "up to "}${mc.passes} passes × ${mc.cold}, in fresh workerd processes with shuffled order${samplesMin === samples ? "" : "; some passes stopped early, see the sample counts at the bottom"})${OUTER ? ", timed from outside the sandbox with a high-resolution clock" : ""}. Log scale across, linear up. Hover or tab through the sizes for exact values.`;
+}
+// Where each shape first crosses 50 ms on this machine.
+{
+	const cross = (shape) => DATA.matrix.filter((d) => d.s === shape).sort((a, b) => a.b - b.b).find((d) => val(d) > 50);
+	const e = cross("eager"), l = cross("lazy");
+	const realOver = DATA.matrix.filter((d) => d.s === "real" && val(d) > 50).sort((a, b) => a.b - b.b)[0];
+	const bits = [];
+	bits.push(e ? `run-at-import code from about ${size(e.b)} would fail on its first call at this machine's speed` : "run-at-import code stayed under 50 ms at every size measured");
+	bits.push(l ? `lazy code would reach that point near ${size(l.b)}` : "lazy code stayed under 50 ms at every size measured");
+	if (realOver) bits.push(`the smallest real plugin over 50 ms here is ${label(realOver.n)} at ${size(realOver.b)} (${fmt(val(realOver))} ms)`);
+	const tinyD = byName["real-audit-log"];
+	document.getElementById("cross-50").textContent = `On the edge, if everything the first call does counts toward its 50 ms${tinyD ? `, including the ${fmt(val(tinyD))} ms that even an almost empty plugin needs on this machine` : ""}, then ${bits.join("; ")}. ${DATA.bisect?.length ? "The Cloudflare measurements below answer it directly." : "The edge folder in the benchmark measures exactly this on real Cloudflare."}`;
+}
 
 function table(id, head, rows, opts = {}) {
 	const t = document.getElementById(id);
@@ -213,6 +256,59 @@ function table(id, head, rows, opts = {}) {
 	t.append(tb);
 }
 
+// ---- findings, computed from this run's numbers
+(function findings() {
+	const ul = document.getElementById("findings");
+	const li = (strong, rest) => { const l = el("li"); l.append(el("strong", {}, strong), document.createTextNode(` ${rest}`)); ul.append(l); };
+	const ms = (d) => (d ? `${fmt(val(d))} ms` : "n/a");
+	const warms = DATA.matrix.map((d) => d.w).filter((v) => v != null);
+	li("Size only costs on the first call into a new isolate.", `Every later call took ${Math.min(...warms)} to ${Math.max(...warms)} ms at every size up to 8 MB.`);
+
+	const com = byName["real-dinkus-commerce"], inv = byName["real-dinkus-inventory"], tiny = byName["real-audit-log"];
+	let t = `On this machine, code that runs at import costs about ${perMB("eager")} ms per MB on the first call, the same code wrapped to run later about ${perMB("lazy")} ms per MB, and plain data about ${perMB("data")} ms per MB.`;
+	if (fit.real && DATA.matrix.some((d) => d.n.startsWith("real-combo"))) t += ` Real DinkusKit plugin code costs about ${perMB("real")} ms per MB.`;
+	if (com && inv) t += ` Inventory with full zod (${size(inv.b)}) takes ${ms(inv)} against ${ms(com)} for Commerce (${size(com.b)}), because it builds its validation schemas as it loads.`;
+	li("What the code does as it loads matters more than its size.", t);
+
+	const c1 = byName["real-combo-commerce-inventory"], c2 = byName["real-combo-x2"], c4 = byName["real-combo-x4"];
+	const e256 = byName["eager-256k"], e1m = byName["eager-1024k"], e8m = byName["eager-8192k"];
+	if (c1) li(`Real plugin code at ${size(c1.b)} takes ${ms(c1)} on its first call here.`, `That is Commerce and Inventory bundled into one plugin${tiny ? `, against ${ms(tiny)} for an almost empty plugin` : ""}.${c2 ? ` About ${size(c2.b)} of real code takes ${ms(c2)}` : ""}${c4 ? ` and ${size(c4.b)} takes ${ms(c4)}` : ""}. Code that runs everything at import takes ${ms(e256)} at 256 KB, ${ms(e1m)} at 1 MB and ${ms(e8m)} at 8 MB.`);
+	else li(`Code that runs everything at import takes ${ms(e256)} at 256 KB.`, `1 MB takes ${ms(e1m)} and 8 MB ${ms(e8m)}.`);
+
+	const memEager = DATA.memory.filter((m) => m.payload.startsWith("eager"));
+	if (memEager.length > 1) {
+		const pts = memEager.map((m) => [m.bytes / 1048576, m.perIsolateKb / 1024]);
+		const mx = pts.reduce((a, p) => a + p[0], 0) / pts.length, my = pts.reduce((a, p) => a + p[1], 0) / pts.length;
+		const slope = pts.reduce((a, p) => a + (p[0] - mx) * (p[1] - my), 0) / pts.reduce((a, p) => a + (p[0] - mx) ** 2, 0);
+		const empty = DATA.memory.find((m) => m.payload === "real-audit-log");
+		const memC1 = DATA.memory.find((m) => m.payload === "real-combo-commerce-inventory");
+		li(`Memory grows about ${Math.round(slope)} MB per MB of code that runs at import,`, `on top of about ${empty ? (empty.perIsolateKb / 1024).toFixed(1) : "1"} MB for an empty isolate.${memC1 ? ` Commerce and Inventory bundled (${size(memC1.bytes)}) use ${(memC1.perIsolateKb / 1024).toFixed(1)} MB per isolate.` : ""}`);
+	}
+
+	const m10 = (n) => DATA.multi.find((m) => m.payload === n);
+	const parts = [["real-dinkus-commerce", "Commerce"], ["real-combo-commerce-inventory", "the 243 KB real plugin"], ["eager-1024k", "a 1 MB plugin"]].map(([n, name]) => (m10(n) ? `${m10(n).sequentialMs} ms for ten copies of ${name}` : null)).filter(Boolean);
+	if (parts.length) li("Plugins woken together still load one after another.", `On a cold site, ten fresh plugins called at once took about as long as ten called in a row (for example ten save hooks on one content save): ${parts.join(", ")}.`);
+
+	if (DATA.bisect?.length) li("Cloudflare's own CPU limit was measured directly.", "The table below gives, for each plugin, the smallest CPU limit it still loads under on the edge.");
+	else li("Local workerd ignores the 50 ms CPU limit,", "so whether a big plugin's first call would fail in production is still open. The callout below explains why.");
+})();
+
+// ---- the same plugins on another machine, when the report was built with one
+if (DATA.compare) {
+	const other = Object.fromEntries(DATA.compare.rows.map((r) => [r.n, r]));
+	const rows = ["real-audit-log", "real-dinkus-commerce", "eager-256k", "eager-1024k", "lazy-1024k", "data-1024k"].filter((n) => byName[n] && other[n]);
+	// Like with like: the outside clock when both runs have it, otherwise workerd's own clock.
+	const both = rows.every((n) => byName[n].o != null && other[n].o != null);
+	const here = (n) => (both ? byName[n].o : byName[n].p50);
+	const there = (n) => (both ? other[n].o : other[n].p50);
+	const ratio = (n) => here(n) / there(n);
+	const code = rows.filter((n) => !n.startsWith("data")).map(ratio).sort((a, b) => a - b);
+	const dataR = rows.includes("data-1024k") ? ratio("data-1024k") : null;
+	document.getElementById("sec-compare").hidden = false;
+	document.getElementById("compare-note").textContent = `This machine took ${code[0].toFixed(1)} to ${code[code.length - 1].toFixed(1)} times as long as ${DATA.compare.label} to load the same plugins${dataR != null && dataR < 1.5 ? `, while the plain-data plugin, which mostly parses one long string, took about the same (${dataR.toFixed(1)}×)` : ""}. Every curve keeps its shape, so read the times on this page as relative costs. What production pays depends on the machine, and only a run on Cloudflare measures that.${both ? "" : " Both columns here use workerd's own 1 ms clock, the only one the other run recorded."}`;
+	table("t-compare", ["Plugin", "Size", "This machine", DATA.compare.short, "Ratio"], rows.map((n) => [niceName(n), size(byName[n].b), `${fmt(here(n))} ms`, `${fmt(there(n))} ms`, `${ratio(n).toFixed(1)}×`]));
+}
+
 // ---- chart
 (function chart() {
 	const host = document.getElementById("chart-cold");
@@ -221,12 +317,13 @@ function table(id, head, rows, opts = {}) {
 	{ const s = el("span"); s.append(el("i", { class: "dot" }), document.createTextNode("Real plugin")); leg.append(s); }
 	{ const s = el("span"); s.append(el("i", { class: "ref" }), document.createTextNode("50 ms CPU limit per call")); leg.append(s); }
 
-	const W = 800, H = 380, m = { l: 52, r: 118, t: 14, b: 40 };
+	const W = 800, H = 380, m = { l: 64, r: 118, t: 14, b: 40 };
 	const xs = (b) => m.l + (Math.log2(b / 4096) / Math.log2(8388608 / 4096)) * (W - m.l - m.r);
-	const yMax = 900;
+	const yMax = Math.max(100, Math.ceil(Math.max(...DATA.matrix.map(val)) / 100) * 100);
 	const ys = (v) => H - m.b - (v / yMax) * (H - m.t - m.b);
 	const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img", "aria-label": "First-call time against plugin size for three code shapes and six real plugins" });
-	for (let v = 0; v <= yMax; v += 100) {
+	const yStep = yMax > 1200 ? 200 : 100;
+	for (let v = 0; v <= yMax; v += yStep) {
 		svg.append(svgEl("line", { x1: m.l, x2: W - m.r, y1: ys(v), y2: ys(v), stroke: "var(--grid)", "stroke-width": 1 }));
 		const t = svgEl("text", { x: m.l - 8, y: ys(v) + 3.5, "text-anchor": "end" }); t.textContent = v === yMax ? `${v} ms` : v; svg.append(t);
 	}
@@ -245,12 +342,13 @@ function table(id, head, rows, opts = {}) {
 	const sizes = [...new Set(DATA.matrix.filter((d) => d.s !== "real").map((d) => d.b >> 10))].sort((a, b) => a - b);
 	for (const [shape, name, v] of SHAPES) {
 		const pts = DATA.matrix.filter((d) => d.s === shape).sort((a, b) => a.b - b.b);
-		svg.append(svgEl("path", { d: pts.map((p, i) => `${i ? "L" : "M"}${xs(p.b).toFixed(1)},${ys(p.p50).toFixed(1)}`).join(""), fill: "none", stroke: `var(${v})`, "stroke-width": 2, "stroke-linejoin": "round" }));
+		if (!pts.length) continue;
+		svg.append(svgEl("path", { d: pts.map((p, i) => `${i ? "L" : "M"}${xs(p.b).toFixed(1)},${ys(val(p)).toFixed(1)}`).join(""), fill: "none", stroke: `var(${v})`, "stroke-width": 2, "stroke-linejoin": "round" }));
 		const last = pts[pts.length - 1];
-		const t = svgEl("text", { x: xs(last.b) + 8, y: ys(last.p50) + 3.5, class: "lbl-strong" }); t.textContent = name; svg.append(t);
+		const t = svgEl("text", { x: xs(last.b) + 8, y: ys(val(last)) + 3.5, class: "lbl-strong" }); t.textContent = name; svg.append(t);
 	}
 	for (const p of DATA.matrix.filter((d) => d.s === "real")) {
-		svg.append(svgEl("circle", { cx: xs(p.b), cy: ys(p.p50), r: 4.5, fill: "var(--surface)", stroke: "var(--ink)", "stroke-width": 1.75 }));
+		svg.append(svgEl("circle", { cx: xs(p.b), cy: ys(val(p)), r: 4.5, fill: "var(--surface)", stroke: "var(--ink)", "stroke-width": 1.75 }));
 	}
 	// hover layer
 	const cross = svgEl("line", { y1: m.t, y2: H - m.b, stroke: "var(--ink-3)", "stroke-width": 1, visibility: "hidden" });
@@ -264,12 +362,12 @@ function table(id, head, rows, opts = {}) {
 		SHAPES.forEach(([shape, name, v], i) => {
 			const d = DATA.matrix.find((p) => p.s === shape && p.b >> 10 === kb);
 			if (!d) return;
-			dots[i].setAttribute("cx", xs(d.b)); dots[i].setAttribute("cy", ys(d.p50)); dots[i].setAttribute("visibility", "visible");
+			dots[i].setAttribute("cx", xs(d.b)); dots[i].setAttribute("cy", ys(val(d))); dots[i].setAttribute("visibility", "visible");
 			const r = el("div", { class: "r" }); const k = el("i"); k.style.background = `var(${v})`;
-			r.append(k, el("b", {}, `${d.p50} ms`), el("span", {}, `${name} (${d.p90})`)); tip.append(r);
+			r.append(k, el("b", {}, `${fmt(val(d))} ms`), el("span", {}, `${name} (${fmt(val90(d))})`)); tip.append(r);
 		});
 		const real = DATA.matrix.filter((p) => p.s === "real" && Math.abs(Math.log2(p.b / b)) < 0.3);
-		for (const d of real) { const r = el("div", { class: "r" }); r.append(el("i"), el("b", {}, `${d.p50} ms`), el("span", {}, label(d.n))); tip.append(r); }
+		for (const d of real) { const r = el("div", { class: "r" }); r.append(el("i"), el("b", {}, `${fmt(val(d))} ms`), el("span", {}, label(d.n))); tip.append(r); }
 		tip.hidden = false;
 		const box = host.getBoundingClientRect(); const fig = host.parentElement.getBoundingClientRect();
 		const px = (x / W) * box.width + (box.left - fig.left);
@@ -297,14 +395,15 @@ function table(id, head, rows, opts = {}) {
 
 // ---- tables
 const real = DATA.matrix.filter((d) => d.s === "real").sort((a, b) => a.b - b.b);
-table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Later calls"], real.map((d) => [label(d.n), size(d.b), d.p50, d.p90, d.w]));
+if (OUTER) table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Extra over a tiny plugin (95% range)", "Later calls"], real.map((d) => [label(d.n), size(d.b), fmt1(val(d)), fmt1(val90(d)), extra(d), d.w]));
+else table("t-real", ["Plugin", "Size", "First call, median", "90th pct", "Later calls"], real.map((d) => [label(d.n), size(d.b), d.p50, d.p90, d.w]));
 
 const limLabel = { quick: "Returns at once", "spin-at-import": "Spins 3 s at import", "spin-in-route": "Spins 2 s in the route" };
 table("t-limits", ["Test plugin", "Limits", "First call", "Error", "Second call", "Error"], DATA.limits.map((l) => [limLabel[l.payload] ?? l.payload, l.limits === "prod" ? "EmDash default (50 ms)" : "120 s", l.coldMs, l.coldError ?? "none", l.warmMs, l.warmError ?? "none"]));
 
-const memName = (n) => NAMES[n] ?? `${n.startsWith("eager") ? "Run at import" : n.startsWith("lazy") ? "Run later" : "Plain data"}`;
+const memName = niceName;
 table("t-mem", ["Plugin", "Size", "Per isolate"], DATA.memory.map((m) => [memName(m.payload), size(m.bytes), `${(m.perIsolateKb / 1024).toFixed(1)} MB`]));
-table("t-multi", ["Plugin", "Size each", "In a row", "At once"], DATA.multi.map((m) => [m.payload.startsWith("eager") ? "Run at import" : label(m.payload), size(m.bytes), `${m.sequentialMs} ms`, `${m.parallelMs} ms`]));
+table("t-multi", ["Plugin", "Size each", "In a row", "At once"], DATA.multi.map((m) => [niceName(m.payload), size(m.bytes), `${m.sequentialMs} ms`, `${m.parallelMs} ms`]));
 
 const counts = [...new Set(DATA.node.map((n) => n.c))].sort((a, b) => a - b);
 const nodeRows = [...new Set(DATA.node.map((n) => n.n))].map((name) => {
@@ -315,5 +414,16 @@ table("t-node", ["Plugin", "Size each", ...counts.map((c) => `${c} plugin${c > 1
 
 const shapeName = { eager: "Run at import", lazy: "Run later", data: "Plain data", real: "Real" };
 const all = [...DATA.matrix].sort((a, b) => ["real", "eager", "lazy", "data"].indexOf(a.s) - ["real", "eager", "lazy", "data"].indexOf(b.s) || a.b - b.b);
-table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), d.p50, d.p90, d.min, d.same, d.w, d.k]), { mono: [0] });
+if (OUTER) table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Extra over a tiny plugin (95% range)", "Inside clock, median", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), fmt1(d.o), fmt1(d.o90), fmt1(d.omin), extra(d), d.p50, d.same, d.w, d.k]), { mono: [0] });
+else table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), d.p50, d.p90, d.min, d.same, d.w, d.k]), { mono: [0] });
+
+if (DATA.bisect?.length) {
+	document.getElementById("sec-bisect").hidden = false;
+	const rows = [...DATA.bisect].sort((a, b) => ["real", "eager", "lazy"].indexOf(a.s) - ["real", "eager", "lazy"].indexOf(b.s) || a.b - b.b);
+	table("t-bisect", ["Plugin", "Shape", "Size", "Smallest CPU limit that loads", "Fits EmDash's 50 ms default"], rows.map((d) => [label(d.n), shapeName[d.s], size(d.b), d.cpu == null ? d.note : `${d.cpu} ms`, d.cpu == null ? "no" : d.cpu <= 50 ? "yes" : "no"]), { hot: (r, i) => i === 4 && r[4] === "no" });
+}
+if (DATA.edge?.length) {
+	document.getElementById("sec-edge").hidden = false;
+	table("t-edge", ["Plugin", "Size", "CPU limit", "First call, median", "90th pct", "Later calls", "Failed loads"], DATA.edge.map((d) => [label(d.n), size(d.b), `${d.cpu} ms`, d.p50, d.p90, d.w, `${d.failed} of ${d.total}`]), { hot: (r, i) => i === 6 && !r[6].startsWith("0 ") });
+}
 </script>
