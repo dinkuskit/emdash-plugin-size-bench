@@ -1,0 +1,10 @@
+{
+  "base": "d2f1d07b40986f181e51888f12116c0844d57345",
+  "files": {
+    "test/real-operation.test.ts": "6cedae3fa6592a280b1934e72fd4d40abfd9b82b2ca0aa75b5a1a8542d94c358",
+    "test/real-operation-unit.test.mjs": "09ddeaacc09947cb06f4cb35022cb11803653f045b82e85cb324c16a63d3d7f8",
+    "real-operation/config.mjs": "506f66543e143be3aee5d85e394da0860ff83dcd564cf7a95db9967e28c9d399",
+    "scripts/run-real-operation.mjs": "b90ff24d37c6cdc21e11f93ee4b51bb2942463e4bee4ed352e8c01ee91c138f4",
+    "vitest.config.ts": "b527d0e6a9643e228f89a2cd49105d4cc3ba16c36671ff9482bb610034b256d8"
+  }
+}
