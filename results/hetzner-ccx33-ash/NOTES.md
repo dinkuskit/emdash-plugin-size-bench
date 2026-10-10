@@ -6,5 +6,5 @@
 - **Machine speed**: with the same method, every payload took 2.8 to 5.1 times as long here as on a shared 4-vCPU Intel Xeon VM (`results/shared-xeon-4vcpu/`), 4.1 times at the median. That includes an almost empty plugin (26.8 ms here, 7.1 ms there) and plain data, so the whole sandbox start-up is slower here, not only compiling. Absolute times here are not production times, and neither are the Xeon VM's. One possible cause, not tested: this guest's kernel runs software workarounds for CPU security flaws (Retpolines, and SRSO "Safe RET" without microcode support, in `lscpu.txt`), which make page faults and memory mapping slower, and starting an isolate does a lot of both.
 - **Node hosting**: a first attempt failed with "Address already in use" because the old port range overlapped Linux's ephemeral ports; bf6e340 fixed it, and `node-host.jsonl` comes from the rerun.
 - **Report**: `report.html` here is built with
-  `RESULTS_DIR=results/hetzner-ccx33-ash COMPARE_DIR=results/shared-xeon-4vcpu COMPARE_LABEL="a shared 4-vCPU Intel Xeon cloud VM measured the same way" COMPARE_SHORT="Shared Xeon VM" node report/build-report.mjs`
-  and is also the checked-in `report/plugin-size-benchmark.html`.
+  `RESULTS_DIR=results/hetzner-ccx33-ash COMPARE_DIR=results/shared-xeon-4vcpu COMPARE_LABEL="a shared 4-vCPU Intel Xeon cloud VM measured the same way" COMPARE_SHORT="Shared Xeon VM" EDGE_DIR=results/cloudflare-edge node report/build-report.mjs`
+  and is also the checked-in `report/plugin-size-benchmark.html`, with the Cloudflare run from `results/cloudflare-edge/`.

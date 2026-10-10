@@ -8,7 +8,7 @@ How much does a bigger sandboxed (Registry) plugin cost to load? This benchmark 
 - **Memory**: workerd resident memory added per loaded plugin isolate.
 - **Ten plugins on a cold site**: ten plugins woken one after another, as a content save with ten save hooks does, and all at once.
 - **Node hosting**: standalone workerd started with N plugins, the way `@emdash-cms/sandbox-workerd` restarts on every plugin change.
-- **Real Cloudflare** (optional): the same loads on Cloudflare's edge, where the 50 ms CPU limit is enforced.
+- **Real Cloudflare**: the same loads on Cloudflare's edge, where the 50 ms CPU limit is enforced, plus busy-loop plugins that check how strictly.
 
 ## What gets loaded
 
@@ -61,11 +61,12 @@ Local workerd does **not** enforce Worker Loader's `cpuMs` limit: a plugin whose
 ```sh
 cd edge
 npx wrangler deploy                      # needs Worker Loader access on the account
-MODE=all node run-edge.mjs https://emdash-plugin-size-bench.<account>.workers.dev
-cd .. && node analyze.mjs                # adds the "Real Cloudflare" tables
+MODE=all RESULTS_DIR=results/cloudflare-edge node run-edge.mjs https://emdash-plugin-size-bench.<account>.workers.dev
+cd .. && RESULTS_DIR=results/cloudflare-edge node analyze.mjs   # the "Real Cloudflare" tables
+npx wrangler delete --name emdash-plugin-size-bench              # from edge/ again
 ```
 
-`MODE=timing` loads every payload at the production limit (50 ms) and at 30 s. `MODE=bisect` finds, for an almost empty plugin (`tiny`, built into the worker as the baseline), each real plugin, and eager and lazy code up to 2 MB, the smallest `cpuMs` under which a fresh isolate still loads and answers (two of three fresh loads at each step). That number is the plugin's start-up CPU cost as Cloudflare counts it, which is what decides whether a bigger plugin fits under EmDash's 50 ms default.
+`MODE=timing` loads every payload at the production limit (50 ms) and at 30 s. `MODE=bisect` finds, for an almost empty plugin (`tiny`, built into the worker as the baseline), each real plugin, and eager and lazy code up to 2 MB, the smallest `cpuMs` under which a fresh isolate still loads and answers (two of three fresh loads at each step). If Cloudflare charged start-up strictly against the limit, that number would be the plugin's start-up CPU cost. `MODE=control` checks how strictly the limit is enforced: plugins that run the local limits suite's busy loop 2 to 1,000 million times, either inside their route or at import, at 50 ms and 30 s, with two later calls into the first isolate, and the same search for four of them. `MODE=all` runs timing, bisect and control in that order.
 
 The worker makes the plugin bridge from its own exports once per request and hands it to Worker Loader ready-made, as EmDash's runner does; if the bridge can't be made, the plugin gets a placeholder, which the benchmark routes never call. `GET /diag` shows what the runtime offered, and every `/run` answer records how the bridge was made.
 
@@ -76,15 +77,16 @@ The worker makes the plugin bridge from its own exports once per request and han
 - `results/hetzner-ccx33-ash/`: a dedicated Hetzner CCX33 server (8 AMD EPYC-Milan vCPUs), every suite, 20 to 100 cold loads per payload with the outside clock and paired tiny-plugin loads. Its `NOTES.md` explains the uneven sample counts.
 - `results/shared-xeon-4vcpu/`: a shared 4-vCPU Intel Xeon VM measured the same way, 30 cold loads per payload, size matrix and CPU-limit check only.
 - `results/`: the first run, on a VM of the same Xeon kind with the older method (one workerd per pass, inside clock only, 21 cold loads per payload).
+- `results/cloudflare-edge/`: Cloudflare's ATL location through Worker Loader, every payload at 50 ms and 30 s, the CPU-limit search, and the busy-loop control. Its `NOTES.md` has the setup and what it found: no plugin's first call failed at 50 ms, up to 8 MB, and the limit is enforced loosely, so a one-off slow load did not trip it.
 
 With the same method, the Hetzner server took 2.8 to 5.1 times as long as the Xeon VM for every payload, 4.1 times at the median, even for an almost empty plugin. So read the times for shape and for costs relative to an almost empty plugin; only the Real Cloudflare run gives production times.
 
-`report/plugin-size-benchmark.html` shows the Hetzner run with the Xeon VM alongside. `COMPARE_DIR` adds a second machine's first-call times, and `EDGE_DIR` takes the Cloudflare tables from an edge run analysed in its own folder:
+`report/plugin-size-benchmark.html` shows the Hetzner run with the Xeon VM alongside and the Cloudflare run. `COMPARE_DIR` adds a second machine's first-call times, and `EDGE_DIR` takes the Cloudflare tables from an edge run analysed in its own folder:
 
 ```sh
 RESULTS_DIR=results/hetzner-ccx33-ash COMPARE_DIR=results/shared-xeon-4vcpu \
   COMPARE_LABEL="a shared 4-vCPU Intel Xeon cloud VM measured the same way" COMPARE_SHORT="Shared Xeon VM" \
-  node report/build-report.mjs
+  EDGE_DIR=results/cloudflare-edge node report/build-report.mjs
 ```
 
 ## Caveats

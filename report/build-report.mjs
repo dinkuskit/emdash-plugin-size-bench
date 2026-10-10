@@ -23,7 +23,17 @@ const data = {
 	generatedAt: s.generatedAt,
 	machine: s.machine ? { label: s.machine.hostLabel, cpu: s.machine.cpuModel, cpus: s.machine.cpus, memGb: s.machine.memGb, platform: s.machine.platform, passes: s.machine.passes, cold: s.machine.coldPerPass } : null,
 	bisect: (e.edgeBisect ?? []).map((r) => ({ n: r.payload, s: r.shape, b: r.bytes, cpu: r.minCpuMs, note: r.note })),
-	edge: (e.edge ?? []).map((r) => ({ n: r.payload, s: r.shape, b: r.bytes, cpu: r.cpuMs, p50: r.coldP50, p90: r.coldP90, w: r.warmP50, failed: r.failed, total: r.total, err: r.firstError })),
+	edge: (e.edge ?? []).map((r) => ({ n: r.payload, s: r.shape, b: r.bytes, cpu: r.cpuMs, p50: r.coldP50, p90: r.coldP90, w: r.warmP50, failed: r.failed, total: r.total, err: r.firstError, colos: r.colos ?? [] })),
+	control: (e.edgeControl ?? []).map((r) => ({ n: r.payload, s: r.shape, steps: r.steps, cpu: r.cpuMs, p50: r.coldP50, failed: r.coldFailed, total: r.coldTotal, w: r.warmP50, wFailed: r.warmFailed, wTotal: r.warmTotal, err: r.firstError })),
+	controlBisect: (e.edgeControlBisect ?? []).map((r) => ({ n: r.payload, s: r.shape, steps: r.steps, cpu: r.minCpuMs, note: r.note })),
+	edgeBridge: (() => {
+		// How the edge worker made the plugin bridge (diag.json from the edge run, when saved).
+		try {
+			return JSON.parse(readFileSync(new URL(`../${process.env.EDGE_DIR ?? process.env.RESULTS_DIR ?? "results"}/diag.json`, import.meta.url), "utf8")).bridge ?? null;
+		} catch {
+			return null;
+		}
+	})(),
 	compare: process.env.COMPARE_DIR
 		? (() => {
 				const c = load(process.env.COMPARE_DIR);
