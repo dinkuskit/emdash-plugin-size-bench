@@ -43,8 +43,21 @@ const REQ = { url: "https://bench.test/_emdash/api/plugins/bench/ping", method: 
 // plugin costs before its own code does anything.
 const TINY_CODE = `export default {hooks:{},routes:{ping:{handler:async()=>({ok:true})}}};`;
 
+// Busy-loop plugins that check the limit itself: spin-route-<n> runs n million
+// loop steps inside its route, spin-import-<n> runs them at import. Same loop
+// as the local harness's limits suite.
+const SPIN = /^spin-(route|import)-(\d+)$/;
+function spinCode(where, n) {
+	const loop = `let x=0;for(let i=0;i<${n}e6;i++){x=(x+i)|0}`;
+	return where === "route"
+		? `export default {hooks:{},routes:{ping:{handler:async()=>{${loop}return {x}}}}};`
+		: `${loop}\nexport default {hooks:{},routes:{ping:{handler:async()=>({x})}}};`;
+}
+
 async function payload(env, name) {
 	if (name === "tiny") return { code: TINY_CODE, route: "ping" };
+	const spin = SPIN.exec(name ?? "");
+	if (spin) return { code: spinCode(spin[1], Number(spin[2])), route: "ping" };
 	const base = "https://assets.local";
 	const [code, manifest] = await Promise.all([
 		env.ASSETS.fetch(`${base}/${name}.js`).then((r) => (r.ok ? r.text() : Promise.reject(new Error(`missing ${name}`)))),

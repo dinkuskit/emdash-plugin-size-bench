@@ -15,6 +15,8 @@ const nodeHost = rows(join(dir, "node-host.jsonl"));
 const edgeAll = rows(join(dir, "edge.jsonl"));
 const edge = edgeAll.filter((r) => r.suite === "edge");
 const edgeBisect = edgeAll.filter((r) => r.suite === "edge-bisect");
+const edgeControl = edgeAll.filter((r) => r.suite === "edge-control");
+const edgeControlBisect = edgeAll.filter((r) => r.suite === "edge-control-bisect");
 const machine = existsSync(join(dir, "machine.json")) ? JSON.parse(readFileSync(join(dir, "machine.json"), "utf8")) : null;
 
 const q = (xs, p) => {
@@ -114,9 +116,22 @@ for (const r of edge) {
 const edgeTable = [...edgeBy.values()].map((e) => ({ payload: e.payload, shape: e.shape, bytes: e.bytes, cpuMs: e.cpuMs, coldP50: q(e.cold, 0.5), coldP90: q(e.cold, 0.9), warmP50: q(e.warm, 0.5), failed: e.errors.length, total: e.errors.length + e.cold.length, firstError: e.errors[0] ?? null, colos: [...e.colos] })).sort((a, b) => a.shape.localeCompare(b.shape) || a.bytes - b.bytes || a.cpuMs - b.cpuMs);
 
 // Cloudflare CPU-limit search: the smallest cpuMs each payload still loads under.
-const bisectTable = edgeBisect.map((r) => ({ payload: r.payload, shape: r.shape, bytes: r.bytes, minCpuMs: r.minCpuMs, colo: r.colo ?? null, note: r.note ?? null })).sort((a, b) => a.shape.localeCompare(b.shape) || a.bytes - b.bytes);
+const bisectRows = (rs) => rs.map((r) => ({ payload: r.payload, shape: r.shape, bytes: r.bytes, minCpuMs: r.minCpuMs, colo: r.colo ?? null, note: r.note ?? null })).sort((a, b) => a.shape.localeCompare(b.shape) || a.bytes - b.bytes);
+const bisectTable = bisectRows(edgeBisect);
 
-const summary = { generatedAt: new Date().toISOString(), machine, baselineColdMs: baseline, fits, table, memory, multi, limits, nodeHost, edge: edgeTable, edgeBisect: bisectTable };
+// Busy-loop checks of the limit itself: n million loop steps in the route or at import.
+const controlBy = new Map();
+for (const r of edgeControl) {
+	const k = `${r.payload}|${r.cpuMs}`;
+	const c = controlBy.get(k) ?? { payload: r.payload, shape: r.shape, steps: r.steps, cpuMs: r.cpuMs, cold: [], coldErrors: [], warm: [], warmErrors: [] };
+	for (const x of r.cold ?? []) (x.error ? c.coldErrors.push(x.error) : c.cold.push(x.ms));
+	for (const x of r.warm ?? []) (x.error ? c.warmErrors.push(x.error) : c.warm.push(x.ms));
+	controlBy.set(k, c);
+}
+const controlTable = [...controlBy.values()].map((c) => ({ payload: c.payload, shape: c.shape, steps: c.steps, cpuMs: c.cpuMs, coldP50: q(c.cold, 0.5), coldFailed: c.coldErrors.length, coldTotal: c.cold.length + c.coldErrors.length, warmP50: q(c.warm, 0.5), warmFailed: c.warmErrors.length, warmTotal: c.warm.length + c.warmErrors.length, firstError: c.coldErrors[0] ?? c.warmErrors[0] ?? null })).sort((a, b) => a.shape.localeCompare(b.shape) || a.steps - b.steps || a.cpuMs - b.cpuMs);
+const controlBisectTable = bisectRows(edgeControlBisect).map((r) => ({ ...r, steps: edgeControlBisect.find((x) => x.payload === r.payload)?.steps ?? null }));
+
+const summary = { generatedAt: new Date().toISOString(), machine, baselineColdMs: baseline, fits, table, memory, multi, limits, nodeHost, edge: edgeTable, edgeBisect: bisectTable, edgeControl: controlTable, edgeControlBisect: controlBisectTable };
 writeFileSync(join(dir, "summary.json"), JSON.stringify(summary, null, 2));
 
 // ---- markdown
@@ -158,6 +173,14 @@ if (edgeTable.length) {
 if (bisectTable.length) {
 	md.push(`\n## Real Cloudflare: smallest CPU limit that still loads\n\nEmDash's default is 50 ms. Each step is three fresh loads; a limit counts as enough when two of three succeed.\n\n| Payload | Size | Smallest cpuMs | Note |\n|---|---:|---:|---|`);
 	for (const b of bisectTable) md.push(`| ${b.payload} | ${kb(b.bytes)} | ${b.minCpuMs ?? "n/a"} | ${b.note ?? ""} |`);
+}
+if (controlTable.length) {
+	md.push(`\n## Real Cloudflare: is the limit enforced?\n\nBusy-loop plugins: n million steps of the local limits suite's loop, in the route or at import.\n\n| Payload | Where | Steps (M) | CPU limit | Cold p50 | Cold failed | Warm p50 | Warm failed | First error |\n|---|---|---:|---:|---:|---:|---:|---:|---|`);
+	for (const c of controlTable) md.push(`| ${c.payload} | ${c.shape.replace("spin-", "")} | ${c.steps / 1e6} | ${c.cpuMs} | ${c.coldP50 ?? "n/a"} | ${c.coldFailed}/${c.coldTotal} | ${c.warmP50 ?? "n/a"} | ${c.warmFailed}/${c.warmTotal} | ${c.firstError ?? ""} |`);
+}
+if (controlBisectTable.length) {
+	md.push(`\n## Real Cloudflare: smallest CPU limit for the busy loops\n\n| Payload | Smallest cpuMs | Note |\n|---|---:|---|`);
+	for (const b of controlBisectTable) md.push(`| ${b.payload} | ${b.minCpuMs ?? "n/a"} | ${b.note ?? ""} |`);
 }
 writeFileSync(join(dir, "summary.md"), md.join("\n") + "\n");
 console.log(md.join("\n"));
