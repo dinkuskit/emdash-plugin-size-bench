@@ -50,6 +50,11 @@ async function text(path: string) {
 async function record(row: Record<string, unknown>) {
 	await E.PROBE.fetch("https://p/result", { method: "POST", body: JSON.stringify({ runId, ...row }) });
 }
+/** Progress line: console output and $RESULTS_DIR/progress.log. */
+async function log(line: string) {
+	console.log(line);
+	await E.PROBE.fetch("https://p/log", { method: "POST", body: line });
+}
 async function rss(): Promise<number> {
 	return ((await (await E.PROBE.fetch("https://p/rss")).json()) as { rssKb: number }).rssKb;
 }
@@ -67,8 +72,16 @@ function newRunner(limits?: object) {
 	} as any);
 }
 
-/** Invoke once and time it. Real plugins get a missing route: the module still loads and runs. */
+/**
+ * Invoke once and time it two ways. `ms` is Date.now() inside workerd, which
+ * only advances on I/O and has 1 ms resolution. `outerMs` is Node's
+ * high-resolution clock read through the PROBE binding just before and just
+ * after the call; it includes a small constant round-trip cost, which the
+ * paired tiny-plugin loads cancel out.
+ * Real plugins get a missing route: the module still loads and runs.
+ */
 async function invoke(inst: any, route: string) {
+	const n0 = await nodeNow();
 	const t0 = Date.now();
 	let error: string | undefined;
 	try {
@@ -76,8 +89,23 @@ async function invoke(inst: any, route: string) {
 	} catch (e) {
 		error = String((e as Error)?.message ?? e).slice(0, 200);
 	}
-	return { ms: Date.now() - t0, error };
+	const ms = Date.now() - t0;
+	const outerMs = (await nodeNow()) - n0;
+	return { ms, outerMs, error };
 }
+
+// The smallest possible plugin. Every cold load in the size matrix is paired
+// with a cold load of this one, so isolate start-up, RPC cost and machine drift
+// cancel out of the difference.
+const TINY_CODE = `export default {hooks:{},routes:{ping:{handler:async()=>({ok:true})}}};`;
+const TINY_MANIFEST = { id: "bench-tiny", version: "1.0.0", capabilities: [], allowedHosts: [], storage: {}, hooks: [], routes: ["ping"], admin: { pages: [], widgets: [] } };
+async function tinyCold(limits: object | undefined) {
+	const nonce = crypto.randomUUID();
+	const inst = await newRunner(limits).load({ ...TINY_MANIFEST, id: `bench-tiny-${nonce}` } as any, `/* bench nonce ${nonce} */\n${TINY_CODE}`);
+	return invoke(inst, "ping");
+}
+const round2 = (x: number) => Math.round(x * 100) / 100;
+
 const isExpected = (route: string, error?: string) =>
 	!error || (route === "__bench_missing" && /not found|NOT_FOUND|ROUTE/i.test(error));
 
@@ -113,7 +141,7 @@ describe("emdash plugin size benchmark", () => {
 				const r = await invoke(inst, "ping");
 				const warm = await invoke(inst, "ping");
 				await record({ suite: "limits", payload: label, limits: limitLabel, coldMs: r.ms, coldError: r.error ?? null, warmMs: warm.ms, warmError: warm.error ?? null });
-				console.log(`limits ${label} ${limitLabel}: cold ${r.ms} ms ${r.error ?? "ok"} | second ${warm.ms} ms ${warm.error ?? "ok"}`);
+				await log(`limits ${label} ${limitLabel}: cold ${r.ms} ms ${r.error ?? "ok"} | second ${warm.ms} ms ${warm.error ?? "ok"}`);
 			}
 		}
 	});
@@ -128,23 +156,33 @@ describe("emdash plugin size benchmark", () => {
 			const route = p.route ?? "ping";
 			for (const [limitLabel, limits] of MODES) {
 				const cold: number[] = [];
+				const coldOuter: number[] = [];
+				const tiny: number[] = [];
+				const tinyOuter: number[] = [];
 				const coldErrors: string[] = [];
 				const warm: number[] = [];
-				let outerFirst: number | undefined;
+				const warmOuter: number[] = [];
 				for (let i = 0; i < COLD; i++) {
 					// A unique comment makes every cold load see never-before-seen source,
 					// so no compile cache keyed on source text can help.
 					const unique = `/* bench nonce ${crypto.randomUUID()} */\n${code}`;
+					// Alternate which of the pair goes first, so drift within a pair cancels too.
+					const tinyFirst = i % 2 === 0;
+					const t = tinyFirst ? await tinyCold(limits) : undefined;
 					const inst = await newRunner(limits).load({ ...manifest, id: `${manifest.id}-${i}` }, unique);
-					const n0 = i === 0 ? await nodeNow() : 0;
 					const r = await invoke(inst, route);
-					if (i === 0) outerFirst = (await nodeNow()) - n0;
+					const t2 = tinyFirst ? t! : await tinyCold(limits);
 					cold.push(r.ms);
+					coldOuter.push(round2(r.outerMs));
+					tiny.push(t2.ms);
+					tinyOuter.push(round2(t2.outerMs));
 					if (!isExpected(route, r.error)) coldErrors.push(r.error!);
+					if (t2.error) coldErrors.push(`tiny: ${t2.error}`);
 					if (i === 0 && isExpected(route, r.error)) {
 						for (let w = 0; w < WARM; w++) {
 							const wr = await invoke(inst, route);
 							warm.push(wr.ms);
+							warmOuter.push(round2(wr.outerMs));
 						}
 					}
 				}
@@ -160,14 +198,18 @@ describe("emdash plugin size benchmark", () => {
 					coldMs: cold,
 					coldMedianMs: median(cold),
 					coldErrors,
-					outerFirstColdMs: outerFirst,
+					coldOuterMs: coldOuter,
+					tinyColdMs: tiny,
+					tinyColdOuterMs: tinyOuter,
 					warmMs: warm,
+					warmOuterMs: warmOuter,
 					warmMedianMs: median(warm),
 					sameSourceColdMs: [sameA.ms, sameB.ms],
 					sameSourceErrors: [sameA.error, sameB.error].filter((e) => e && !isExpected(route, e)),
 				};
 				await record(row);
-				console.log(`${p.name.padEnd(30)} ${limitLabel.padEnd(13)} cold median ${String(row.coldMedianMs).padStart(6)} ms  warm ${String(row.warmMedianMs).padStart(4)} ms  errors ${coldErrors.length}${coldErrors[0] ? " (" + coldErrors[0].slice(0, 80) + ")" : ""}`);
+				const extra = median(coldOuter.map((c, i) => c - tinyOuter[i]));
+				await log(`${p.name.padEnd(30)} ${limitLabel.padEnd(13)} cold median ${String(row.coldMedianMs).padStart(6)} ms  extra over tiny ${extra.toFixed(1).padStart(7)} ms  warm ${String(row.warmMedianMs).padStart(4)} ms  errors ${coldErrors.length}${coldErrors[0] ? " (" + coldErrors[0].slice(0, 80) + ")" : ""}`);
 			}
 		}
 	});
@@ -175,7 +217,7 @@ describe("emdash plugin size benchmark", () => {
 	it("memory: workerd resident memory per loaded plugin isolate", async () => {
 		if (!wants("memory")) return;
 		const K = cfg.memK ?? 8;
-		const names = cfg.memPayloads ?? ["real-audit-log", "eager-64k", "eager-128k", "eager-256k", "eager-512k", "eager-1024k", "eager-2048k", "eager-4096k", "lazy-1024k", "lazy-4096k", "data-1024k", "data-4096k"];
+		const names = cfg.memPayloads ?? ["real-audit-log", "real-dinkus-commerce", "real-combo-commerce-inventory", "real-combo-x2", "real-combo-x4", "eager-64k", "eager-128k", "eager-256k", "eager-512k", "eager-1024k", "eager-2048k", "eager-4096k", "lazy-1024k", "lazy-4096k", "data-1024k", "data-4096k"];
 		for (const name of names) {
 			const { code, manifest } = await loadPayload(name);
 			const route = manifest.routes[0] ?? "ping";
@@ -191,14 +233,14 @@ describe("emdash plugin size benchmark", () => {
 			const after = await rss();
 			const row = { suite: "memory", payload: name, bytes: code.length, isolates: K, rssBeforeKb: before, rssAfterKb: after, perIsolateKb: Math.round((after - before) / K), errors };
 			await record(row);
-			console.log(`memory ${name.padEnd(24)} +${row.perIsolateKb} KB per isolate (${K} isolates, ${errors} errors)`);
+			await log(`memory ${name.padEnd(24)} +${row.perIsolateKb} KB per isolate (${K} isolates, ${errors} errors)`);
 		}
 	});
 
 	it("multi: a cold site running N plugins in a row and at once", async () => {
 		if (!wants("multi")) return;
 		const N = cfg.multiN ?? 10;
-		const names = cfg.multiPayloads ?? ["real-audit-log", "real-dinkus-commerce", "eager-128k", "eager-256k", "eager-512k", "eager-1024k"];
+		const names = cfg.multiPayloads ?? ["real-audit-log", "real-dinkus-commerce", "real-combo-commerce-inventory", "real-combo-x2", "eager-128k", "eager-256k", "eager-512k", "eager-1024k"];
 		for (const name of names) {
 			const { code, manifest } = await loadPayload(name);
 			const route = manifest.routes[0] ?? "ping";
@@ -219,7 +261,7 @@ describe("emdash plugin size benchmark", () => {
 				const parErrors = par.filter((r) => !isExpected(route, r.error)).length;
 				const row = { suite: "multi", payload: name, bytes: code.length, n: N, limits: limitLabel, sequentialMs: seqMs, parallelMs: parMs, seqErrors, parErrors };
 				await record(row);
-				console.log(`multi ${name.padEnd(22)} ${limitLabel.padEnd(13)} ${N} in a row ${seqMs} ms (${seqErrors} err), at once ${parMs} ms (${parErrors} err)`);
+				await log(`multi ${name.padEnd(22)} ${limitLabel.padEnd(13)} ${N} in a row ${seqMs} ms (${seqErrors} err), at once ${parMs} ms (${parErrors} err)`);
 			}
 		}
 	});

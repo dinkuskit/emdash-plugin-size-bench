@@ -1,0 +1,26 @@
+control spin-route-2         cpu 50    cold 21,23,21 warm 13,4
+control spin-route-2         cpu 30000 cold 24,22,21 warm 12,3
+control spin-route-10        cpu 50    cold 67,65,56 warm 52,6
+control spin-route-10        cpu 30000 cold 62,69,60 warm 54,6
+control spin-route-30        cpu 50    cold 168,146,166 warm 138,13
+control spin-route-30        cpu 30000 cold 169,157,177 warm 137,13
+control spin-route-100       cpu 50    cold 482,525,464 warm 459,35
+control spin-route-100       cpu 30000 cold 517,483,463 warm 446,34
+control spin-route-300       cpu 50    cold 1535,1393,1610 warm 1581,ERR(Worker exceeded CPU time limit.)
+control spin-route-300       cpu 30000 cold 1457,1388,1486 warm 1502,1611
+control spin-import-2        cpu 50    cold 25,29,33 warm 2,2
+control spin-import-2        cpu 30000 cold 27,33,27 warm 2,2
+control spin-import-10       cpu 50    cold 103,86,86 warm 2,1
+control spin-import-10       cpu 30000 cold 87,78,86 warm 2,2
+control spin-import-30       cpu 50    cold 262,224,268 warm 1,2
+control spin-import-30       cpu 30000 cold 267,294,244 warm 2,1
+control spin-import-100      cpu 50    cold 846,684,874 warm 0,0
+control spin-import-100      cpu 30000 cold 859,745,729 warm 1,2
+control spin-import-300      cpu 50    cold 2605,2718,2603 warm 1,1
+control spin-import-300      cpu 30000 cold 2585,2572,2582 warm 2,3
+control spin-import-1000     cpu 50    cold 8154,8487,8088 warm 2,2
+control spin-import-1000     cpu 30000 cold 8094,8249,8201 warm 1,1
+edge-control-bisect spin-route-30                       114 B  smallest cpuMs 1 
+edge-control-bisect spin-route-300                      115 B  smallest cpuMs 1 
+edge-control-bisect spin-import-30                      108 B  smallest cpuMs 1 
+edge-control-bisect spin-import-300                     109 B  smallest cpuMs 1 

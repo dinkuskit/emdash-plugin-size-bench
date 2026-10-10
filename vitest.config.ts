@@ -4,7 +4,7 @@
 // through function service bindings.
 import { execFileSync } from "node:child_process";
 import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 
 import { cloudflareTest } from "@cloudflare/vitest-plugin";
 import { defineConfig, type Plugin } from "vite";
@@ -25,6 +25,8 @@ const virtualPlugin: Plugin = {
 
 const payloadDir = resolve("payloads");
 const resultsFile = resolve(process.env.BENCH_RESULTS ?? "results/raw.jsonl");
+// One line per finished measurement, so a long run can be followed with tail -f.
+const progressFile = resolve(dirname(resultsFile), "progress.log");
 
 function workerdRssKb(): { rssKb: number; pids: number[] } {
 	const out = execFileSync("ps", ["-eo", "pid=,rss=,comm="], { encoding: "utf8" });
@@ -66,9 +68,14 @@ export default defineConfig({
 					PROBE: async (request: Request) => {
 						const url = new URL(request.url);
 						if (url.pathname === "/rss") return Response.json(workerdRssKb());
+						// Node's high-resolution clock (fractional ms), used for the outside timing.
 						if (url.pathname === "/now") return Response.json({ ms: performance.now() });
 						if (url.pathname === "/wrapper") {
 							writeFileSync(resolve("edge/src/wrapper.js.txt"), await request.text());
+							return new Response("ok");
+						}
+						if (url.pathname === "/log") {
+							appendFileSync(progressFile, `${new Date().toISOString()} ${await request.text()}\n`);
 							return new Response("ok");
 						}
 						if (url.pathname === "/result") {

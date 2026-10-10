@@ -9,9 +9,14 @@
 //           (lower bound: V8 pre-parses but does not compile or run them)
 //   data  - the same byte count as one string literal (parse cost only)
 //   real-* - unmodified published plugin bundles (upstream + DinkusKit)
-import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+//   real-combo-* - real DinkusKit backends bundled together into one plugin,
+//           to measure real plugin code at 192 KB to 1 MB
+import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync, existsSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { buildSync } from "esbuild";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const corpusDir = join(root, "corpus");
@@ -126,16 +131,16 @@ for (const size of SIZES) {
 
 // Real published bundles.
 const real = [
-	["real-audit-log", "bench/real/plugin-audit-log/package/dist/plugin.mjs", "@emdash-cms/plugin-audit-log@0.2.3"],
-	["real-webhook-notifier", "bench/real/plugin-webhook-notifier/package/dist/plugin.mjs", "@emdash-cms/plugin-webhook-notifier@0.2.3"],
-	["real-atproto", "bench/real/plugin-atproto/package/dist/plugin.mjs", "@emdash-cms/plugin-atproto@0.2.3"],
-	["real-dinkus-inventory-zodmini", "bench/real/dinkus-inventory-zodmini-backend.js", "dinkuskit/inventory#53 (zod/mini) Registry backend.js"],
-	["real-dinkus-commerce", "bench/real/dinkus-commerce-backend.js", "dinkuskit/commerce main 554e085 Registry backend.js"],
-	["real-dinkus-inventory", "bench/real/dinkus-inventory-backend.js", "dinkuskit/inventory main fd2df02 Registry backend.js (full zod)"],
+	["real-audit-log", "real/plugin-audit-log/package/dist/plugin.mjs", "@emdash-cms/plugin-audit-log@0.2.3"],
+	["real-webhook-notifier", "real/plugin-webhook-notifier/package/dist/plugin.mjs", "@emdash-cms/plugin-webhook-notifier@0.2.3"],
+	["real-atproto", "real/plugin-atproto/package/dist/plugin.mjs", "@emdash-cms/plugin-atproto@0.2.3"],
+	["real-dinkus-inventory-zodmini", "real/dinkus-inventory-zodmini-backend.js", "dinkuskit/inventory#53 (zod/mini) Registry backend.js"],
+	["real-dinkus-commerce", "real/dinkus-commerce-backend.js", "dinkuskit/commerce main 554e085 Registry backend.js"],
+	["real-dinkus-inventory", "real/dinkus-inventory-backend.js", "dinkuskit/inventory main fd2df02 Registry backend.js (full zod)"],
 ];
 for (const [name, path, source] of real) {
 	if (!path) continue;
-	const abs = path.startsWith("/") ? path : join(root, "..", path);
+	const abs = join(root, path);
 	if (!existsSync(abs)) {
 		console.warn(`skip ${name}: ${abs} missing`);
 		continue;
@@ -144,6 +149,33 @@ for (const [name, path, source] of real) {
 	// Route that does not exist: the call still loads and runs the module,
 	// then returns a "route not found" error, which the harness counts as done.
 	emit(name, "real", code, [source], manifest(`bench-${name}`, ["__bench_missing"]), source);
+}
+
+// Real DinkusKit code at sizes above today's 128 KiB cap: several Registry
+// backends bundled into one module whose routes are the union of theirs.
+// A part listed twice is bundled from two separate copies, so V8 parses and
+// runs it twice, as it would two different modules of the same size.
+const COMBOS = [
+	["real-combo-commerce-inventory-zodmini", ["dinkus-commerce-backend.js", "dinkus-inventory-zodmini-backend.js"]],
+	["real-combo-commerce-inventory", ["dinkus-commerce-backend.js", "dinkus-inventory-backend.js"]],
+	["real-combo-x2", ["dinkus-commerce-backend.js", "dinkus-inventory-backend.js", "dinkus-commerce-backend.js", "dinkus-inventory-backend.js"]],
+	["real-combo-x4", Array.from({ length: 4 }, () => ["dinkus-commerce-backend.js", "dinkus-inventory-backend.js"]).flat()],
+];
+for (const [name, parts] of COMBOS) {
+	const tmp = mkdtempSync(join(tmpdir(), "emdash-bench-combo-"));
+	try {
+		const imports = parts.map((part, i) => {
+			copyFileSync(join(root, "real", part), join(tmp, `p${i}.js`));
+			return `import p${i} from "./p${i}.js";`;
+		});
+		const routes = parts.map((_, i) => `...p${i}.routes`).join(",");
+		writeFileSync(join(tmp, "entry.js"), `${imports.join("\n")}\nexport default { hooks: {}, routes: { ${routes} } };\n`);
+		const out = buildSync({ entryPoints: [join(tmp, "entry.js")], bundle: true, format: "esm", minify: true, write: false, logLevel: "warning" });
+		const code = out.outputFiles[0].text;
+		emit(name, "real", code, parts, manifest(`bench-${name}`, ["__bench_missing"]), `bundle of ${parts.join(" + ")}`);
+	} finally {
+		rmSync(tmp, { recursive: true, force: true });
+	}
 }
 
 writeFileSync(join(outDir, "index.json"), JSON.stringify(index, null, 2));

@@ -8,7 +8,7 @@ How much does a bigger sandboxed (Registry) plugin cost to load? This benchmark 
 - **Memory**: workerd resident memory added per loaded plugin isolate.
 - **Ten plugins on a cold site**: ten plugins woken one after another, as a content save with ten save hooks does, and all at once.
 - **Node hosting**: standalone workerd started with N plugins, the way `@emdash-cms/sandbox-workerd` restarts on every plugin change.
-- **Real Cloudflare** (optional): the same loads on Cloudflare's edge, where the 50 ms CPU limit is enforced.
+- **Real Cloudflare**: the same loads on Cloudflare's edge, where the 50 ms CPU limit is enforced, plus busy-loop plugins that check how strictly.
 
 ## What gets loaded
 
@@ -20,6 +20,7 @@ How much does a bigger sandboxed (Registry) plugin cost to load? This benchmark 
 | `lazy-*` | The same code wrapped in functions that only run on demand. This is the lower bound: V8 pre-parses those functions but does not compile or run them. |
 | `data-*` | The same number of bytes as one string literal. This measures parsing alone. |
 | `real-*` | Unmodified bundles: upstream `@emdash-cms/plugin-audit-log`, `plugin-webhook-notifier` and `plugin-atproto` 0.2.3, plus DinkusKit Commerce (117 KB, today's largest real Registry backend we know of) and Inventory with full zod (131 KB) and with `zod/mini` (76 KB). |
+| `real-combo-*` | Real plugin code above today's cap: the DinkusKit backends bundled by esbuild into one plugin whose routes are the union of theirs. Commerce + Inventory `zod/mini` (194 KB), Commerce + Inventory (249 KB), that pair twice (498 KB) and four times (1 MB). Repeated parts come from separate copies, so V8 parses and runs each copy, as it would for different code of the same size. |
 
 Each synthetic size comes in all three shapes: 16, 32, 64, 96, 128, 192, 256, 384 and 512 KB, then 768 KB and 1, 1.5, 2, 4 and 8 MB.
 
@@ -27,36 +28,70 @@ Each synthetic size comes in all three shapes: 16, 32, 64, 96, 128, 192, 256, 38
 
 `test/bench.test.ts` runs inside workerd through `@cloudflare/vitest-plugin`. It loads each payload with EmDash's production `CloudflareSandboxRunner` from `@emdash-cms/cloudflare@1.2.0`, which uses a real Worker Loader binding, the generated wrapper and the `PluginBridge` loopback. Every cold load gets a new isolate key and a unique source comment, so neither isolate reuse nor a source-keyed cache can help.
 
-The timer is `Date.now()` inside workerd, which only advances on I/O, so each number spans one awaited RPC into the plugin isolate. A Node-side clock taken around the first cold call of each payload agrees with it.
+Each call is timed two ways. `Date.now()` inside workerd only advances on I/O and has 1 ms resolution, so it spans exactly one awaited RPC into the plugin isolate. Node's high-resolution clock, read through a service binding just before and after the same call, gives sub-millisecond resolution plus a small constant round-trip cost.
 
-`run-all.mjs` runs the CPU-limit check, then three passes of the size matrix, each in a fresh workerd process with payload order shuffled to spread drift, then the memory and ten-plugin suites. `analyze.mjs` pools the samples (21 cold loads per payload) and writes `results/summary.md` and `results/summary.json`.
+Every cold load in the size matrix is paired with a cold load of the smallest possible plugin, taken right next to it, alternating which goes first. The difference ("extra over the tiny plugin") cancels the isolate's fixed start-up cost, the round trip and slow drift in the machine, which leaves the cost that size adds. `analyze.mjs` reports its median with a 95% bootstrap range.
+
+`run-all.mjs` runs the CPU-limit check, then five passes of the size matrix with payload order shuffled in each pass to spread drift, then the memory and ten-plugin suites. Each pass starts a fresh workerd process for every four payloads (`CHUNK`), because one process that has loaded more than about a thousand plugin isolates eventually runs out of heap and crashes; a chunk that dies is retried once in a new process. `analyze.mjs` pools the samples (100 cold loads per payload by default; the first published run used 21) and writes `summary.md` and `summary.json` next to the raw rows. `RESULTS_DIR` picks the folder (default `results/`), so runs on different machines sit side by side, each with a `machine.json`.
 
 ```sh
 pnpm install
 node gen/fetch-corpus.mjs      # downloads pinned libraries into corpus/
 node gen/build-payloads.mjs
-PASSES=3 COLD=7 node run-all.mjs
+PASSES=5 COLD=20 node run-all.mjs
 WORKERD_BIN=$(ls -d node_modules/.pnpm/@cloudflare+workerd-linux-64@*/node_modules/@cloudflare/workerd-linux-64/bin/workerd) \
   node node-host/bench-workerd-node.mjs
 node analyze.mjs
 ```
 
+### On a dedicated machine
+
+For numbers with less noise, use a Linux box with dedicated cores (for example a Hetzner CCX server, which has AMD EPYC cores like many of Cloudflare's machines) and nothing else running:
+
+```sh
+RESULTS_DIR=results/hetzner-ccx33-ash ./scripts/run-dedicated.sh
+```
+
+The script installs everything, builds the payloads, sets the CPU governor to `performance` and turns off turbo boost when it has passwordless sudo, keeps CPU 0 free for the operating system, runs every local suite pinned to the other cores, and writes the raw rows, `summary.md`, `machine.json`, a `progress.log` and a `report.html` into `RESULTS_DIR`. Expect about an hour.
+
 ### Real Cloudflare
 
-Local workerd does **not** enforce Worker Loader's `cpuMs` limit: a plugin that spins for 3 seconds at import passes under EmDash's 50 ms default (see the limits table). Only the edge can show where the production limit bites.
+Local workerd does **not** enforce Worker Loader's `cpuMs` limit: a plugin whose busy loop at import runs for seconds still loads under EmDash's 50 ms default (see the limits table). Only the edge can show where the production limit bites.
 
 ```sh
 cd edge
 npx wrangler deploy                      # needs Worker Loader access on the account
-node run-edge.mjs https://emdash-plugin-size-bench.<account>.workers.dev
-cd .. && node analyze.mjs                # adds a "Real Cloudflare" table
+MODE=all RESULTS_DIR=results/cloudflare-edge node run-edge.mjs https://emdash-plugin-size-bench.<account>.workers.dev
+cd .. && RESULTS_DIR=results/cloudflare-edge node analyze.mjs   # the "Real Cloudflare" tables
+npx wrangler delete --name emdash-plugin-size-bench              # from edge/ again
 ```
+
+`MODE=timing` loads every payload at the production limit (50 ms) and at 30 s. `MODE=bisect` finds, for an almost empty plugin (`tiny`, built into the worker as the baseline), each real plugin, and eager and lazy code up to 2 MB, the smallest `cpuMs` under which a fresh isolate still loads and answers (two of three fresh loads at each step). If Cloudflare charged start-up strictly against the limit, that number would be the plugin's start-up CPU cost. `MODE=control` checks how strictly the limit is enforced: plugins that run the local limits suite's busy loop 2 to 1,000 million times, either inside their route or at import, at 50 ms and 30 s, with two later calls into the first isolate, and the same search for four of them. `MODE=all` runs timing, bisect and control in that order.
+
+The worker makes the plugin bridge from its own exports once per request and hands it to Worker Loader ready-made, as EmDash's runner does; if the bridge can't be made, the plugin gets a placeholder, which the benchmark routes never call. `GET /diag` shows what the runtime offered, and every `/run` answer records how the bridge was made.
 
 `edge/src/wrapper.js.txt` is EmDash 1.2.0's generated wrapper. It was exported by the harness's `wrapper` suite, so the edge worker loads exactly the module pair the runner loads, at limits of 50 ms (production) and 30 s.
 
+## Results
+
+- `results/hetzner-ccx33-ash/`: a dedicated Hetzner CCX33 server (8 AMD EPYC-Milan vCPUs), every suite, 20 to 100 cold loads per payload with the outside clock and paired tiny-plugin loads. Its `NOTES.md` explains the uneven sample counts.
+- `results/shared-xeon-4vcpu/`: a shared 4-vCPU Intel Xeon VM measured the same way, 30 cold loads per payload, size matrix and CPU-limit check only.
+- `results/`: the first run, on a VM of the same Xeon kind with the older method (one workerd per pass, inside clock only, 21 cold loads per payload).
+- `results/cloudflare-edge/`: Cloudflare's ATL location through Worker Loader, every payload at 50 ms and 30 s, the CPU-limit search, and the busy-loop control. Its `NOTES.md` has the setup and what it found: no plugin's first call failed at 50 ms, up to 8 MB, and the limit is enforced loosely, so a one-off slow load did not trip it.
+
+With the same method, the Hetzner server took 2.8 to 5.1 times as long as the Xeon VM for every payload, 4.1 times at the median, even for an almost empty plugin. So read the times for shape and for costs relative to an almost empty plugin; only the Real Cloudflare run gives production times.
+
+`report/plugin-size-benchmark.html` shows the Hetzner run with the Xeon VM alongside and the Cloudflare run. `COMPARE_DIR` adds a second machine's first-call times, and `EDGE_DIR` takes the Cloudflare tables from an edge run analysed in its own folder:
+
+```sh
+RESULTS_DIR=results/hetzner-ccx33-ash COMPARE_DIR=results/shared-xeon-4vcpu \
+  COMPARE_LABEL="a shared 4-vCPU Intel Xeon cloud VM measured the same way" COMPARE_SHORT="Shared Xeon VM" \
+  EDGE_DIR=results/cloudflare-edge node report/build-report.mjs
+```
+
 ## Caveats
 
-- The local numbers come from one shared 4-vCPU cloud VM (Intel Xeon 2.1 GHz). Read them for shape and ratios, not as absolute production latency. Below about 30 ms, run-to-run noise (5 to 20 ms) is as large as the size effect.
+- Absolute times depend heavily on the machine (see Results). In the first run (`results/`), below about 30 ms, run-to-run noise (5 to 20 ms) is as large as the size effect, and its plain-data times jump around; the Hetzner run's paired loads bring its 95% ranges to within a few percent.
 - RSS per isolate is the workerd process growth divided by eight loaded isolates, so it includes allocator slack.
 - The Node-hosting harness uses a minimal stand-in wrapper and shim module instead of EmDash's generated ones. Those are the same few KB for every plugin, so they do not change the size trend.
 - Network and storage costs that also grow with size are not measured here: downloading the bundle from the Registry at install, and reading `backend.js` from R2 on every host cold start (`loadBundleFromR2`).

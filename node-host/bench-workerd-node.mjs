@@ -10,17 +10,18 @@
 // Usage: node node-host/bench-workerd-node.mjs [results.jsonl]
 import { spawn } from "node:child_process";
 import { appendFileSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createServer } from "node:net";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const out = resolve(process.argv[2] ?? join(root, "results/node-host.jsonl"));
+const out = resolve(process.argv[2] ?? join(root, process.env.RESULTS_DIR ?? "results", "node-host.jsonl"));
 const workerdBin = process.env.WORKERD_BIN;
 if (!workerdBin) throw new Error("Set WORKERD_BIN to the workerd binary");
 
 const index = JSON.parse(readFileSync(join(root, "payloads/index.json"), "utf8"));
-const PAYLOADS = (process.env.NODE_PAYLOADS ?? "real-audit-log,real-dinkus-commerce,eager-128k,eager-256k,eager-512k,eager-1024k,eager-2048k,eager-4096k,lazy-1024k,data-1024k").split(",");
+const PAYLOADS = (process.env.NODE_PAYLOADS ?? "real-audit-log,real-dinkus-commerce,real-combo-commerce-inventory,real-combo-x2,eager-128k,eager-256k,eager-512k,eager-1024k,eager-2048k,eager-4096k,lazy-1024k,data-1024k").split(",");
 const COUNTS = (process.env.NODE_COUNTS ?? "1,5,10,20").split(",").map(Number);
 const REPS = Number(process.env.NODE_REPS ?? 3);
 
@@ -110,16 +111,37 @@ ${workers.join("\n")}`;
 	return { readyMs: firstAllMs, rssKb: rss, error: firstAllMs === null ? stderr.slice(0, 300) : null };
 }
 
-let port = 41000;
+// Ports come from 20000-32000, below the ephemeral ranges Linux (32768+) and
+// macOS (49152+) hand to outgoing connections, and every block is checked
+// free before workerd binds it, so a stray socket cannot make a run fail.
+const PORT_MIN = 20000;
+const PORT_MAX = 32000;
+const isFree = (p) =>
+	new Promise((ok) => {
+		const srv = createServer();
+		srv.once("error", () => ok(false));
+		srv.listen(p, "127.0.0.1", () => srv.close(() => ok(true)));
+	});
+async function freeBlock(start, count) {
+	let base = start;
+	for (;;) {
+		if (base + count > PORT_MAX) base = PORT_MIN;
+		let clash = -1;
+		for (let i = 0; i < count; i++) if (!(await isFree(base + i))) { clash = i; break; }
+		if (clash < 0) return base;
+		base += clash + 1;
+	}
+}
+let port = PORT_MIN;
 for (const payload of PAYLOADS) {
 	const meta = index.find((p) => p.name === payload);
 	if (!meta) continue;
 	for (const n of COUNTS) {
 		const runs = [];
 		for (let r = 0; r < REPS; r++) {
+			port = await freeBlock(port, n);
 			runs.push(await runOnce(payload, n, port));
 			port += n + 1;
-			if (port > 60000) port = 41000;
 		}
 		const ms = runs.map((x) => x.readyMs).filter((x) => x !== null).sort((a, b) => a - b);
 		const row = {

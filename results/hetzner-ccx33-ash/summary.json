@@ -1,0 +1,2619 @@
+{
+  "generatedAt": "2026-10-10T00:20:19.272Z",
+  "machine": {
+    "startedAt": "2026-10-09T23:40:39.793Z",
+    "hostLabel": "hetzner-ccx33-ash",
+    "platform": "linux 6.8.0-139-generic x64",
+    "cpuModel": "AMD EPYC-Milan Processor",
+    "cpus": 8,
+    "memGb": 31,
+    "node": "v22.23.3",
+    "governor": null,
+    "pinnedCpus": "1-7",
+    "lscpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           40 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  8\nOn-line CPU(s) list:                     0-7\nVendor ID:                               AuthenticAMD\nModel name:                              AMD EPYC-Milan Processor\nCPU family:                              25\nModel:                                   1\nThread(s) per core:                      2\nCore(s) per socket:                      4\nSocket(s):                               1\nStepping:                                1\nBogoMIPS:                                4393.38\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves clzero xsaveerptr wbnoinvd arat umip pku ospke rdpid fsrm\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               128 KiB (4 instances)\nL1i cache:                               128 KiB (4 instances)\nL2 cache:                                2 MiB (4 instances)\nL3 cache:                                32 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-7\nVulnerability Gather data sampling:      Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Vulnerable: Safe RET, no microcode\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Retpolines; IBPB conditional; IBRS_FW; STIBP conditional; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Vulnerable: Clear CPU buffers attempted, no microcode\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected",
+    "passes": 5,
+    "coldPerPass": 20,
+    "seed": 42
+  },
+  "baselineColdMs": 24,
+  "fits": [
+    {
+      "shape": "real",
+      "msPerMB": 376.9,
+      "interceptMs": 6.3
+    },
+    {
+      "shape": "eager",
+      "msPerMB": 297.8,
+      "interceptMs": 80
+    },
+    {
+      "shape": "lazy",
+      "msPerMB": 106.9,
+      "interceptMs": 6.2
+    },
+    {
+      "shape": "data",
+      "msPerMB": 15,
+      "interceptMs": 2.8
+    }
+  ],
+  "table": [
+    {
+      "payload": "data-16k",
+      "shape": "data",
+      "bytes": 16384,
+      "samples": 20,
+      "coldP50": 21,
+      "coldP90": 24,
+      "coldMin": 20,
+      "outerP50": 24.8,
+      "outerP90": 28.3,
+      "outerMin": 23.9,
+      "outerRange": [
+        24.4,
+        25.2
+      ],
+      "extraP50": 0.6,
+      "extraRange": [
+        0,
+        0.7
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 21,
+      "errors": 0,
+      "passes": 1
+    },
+    {
+      "payload": "data-32k",
+      "shape": "data",
+      "bytes": 32768,
+      "samples": 40,
+      "coldP50": 23,
+      "coldP90": 25,
+      "coldMin": 20,
+      "outerP50": 27.3,
+      "outerP90": 28.5,
+      "outerMin": 22.9,
+      "outerRange": [
+        24.1,
+        27.8
+      ],
+      "extraP50": 0.8,
+      "extraRange": [
+        0.5,
+        1.3
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 24,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "data-64k",
+      "shape": "data",
+      "bytes": 65536,
+      "samples": 60,
+      "coldP50": 24,
+      "coldP90": 26,
+      "coldMin": 21,
+      "outerP50": 27.8,
+      "outerP90": 30.2,
+      "outerMin": 25.8,
+      "outerRange": [
+        27.4,
+        28
+      ],
+      "extraP50": 1.8,
+      "extraRange": [
+        1.4,
+        2
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 24,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-96k",
+      "shape": "data",
+      "bytes": 98304,
+      "samples": 60,
+      "coldP50": 23,
+      "coldP90": 25,
+      "coldMin": 20,
+      "outerP50": 26,
+      "outerP90": 28.7,
+      "outerMin": 24.3,
+      "outerRange": [
+        25.7,
+        26.3
+      ],
+      "extraP50": 2.1,
+      "extraRange": [
+        1.9,
+        2.2
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 22,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-128k",
+      "shape": "data",
+      "bytes": 131072,
+      "samples": 60,
+      "coldP50": 25,
+      "coldP90": 26,
+      "coldMin": 23,
+      "outerP50": 27.6,
+      "outerP90": 28.6,
+      "outerMin": 25.8,
+      "outerRange": [
+        27.3,
+        27.9
+      ],
+      "extraP50": 3.2,
+      "extraRange": [
+        3.1,
+        3.5
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 24,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-192k",
+      "shape": "data",
+      "bytes": 196608,
+      "samples": 40,
+      "coldP50": 27,
+      "coldP90": 29,
+      "coldMin": 24,
+      "outerP50": 31.6,
+      "outerP90": 32.9,
+      "outerMin": 29.3,
+      "outerRange": [
+        31,
+        31.9
+      ],
+      "extraP50": 4.6,
+      "extraRange": [
+        4.4,
+        4.9
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 27,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "data-256k",
+      "shape": "data",
+      "bytes": 262144,
+      "samples": 100,
+      "coldP50": 27,
+      "coldP90": 29,
+      "coldMin": 24,
+      "outerP50": 30.7,
+      "outerP90": 32.9,
+      "outerMin": 27.1,
+      "outerRange": [
+        30.4,
+        30.9
+      ],
+      "extraP50": 6.1,
+      "extraRange": [
+        5.9,
+        6.4
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 26,
+      "errors": 0,
+      "passes": 5
+    },
+    {
+      "payload": "data-384k",
+      "shape": "data",
+      "bytes": 393216,
+      "samples": 60,
+      "coldP50": 31,
+      "coldP90": 33,
+      "coldMin": 28,
+      "outerP50": 34.6,
+      "outerP90": 36.4,
+      "outerMin": 31.6,
+      "outerRange": [
+        34.2,
+        35.1
+      ],
+      "extraP50": 10,
+      "extraRange": [
+        9.3,
+        10.3
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 30,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-512k",
+      "shape": "data",
+      "bytes": 524288,
+      "samples": 20,
+      "coldP50": 33,
+      "coldP90": 35,
+      "coldMin": 29,
+      "outerP50": 36.6,
+      "outerP90": 38.8,
+      "outerMin": 32.7,
+      "outerRange": [
+        34.9,
+        37.3
+      ],
+      "extraP50": 11.2,
+      "extraRange": [
+        10.7,
+        13.3
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 31,
+      "errors": 0,
+      "passes": 1
+    },
+    {
+      "payload": "data-768k",
+      "shape": "data",
+      "bytes": 786432,
+      "samples": 40,
+      "coldP50": 38,
+      "coldP90": 40,
+      "coldMin": 32,
+      "outerP50": 40.9,
+      "outerP90": 43.3,
+      "outerMin": 35.6,
+      "outerRange": [
+        37.8,
+        42.1
+      ],
+      "extraP50": 16.8,
+      "extraRange": [
+        14.3,
+        18.9
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 33,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "data-1024k",
+      "shape": "data",
+      "bytes": 1048576,
+      "samples": 60,
+      "coldP50": 40,
+      "coldP90": 43,
+      "coldMin": 35,
+      "outerP50": 43.6,
+      "outerP90": 46.8,
+      "outerMin": 38.5,
+      "outerRange": [
+        42.7,
+        45.1
+      ],
+      "extraP50": 20.2,
+      "extraRange": [
+        19.7,
+        21.6
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 37,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-1536k",
+      "shape": "data",
+      "bytes": 1572864,
+      "samples": 40,
+      "coldP50": 49,
+      "coldP90": 51,
+      "coldMin": 44,
+      "outerP50": 52.1,
+      "outerP90": 54.8,
+      "outerMin": 47.7,
+      "outerRange": [
+        51,
+        53.1
+      ],
+      "extraP50": 29.3,
+      "extraRange": [
+        27,
+        30
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 47,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "data-2048k",
+      "shape": "data",
+      "bytes": 2097152,
+      "samples": 60,
+      "coldP50": 56,
+      "coldP90": 62,
+      "coldMin": 46,
+      "outerP50": 59.1,
+      "outerP90": 66.8,
+      "outerMin": 48.6,
+      "outerRange": [
+        57.6,
+        60
+      ],
+      "extraP50": 35.8,
+      "extraRange": [
+        34.9,
+        37
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 53,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "data-4096k",
+      "shape": "data",
+      "bytes": 4194304,
+      "samples": 40,
+      "coldP50": 83,
+      "coldP90": 94,
+      "coldMin": 75,
+      "outerP50": 86.2,
+      "outerP90": 98.3,
+      "outerMin": 78.5,
+      "outerRange": [
+        84.5,
+        93.9
+      ],
+      "extraP50": 62.3,
+      "extraRange": [
+        61.1,
+        67.6
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 94,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "data-8192k",
+      "shape": "data",
+      "bytes": 8388608,
+      "samples": 60,
+      "coldP50": 140,
+      "coldP90": 190,
+      "coldMin": 135,
+      "outerP50": 144.5,
+      "outerP90": 194.9,
+      "outerMin": 138.8,
+      "outerRange": [
+        142.8,
+        147.9
+      ],
+      "extraP50": 120.8,
+      "extraRange": [
+        119.2,
+        122.7
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 138,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-16k",
+      "shape": "eager",
+      "bytes": 16420,
+      "samples": 100,
+      "coldP50": 26,
+      "coldP90": 28,
+      "coldMin": 23,
+      "outerP50": 29.5,
+      "outerP90": 31.4,
+      "outerMin": 27.3,
+      "outerRange": [
+        29.2,
+        29.8
+      ],
+      "extraP50": 4.5,
+      "extraRange": [
+        4.3,
+        4.8
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 25,
+      "errors": 0,
+      "passes": 5
+    },
+    {
+      "payload": "eager-32k",
+      "shape": "eager",
+      "bytes": 32906,
+      "samples": 20,
+      "coldP50": 28,
+      "coldP90": 30,
+      "coldMin": 25,
+      "outerP50": 30.7,
+      "outerP90": 32.9,
+      "outerMin": 28.8,
+      "outerRange": [
+        30.1,
+        31.6
+      ],
+      "extraP50": 7.1,
+      "extraRange": [
+        6.7,
+        8
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 27,
+      "errors": 0,
+      "passes": 1
+    },
+    {
+      "payload": "eager-64k",
+      "shape": "eager",
+      "bytes": 65544,
+      "samples": 80,
+      "coldP50": 50,
+      "coldP90": 52,
+      "coldMin": 48,
+      "outerP50": 53.9,
+      "outerP90": 56.1,
+      "outerMin": 51.4,
+      "outerRange": [
+        53.6,
+        54.7
+      ],
+      "extraP50": 28.3,
+      "extraRange": [
+        28,
+        28.7
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 50,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "eager-96k",
+      "shape": "eager",
+      "bytes": 98307,
+      "samples": 80,
+      "coldP50": 58,
+      "coldP90": 61,
+      "coldMin": 54,
+      "outerP50": 61.6,
+      "outerP90": 65.2,
+      "outerMin": 58.4,
+      "outerRange": [
+        61.1,
+        62
+      ],
+      "extraP50": 35.6,
+      "extraRange": [
+        35.3,
+        36.1
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 59,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "eager-128k",
+      "shape": "eager",
+      "bytes": 131102,
+      "samples": 40,
+      "coldP50": 64,
+      "coldP90": 65,
+      "coldMin": 64,
+      "outerP50": 68.4,
+      "outerP90": 69.4,
+      "outerMin": 67.3,
+      "outerRange": [
+        68.1,
+        68.7
+      ],
+      "extraP50": 43.7,
+      "extraRange": [
+        43.6,
+        43.9
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 64,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "eager-192k",
+      "shape": "eager",
+      "bytes": 196660,
+      "samples": 80,
+      "coldP50": 164,
+      "coldP90": 170,
+      "coldMin": 155,
+      "outerP50": 168.4,
+      "outerP90": 173.3,
+      "outerMin": 159.4,
+      "outerRange": [
+        164.9,
+        170.2
+      ],
+      "extraP50": 142.4,
+      "extraRange": [
+        140.5,
+        144.6
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 163,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "eager-256k",
+      "shape": "eager",
+      "bytes": 262258,
+      "samples": 20,
+      "coldP50": 190,
+      "coldP90": 194,
+      "coldMin": 185,
+      "outerP50": 194.5,
+      "outerP90": 200.5,
+      "outerMin": 189.2,
+      "outerRange": [
+        192.1,
+        197.8
+      ],
+      "extraP50": 167.6,
+      "extraRange": [
+        165.2,
+        170.4
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 187,
+      "errors": 0,
+      "passes": 1
+    },
+    {
+      "payload": "eager-384k",
+      "shape": "eager",
+      "bytes": 393292,
+      "samples": 80,
+      "coldP50": 222,
+      "coldP90": 229,
+      "coldMin": 218,
+      "outerP50": 226.4,
+      "outerP90": 232.7,
+      "outerMin": 222.1,
+      "outerRange": [
+        225.9,
+        227.3
+      ],
+      "extraP50": 201.7,
+      "extraRange": [
+        200.9,
+        202.7
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 221,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "eager-512k",
+      "shape": "eager",
+      "bytes": 524396,
+      "samples": 80,
+      "coldP50": 276,
+      "coldP90": 284,
+      "coldMin": 267,
+      "outerP50": 280.7,
+      "outerP90": 288.1,
+      "outerMin": 271.7,
+      "outerRange": [
+        278.2,
+        282.3
+      ],
+      "extraP50": 255,
+      "extraRange": [
+        252.8,
+        256.3
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 276,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "eager-768k",
+      "shape": "eager",
+      "bytes": 786673,
+      "samples": 60,
+      "coldP50": 381,
+      "coldP90": 389,
+      "coldMin": 360,
+      "outerP50": 385.4,
+      "outerP90": 393.2,
+      "outerMin": 363.6,
+      "outerRange": [
+        375.9,
+        387.7
+      ],
+      "extraP50": 358.9,
+      "extraRange": [
+        351.6,
+        360.9
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 373,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-1024k",
+      "shape": "eager",
+      "bytes": 1048682,
+      "samples": 60,
+      "coldP50": 501,
+      "coldP90": 514,
+      "coldMin": 490,
+      "outerP50": 505.8,
+      "outerP90": 517.9,
+      "outerMin": 494.3,
+      "outerRange": [
+        502.7,
+        510.4
+      ],
+      "extraP50": 480.4,
+      "extraRange": [
+        477.4,
+        484.6
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 498,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-1536k",
+      "shape": "eager",
+      "bytes": 1572959,
+      "samples": 40,
+      "coldP50": 625,
+      "coldP90": 643,
+      "coldMin": 599,
+      "outerP50": 629.7,
+      "outerP90": 646.6,
+      "outerMin": 603.3,
+      "outerRange": [
+        619.3,
+        632.4
+      ],
+      "extraP50": 603.3,
+      "extraRange": [
+        595,
+        606.5
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 625,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "eager-2048k",
+      "shape": "eager",
+      "bytes": 2097349,
+      "samples": 40,
+      "coldP50": 799,
+      "coldP90": 826,
+      "coldMin": 770,
+      "outerP50": 803.6,
+      "outerP90": 830.1,
+      "outerMin": 775.1,
+      "outerRange": [
+        787.4,
+        806.7
+      ],
+      "extraP50": 778,
+      "extraRange": [
+        762.9,
+        781.3
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 826,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "eager-4096k",
+      "shape": "eager",
+      "bytes": 4194652,
+      "samples": 60,
+      "coldP50": 1380,
+      "coldP90": 1431,
+      "coldMin": 1356,
+      "outerP50": 1384.3,
+      "outerP90": 1435,
+      "outerMin": 1359.1,
+      "outerRange": [
+        1377.7,
+        1390.5
+      ],
+      "extraP50": 1358.6,
+      "extraRange": [
+        1353.5,
+        1365.3
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 1370,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "eager-8192k",
+      "shape": "eager",
+      "bytes": 8389137,
+      "samples": 20,
+      "coldP50": 2379,
+      "coldP90": 2397,
+      "coldMin": 2350,
+      "outerP50": 2384.2,
+      "outerP90": 2400.7,
+      "outerMin": 2353.9,
+      "outerRange": [
+        2371.5,
+        2385.8
+      ],
+      "extraP50": 2361.4,
+      "extraRange": [
+        2348.3,
+        2363.7
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 2364,
+      "errors": 0,
+      "passes": 1
+    },
+    {
+      "payload": "lazy-16k",
+      "shape": "lazy",
+      "bytes": 16462,
+      "samples": 40,
+      "coldP50": 23,
+      "coldP90": 24,
+      "coldMin": 21,
+      "outerP50": 26.8,
+      "outerP90": 27.8,
+      "outerMin": 24.4,
+      "outerRange": [
+        26.6,
+        27.1
+      ],
+      "extraP50": 2,
+      "extraRange": [
+        1.8,
+        2.4
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 24,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "lazy-32k",
+      "shape": "lazy",
+      "bytes": 32776,
+      "samples": 60,
+      "coldP50": 25,
+      "coldP90": 27,
+      "coldMin": 24,
+      "outerP50": 29,
+      "outerP90": 30.6,
+      "outerMin": 27.1,
+      "outerRange": [
+        28.6,
+        29.3
+      ],
+      "extraP50": 3.6,
+      "extraRange": [
+        3.4,
+        3.8
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 25,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-64k",
+      "shape": "lazy",
+      "bytes": 65586,
+      "samples": 40,
+      "coldP50": 30,
+      "coldP90": 31,
+      "coldMin": 28,
+      "outerP50": 33.2,
+      "outerP90": 35,
+      "outerMin": 31.6,
+      "outerRange": [
+        32.6,
+        33.9
+      ],
+      "extraP50": 7.7,
+      "extraRange": [
+        7.5,
+        8.1
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 30,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "lazy-96k",
+      "shape": "lazy",
+      "bytes": 98349,
+      "samples": 80,
+      "coldP50": 33,
+      "coldP90": 35,
+      "coldMin": 31,
+      "outerP50": 36.9,
+      "outerP90": 40.1,
+      "outerMin": 35.3,
+      "outerRange": [
+        36.4,
+        37.4
+      ],
+      "extraP50": 11.5,
+      "extraRange": [
+        11.4,
+        11.8
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 33,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "lazy-128k",
+      "shape": "lazy",
+      "bytes": 131144,
+      "samples": 80,
+      "coldP50": 36,
+      "coldP90": 39,
+      "coldMin": 33,
+      "outerP50": 39.8,
+      "outerP90": 42.8,
+      "outerMin": 37,
+      "outerRange": [
+        39.5,
+        40.1
+      ],
+      "extraP50": 15.3,
+      "extraRange": [
+        15.2,
+        15.5
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 36,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "lazy-192k",
+      "shape": "lazy",
+      "bytes": 196702,
+      "samples": 80,
+      "coldP50": 46,
+      "coldP90": 49,
+      "coldMin": 43,
+      "outerP50": 50.3,
+      "outerP90": 52.9,
+      "outerMin": 45.7,
+      "outerRange": [
+        50.1,
+        50.6
+      ],
+      "extraP50": 25.3,
+      "extraRange": [
+        25,
+        25.7
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 46,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "lazy-256k",
+      "shape": "lazy",
+      "bytes": 262300,
+      "samples": 40,
+      "coldP50": 57,
+      "coldP90": 61,
+      "coldMin": 54,
+      "outerP50": 61.5,
+      "outerP90": 64.7,
+      "outerMin": 58.7,
+      "outerRange": [
+        60.4,
+        62.5
+      ],
+      "extraP50": 34.9,
+      "extraRange": [
+        34.4,
+        36.3
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 58,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "lazy-384k",
+      "shape": "lazy",
+      "bytes": 393334,
+      "samples": 40,
+      "coldP50": 73,
+      "coldP90": 76,
+      "coldMin": 71,
+      "outerP50": 76.5,
+      "outerP90": 79.8,
+      "outerMin": 74.7,
+      "outerRange": [
+        76.1,
+        77.2
+      ],
+      "extraP50": 51,
+      "extraRange": [
+        50.7,
+        52
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 72,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "lazy-512k",
+      "shape": "lazy",
+      "bytes": 524438,
+      "samples": 40,
+      "coldP50": 89,
+      "coldP90": 92,
+      "coldMin": 83,
+      "outerP50": 93.1,
+      "outerP90": 95.3,
+      "outerMin": 87.2,
+      "outerRange": [
+        92.1,
+        93.7
+      ],
+      "extraP50": 66.8,
+      "extraRange": [
+        66.5,
+        67.6
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 87,
+      "errors": 0,
+      "passes": 2
+    },
+    {
+      "payload": "lazy-768k",
+      "shape": "lazy",
+      "bytes": 786540,
+      "samples": 60,
+      "coldP50": 114,
+      "coldP90": 118,
+      "coldMin": 109,
+      "outerP50": 118.1,
+      "outerP90": 122.6,
+      "outerMin": 112.2,
+      "outerRange": [
+        117,
+        118.7
+      ],
+      "extraP50": 91.5,
+      "extraRange": [
+        90.7,
+        92.3
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 114,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-1024k",
+      "shape": "lazy",
+      "bytes": 1048724,
+      "samples": 80,
+      "coldP50": 142,
+      "coldP90": 147,
+      "coldMin": 138,
+      "outerP50": 145.8,
+      "outerP90": 151.2,
+      "outerMin": 142,
+      "outerRange": [
+        145,
+        147.1
+      ],
+      "extraP50": 120.6,
+      "extraRange": [
+        120.2,
+        121.2
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 143,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "lazy-1536k",
+      "shape": "lazy",
+      "bytes": 1573001,
+      "samples": 60,
+      "coldP50": 188,
+      "coldP90": 193,
+      "coldMin": 176,
+      "outerP50": 191.9,
+      "outerP90": 197.7,
+      "outerMin": 180.2,
+      "outerRange": [
+        188,
+        192.8
+      ],
+      "extraP50": 165.4,
+      "extraRange": [
+        162.9,
+        167.5
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 178,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-2048k",
+      "shape": "lazy",
+      "bytes": 2097391,
+      "samples": 60,
+      "coldP50": 243,
+      "coldP90": 253,
+      "coldMin": 235,
+      "outerP50": 247.1,
+      "outerP90": 256.5,
+      "outerMin": 238.7,
+      "outerRange": [
+        245.2,
+        248.2
+      ],
+      "extraP50": 221.6,
+      "extraRange": [
+        219.2,
+        222.5
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 237,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-4096k",
+      "shape": "lazy",
+      "bytes": 4194694,
+      "samples": 60,
+      "coldP50": 460,
+      "coldP90": 483,
+      "coldMin": 434,
+      "outerP50": 463.5,
+      "outerP90": 488.1,
+      "outerMin": 438.4,
+      "outerRange": [
+        458.6,
+        469
+      ],
+      "extraP50": 438.9,
+      "extraRange": [
+        434.5,
+        442.8
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 437,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "lazy-8192k",
+      "shape": "lazy",
+      "bytes": 8388997,
+      "samples": 80,
+      "coldP50": 878,
+      "coldP90": 922,
+      "coldMin": 837,
+      "outerP50": 882,
+      "outerP90": 926,
+      "outerMin": 841.3,
+      "outerRange": [
+        871.3,
+        892.3
+      ],
+      "extraP50": 857.1,
+      "extraRange": [
+        843.2,
+        867.4
+      ],
+      "warmP50": 1,
+      "sameSourceP50": 886,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "real-audit-log",
+      "shape": "real",
+      "bytes": 4905,
+      "samples": 60,
+      "coldP50": 24,
+      "coldP90": 25,
+      "coldMin": 22,
+      "outerP50": 26.8,
+      "outerP90": 28.8,
+      "outerMin": 25.8,
+      "outerRange": [
+        26.6,
+        27.5
+      ],
+      "extraP50": 2.1,
+      "extraRange": [
+        2,
+        2.2
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 23,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-webhook-notifier",
+      "shape": "real",
+      "bytes": 9911,
+      "samples": 60,
+      "coldP50": 24,
+      "coldP90": 26,
+      "coldMin": 22,
+      "outerP50": 27.2,
+      "outerP90": 29.5,
+      "outerMin": 25.7,
+      "outerRange": [
+        26.9,
+        28.3
+      ],
+      "extraP50": 2.5,
+      "extraRange": [
+        2.4,
+        2.6
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 24,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-atproto",
+      "shape": "real",
+      "bytes": 20310,
+      "samples": 100,
+      "coldP50": 27,
+      "coldP90": 28,
+      "coldMin": 24,
+      "outerP50": 30,
+      "outerP90": 32.1,
+      "outerMin": 27.6,
+      "outerRange": [
+        29.1,
+        30.7
+      ],
+      "extraP50": 4.3,
+      "extraRange": [
+        4.2,
+        4.4
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 26,
+      "errors": 0,
+      "passes": 5
+    },
+    {
+      "payload": "real-dinkus-inventory-zodmini",
+      "shape": "real",
+      "bytes": 76051,
+      "samples": 20,
+      "coldP50": 74,
+      "coldP90": 76,
+      "coldMin": 72,
+      "outerP50": 77.5,
+      "outerP90": 79.3,
+      "outerMin": 75.4,
+      "outerRange": [
+        76.5,
+        78.2
+      ],
+      "extraP50": 51.3,
+      "extraRange": [
+        50.3,
+        51.9
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 74,
+      "errors": 0,
+      "passes": 1
+    },
+    {
+      "payload": "real-dinkus-commerce",
+      "shape": "real",
+      "bytes": 117068,
+      "samples": 60,
+      "coldP50": 43,
+      "coldP90": 46,
+      "coldMin": 41,
+      "outerP50": 46.6,
+      "outerP90": 48.9,
+      "outerMin": 45,
+      "outerRange": [
+        46.1,
+        46.8
+      ],
+      "extraP50": 21.2,
+      "extraRange": [
+        21.1,
+        21.6
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 43,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-dinkus-inventory",
+      "shape": "real",
+      "bytes": 131060,
+      "samples": 60,
+      "coldP50": 108,
+      "coldP90": 116,
+      "coldMin": 102,
+      "outerP50": 111.8,
+      "outerP90": 121.9,
+      "outerMin": 105.2,
+      "outerRange": [
+        110.7,
+        115
+      ],
+      "extraP50": 86.7,
+      "extraRange": [
+        86,
+        89.7
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 105,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-combo-commerce-inventory-zodmini",
+      "shape": "real",
+      "bytes": 193731,
+      "samples": 60,
+      "coldP50": 87,
+      "coldP90": 100,
+      "coldMin": 81,
+      "outerP50": 90.6,
+      "outerP90": 103.5,
+      "outerMin": 84.7,
+      "outerRange": [
+        90.3,
+        91.3
+      ],
+      "extraP50": 65,
+      "extraRange": [
+        64.6,
+        65.4
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 86,
+      "errors": 0,
+      "passes": 3
+    },
+    {
+      "payload": "real-combo-commerce-inventory",
+      "shape": "real",
+      "bytes": 248704,
+      "samples": 80,
+      "coldP50": 126,
+      "coldP90": 135,
+      "coldMin": 119,
+      "outerP50": 130.8,
+      "outerP90": 139.1,
+      "outerMin": 123.4,
+      "outerRange": [
+        127.3,
+        133.8
+      ],
+      "extraP50": 104.1,
+      "extraRange": [
+        102,
+        107.2
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 126,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "real-combo-x2",
+      "shape": "real",
+      "bytes": 498232,
+      "samples": 80,
+      "coldP50": 214,
+      "coldP90": 221,
+      "coldMin": 199,
+      "outerP50": 217.9,
+      "outerP90": 224.5,
+      "outerMin": 202.6,
+      "outerRange": [
+        215.9,
+        220.2
+      ],
+      "extraP50": 192.7,
+      "extraRange": [
+        190.5,
+        194.1
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 212,
+      "errors": 0,
+      "passes": 4
+    },
+    {
+      "payload": "real-combo-x4",
+      "shape": "real",
+      "bytes": 1001334,
+      "samples": 40,
+      "coldP50": 381,
+      "coldP90": 400,
+      "coldMin": 363,
+      "outerP50": 385,
+      "outerP90": 403.8,
+      "outerMin": 367.8,
+      "outerRange": [
+        377.9,
+        391.2
+      ],
+      "extraP50": 360.4,
+      "extraRange": [
+        351.9,
+        365.9
+      ],
+      "warmP50": 2,
+      "sameSourceP50": 386,
+      "errors": 0,
+      "passes": 2
+    }
+  ],
+  "memory": [
+    {
+      "payload": "real-audit-log",
+      "bytes": 4905,
+      "perIsolateKb": 1247,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "real-dinkus-commerce",
+      "bytes": 117062,
+      "perIsolateKb": 2216,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "real-combo-commerce-inventory",
+      "bytes": 248704,
+      "perIsolateKb": 3926,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "real-combo-x2",
+      "bytes": 498232,
+      "perIsolateKb": 8544,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "real-combo-x4",
+      "bytes": 1001334,
+      "perIsolateKb": 13770,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "eager-64k",
+      "bytes": 65544,
+      "perIsolateKb": 1631,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "eager-128k",
+      "bytes": 131102,
+      "perIsolateKb": 2208,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "eager-256k",
+      "bytes": 262162,
+      "perIsolateKb": 5394,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "eager-512k",
+      "bytes": 524300,
+      "perIsolateKb": 7441,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "eager-1024k",
+      "bytes": 1048490,
+      "perIsolateKb": 11132,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "eager-2048k",
+      "bytes": 2097157,
+      "perIsolateKb": 18615,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "eager-4096k",
+      "bytes": 4194364,
+      "perIsolateKb": 33664,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "lazy-1024k",
+      "bytes": 1048532,
+      "perIsolateKb": 6474,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "lazy-4096k",
+      "bytes": 4194406,
+      "perIsolateKb": 21344,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "data-1024k",
+      "bytes": 1048576,
+      "perIsolateKb": 5824,
+      "isolates": 8,
+      "errors": 0
+    },
+    {
+      "payload": "data-4096k",
+      "bytes": 4194304,
+      "perIsolateKb": 19383,
+      "isolates": 8,
+      "errors": 0
+    }
+  ],
+  "multi": [
+    {
+      "payload": "real-audit-log",
+      "bytes": 4905,
+      "n": 10,
+      "sequentialMs": 315,
+      "parallelMs": 275,
+      "errors": 0
+    },
+    {
+      "payload": "real-dinkus-commerce",
+      "bytes": 117062,
+      "n": 10,
+      "sequentialMs": 493,
+      "parallelMs": 448,
+      "errors": 0
+    },
+    {
+      "payload": "real-combo-commerce-inventory",
+      "bytes": 248704,
+      "n": 10,
+      "sequentialMs": 1320,
+      "parallelMs": 1309,
+      "errors": 0
+    },
+    {
+      "payload": "real-combo-x2",
+      "bytes": 498232,
+      "n": 10,
+      "sequentialMs": 2136,
+      "parallelMs": 2091,
+      "errors": 0
+    },
+    {
+      "payload": "eager-128k",
+      "bytes": 131102,
+      "n": 10,
+      "sequentialMs": 725,
+      "parallelMs": 680,
+      "errors": 0
+    },
+    {
+      "payload": "eager-256k",
+      "bytes": 262162,
+      "n": 10,
+      "sequentialMs": 1957,
+      "parallelMs": 1896,
+      "errors": 0
+    },
+    {
+      "payload": "eager-512k",
+      "bytes": 524300,
+      "n": 10,
+      "sequentialMs": 2908,
+      "parallelMs": 2806,
+      "errors": 0
+    },
+    {
+      "payload": "eager-1024k",
+      "bytes": 1048490,
+      "n": 10,
+      "sequentialMs": 5245,
+      "parallelMs": 5062,
+      "errors": 0
+    }
+  ],
+  "limits": [
+    {
+      "payload": "quick",
+      "limits": "prod",
+      "coldMs": 23,
+      "coldError": null,
+      "warmMs": 1,
+      "warmError": null
+    },
+    {
+      "payload": "quick",
+      "limits": "no-cpu-limit",
+      "coldMs": 20,
+      "coldError": null,
+      "warmMs": 1,
+      "warmError": null
+    },
+    {
+      "payload": "spin-at-import",
+      "limits": "prod",
+      "coldMs": 15733,
+      "coldError": null,
+      "warmMs": 2,
+      "warmError": null
+    },
+    {
+      "payload": "spin-at-import",
+      "limits": "no-cpu-limit",
+      "coldMs": 15729,
+      "coldError": null,
+      "warmMs": 1,
+      "warmError": null
+    },
+    {
+      "payload": "spin-in-route",
+      "limits": "prod",
+      "coldMs": 720,
+      "coldError": null,
+      "warmMs": 696,
+      "warmError": null
+    },
+    {
+      "payload": "spin-in-route",
+      "limits": "no-cpu-limit",
+      "coldMs": 725,
+      "coldError": null,
+      "warmMs": 698,
+      "warmError": null
+    }
+  ],
+  "nodeHost": [
+    {
+      "suite": "node-host",
+      "payload": "real-audit-log",
+      "shape": "real",
+      "bytes": 4905,
+      "plugins": 1,
+      "totalBytes": 4905,
+      "readyMs": [
+        171,
+        89,
+        89
+      ],
+      "readyMedianMs": 89,
+      "rssKb": [
+        43484,
+        43368,
+        43208
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-audit-log",
+      "shape": "real",
+      "bytes": 4905,
+      "plugins": 5,
+      "totalBytes": 24525,
+      "readyMs": [
+        162,
+        167,
+        161
+      ],
+      "readyMedianMs": 162,
+      "rssKb": [
+        49136,
+        49404,
+        49056
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-audit-log",
+      "shape": "real",
+      "bytes": 4905,
+      "plugins": 10,
+      "totalBytes": 49050,
+      "readyMs": [
+        242,
+        247,
+        250
+      ],
+      "readyMedianMs": 247,
+      "rssKb": [
+        56424,
+        56312,
+        56620
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-audit-log",
+      "shape": "real",
+      "bytes": 4905,
+      "plugins": 20,
+      "totalBytes": 98100,
+      "readyMs": [
+        437,
+        426,
+        436
+      ],
+      "readyMedianMs": 436,
+      "rssKb": [
+        71516,
+        71756,
+        71748
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-dinkus-commerce",
+      "shape": "real",
+      "bytes": 117068,
+      "plugins": 1,
+      "totalBytes": 117068,
+      "readyMs": [
+        113,
+        111,
+        111
+      ],
+      "readyMedianMs": 111,
+      "rssKb": [
+        46356,
+        46256,
+        46164
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-dinkus-commerce",
+      "shape": "real",
+      "bytes": 117068,
+      "plugins": 5,
+      "totalBytes": 585340,
+      "readyMs": [
+        257,
+        252,
+        254
+      ],
+      "readyMedianMs": 254,
+      "rssKb": [
+        55576,
+        55376,
+        55236
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-dinkus-commerce",
+      "shape": "real",
+      "bytes": 117068,
+      "plugins": 10,
+      "totalBytes": 1170680,
+      "readyMs": [
+        463,
+        451,
+        450
+      ],
+      "readyMedianMs": 451,
+      "rssKb": [
+        66896,
+        66768,
+        67072
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-dinkus-commerce",
+      "shape": "real",
+      "bytes": 117068,
+      "plugins": 20,
+      "totalBytes": 2341360,
+      "readyMs": [
+        827,
+        819,
+        818
+      ],
+      "readyMedianMs": 819,
+      "rssKb": [
+        88588,
+        88196,
+        88532
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-combo-commerce-inventory",
+      "shape": "real",
+      "bytes": 248704,
+      "plugins": 1,
+      "totalBytes": 248704,
+      "readyMs": [
+        198,
+        213,
+        205
+      ],
+      "readyMedianMs": 205,
+      "rssKb": [
+        56016,
+        56256,
+        55952
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-combo-commerce-inventory",
+      "shape": "real",
+      "bytes": 248704,
+      "plugins": 5,
+      "totalBytes": 1243520,
+      "readyMs": [
+        690,
+        729,
+        701
+      ],
+      "readyMedianMs": 701,
+      "rssKb": [
+        80592,
+        80656,
+        80964
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-combo-commerce-inventory",
+      "shape": "real",
+      "bytes": 248704,
+      "plugins": 10,
+      "totalBytes": 2487040,
+      "readyMs": [
+        1303,
+        1366,
+        1337
+      ],
+      "readyMedianMs": 1337,
+      "rssKb": [
+        111928,
+        112016,
+        111304
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-combo-commerce-inventory",
+      "shape": "real",
+      "bytes": 248704,
+      "plugins": 20,
+      "totalBytes": 4974080,
+      "readyMs": [
+        2726,
+        2655,
+        2662
+      ],
+      "readyMedianMs": 2662,
+      "rssKb": [
+        163600,
+        163696,
+        162668
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-combo-x2",
+      "shape": "real",
+      "bytes": 498232,
+      "plugins": 1,
+      "totalBytes": 498232,
+      "readyMs": [
+        307,
+        325,
+        299
+      ],
+      "readyMedianMs": 307,
+      "rssKb": [
+        59228,
+        59736,
+        59348
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-combo-x2",
+      "shape": "real",
+      "bytes": 498232,
+      "plugins": 5,
+      "totalBytes": 2491160,
+      "readyMs": [
+        1148,
+        1135,
+        1246
+      ],
+      "readyMedianMs": 1148,
+      "rssKb": [
+        101316,
+        101340,
+        100844
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-combo-x2",
+      "shape": "real",
+      "bytes": 498232,
+      "plugins": 10,
+      "totalBytes": 4982320,
+      "readyMs": [
+        2342,
+        2325,
+        2347
+      ],
+      "readyMedianMs": 2342,
+      "rssKb": [
+        143860,
+        143500,
+        143676
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "real-combo-x2",
+      "shape": "real",
+      "bytes": 498232,
+      "plugins": 20,
+      "totalBytes": 9964640,
+      "readyMs": [
+        4539,
+        4570,
+        4559
+      ],
+      "readyMedianMs": 4559,
+      "rssKb": [
+        229956,
+        229328,
+        229384
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-128k",
+      "shape": "eager",
+      "bytes": 131102,
+      "plugins": 1,
+      "totalBytes": 131102,
+      "readyMs": [
+        147,
+        137,
+        143
+      ],
+      "readyMedianMs": 143,
+      "rssKb": [
+        47016,
+        46600,
+        47188
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-128k",
+      "shape": "eager",
+      "bytes": 131102,
+      "plugins": 5,
+      "totalBytes": 655510,
+      "readyMs": [
+        379,
+        401,
+        390
+      ],
+      "readyMedianMs": 390,
+      "rssKb": [
+        55584,
+        56760,
+        56536
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-128k",
+      "shape": "eager",
+      "bytes": 131102,
+      "plugins": 10,
+      "totalBytes": 1311020,
+      "readyMs": [
+        676,
+        693,
+        705
+      ],
+      "readyMedianMs": 693,
+      "rssKb": [
+        69116,
+        69168,
+        68904
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-128k",
+      "shape": "eager",
+      "bytes": 131102,
+      "plugins": 20,
+      "totalBytes": 2622040,
+      "readyMs": [
+        1383,
+        1392,
+        1383
+      ],
+      "readyMedianMs": 1383,
+      "rssKb": [
+        96624,
+        96456,
+        96776
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-256k",
+      "shape": "eager",
+      "bytes": 262258,
+      "plugins": 1,
+      "totalBytes": 262258,
+      "readyMs": [
+        258,
+        261,
+        263
+      ],
+      "readyMedianMs": 261,
+      "rssKb": [
+        51196,
+        51044,
+        50996
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-256k",
+      "shape": "eager",
+      "bytes": 262258,
+      "plugins": 5,
+      "totalBytes": 1311290,
+      "readyMs": [
+        986,
+        989,
+        1000
+      ],
+      "readyMedianMs": 989,
+      "rssKb": [
+        76208,
+        78068,
+        78116
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-256k",
+      "shape": "eager",
+      "bytes": 262258,
+      "plugins": 10,
+      "totalBytes": 2622580,
+      "readyMs": [
+        1964,
+        1974,
+        1934
+      ],
+      "readyMedianMs": 1964,
+      "rssKb": [
+        108012,
+        110700,
+        110848
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-256k",
+      "shape": "eager",
+      "bytes": 262258,
+      "plugins": 20,
+      "totalBytes": 5245160,
+      "readyMs": [
+        3864,
+        3793,
+        3759
+      ],
+      "readyMedianMs": 3793,
+      "rssKb": [
+        160580,
+        160796,
+        160592
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-512k",
+      "shape": "eager",
+      "bytes": 524396,
+      "plugins": 1,
+      "totalBytes": 524396,
+      "readyMs": [
+        380,
+        367,
+        365
+      ],
+      "readyMedianMs": 367,
+      "rssKb": [
+        55772,
+        55752,
+        55524
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-512k",
+      "shape": "eager",
+      "bytes": 524396,
+      "plugins": 5,
+      "totalBytes": 2621980,
+      "readyMs": [
+        1490,
+        1513,
+        1478
+      ],
+      "readyMedianMs": 1490,
+      "rssKb": [
+        93764,
+        93268,
+        93824
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-512k",
+      "shape": "eager",
+      "bytes": 524396,
+      "plugins": 10,
+      "totalBytes": 5243960,
+      "readyMs": [
+        2906,
+        2959,
+        2974
+      ],
+      "readyMedianMs": 2959,
+      "rssKb": [
+        131092,
+        131176,
+        131372
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-512k",
+      "shape": "eager",
+      "bytes": 524396,
+      "plugins": 20,
+      "totalBytes": 10487920,
+      "readyMs": [
+        6107,
+        6096,
+        5958
+      ],
+      "readyMedianMs": 6096,
+      "rssKb": [
+        219772,
+        219868,
+        219496
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-1024k",
+      "shape": "eager",
+      "bytes": 1048682,
+      "plugins": 1,
+      "totalBytes": 1048682,
+      "readyMs": [
+        600,
+        616,
+        619
+      ],
+      "readyMedianMs": 616,
+      "rssKb": [
+        64536,
+        64500,
+        64568
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-1024k",
+      "shape": "eager",
+      "bytes": 1048682,
+      "plugins": 5,
+      "totalBytes": 5243410,
+      "readyMs": [
+        2702,
+        2764,
+        2680
+      ],
+      "readyMedianMs": 2702,
+      "rssKb": [
+        125632,
+        125812,
+        125048
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-1024k",
+      "shape": "eager",
+      "bytes": 1048682,
+      "plugins": 10,
+      "totalBytes": 10486820,
+      "readyMs": [
+        5371,
+        5540,
+        5513
+      ],
+      "readyMedianMs": 5513,
+      "rssKb": [
+        209036,
+        208892,
+        208864
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-1024k",
+      "shape": "eager",
+      "bytes": 1048682,
+      "plugins": 20,
+      "totalBytes": 20973640,
+      "readyMs": [
+        11223,
+        11086,
+        11497
+      ],
+      "readyMedianMs": 11223,
+      "rssKb": [
+        366608,
+        366672,
+        366680
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-2048k",
+      "shape": "eager",
+      "bytes": 2097349,
+      "plugins": 1,
+      "totalBytes": 2097349,
+      "readyMs": [
+        1030,
+        900,
+        974
+      ],
+      "readyMedianMs": 974,
+      "rssKb": [
+        81644,
+        81408,
+        81664
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-2048k",
+      "shape": "eager",
+      "bytes": 2097349,
+      "plugins": 5,
+      "totalBytes": 10486745,
+      "readyMs": [
+        4234,
+        4523,
+        4339
+      ],
+      "readyMedianMs": 4339,
+      "rssKb": [
+        181768,
+        181992,
+        175344
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-2048k",
+      "shape": "eager",
+      "bytes": 2097349,
+      "plugins": 10,
+      "totalBytes": 20973490,
+      "readyMs": [
+        8386,
+        8557,
+        null
+      ],
+      "readyMedianMs": 8386,
+      "rssKb": [
+        307088,
+        306564,
+        0
+      ],
+      "errors": [
+        "*** Fatal uncaught kj::Exception: rust/cxx/kj-rs-io/ffi.rs:209: failed: bind(): Address already in use (os error 98)\nstack: node_modules/.pnpm/@cloudflare+workerd-linux-64@1.20261006.1/node_modules/@cloudflare/workerd-linux-64/bin/workerd@22abd7b node_modules/.pnpm/@cloudflare+workerd-linux-64@1.202"
+      ]
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-2048k",
+      "shape": "eager",
+      "bytes": 2097349,
+      "plugins": 20,
+      "totalBytes": 41946980,
+      "readyMs": [
+        16724,
+        16910,
+        17623
+      ],
+      "readyMedianMs": 16910,
+      "rssKb": [
+        544864,
+        544832,
+        545340
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-4096k",
+      "shape": "eager",
+      "bytes": 4194652,
+      "plugins": 1,
+      "totalBytes": 4194652,
+      "readyMs": [
+        1580,
+        1648,
+        1572
+      ],
+      "readyMedianMs": 1580,
+      "rssKb": [
+        96856,
+        96660,
+        96832
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-4096k",
+      "shape": "eager",
+      "bytes": 4194652,
+      "plugins": 5,
+      "totalBytes": 20973260,
+      "readyMs": [
+        7800,
+        7833,
+        7865
+      ],
+      "readyMedianMs": 7833,
+      "rssKb": [
+        283312,
+        283660,
+        283672
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-4096k",
+      "shape": "eager",
+      "bytes": 4194652,
+      "plugins": 10,
+      "totalBytes": 41946520,
+      "readyMs": [
+        15546,
+        15679,
+        15411
+      ],
+      "readyMedianMs": 15546,
+      "rssKb": [
+        503760,
+        503352,
+        503716
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "eager-4096k",
+      "shape": "eager",
+      "bytes": 4194652,
+      "plugins": 20,
+      "totalBytes": 83893040,
+      "readyMs": [
+        null,
+        31251,
+        null
+      ],
+      "readyMedianMs": 31251,
+      "rssKb": [
+        0,
+        772640,
+        0
+      ],
+      "errors": [
+        "*** Fatal uncaught kj::Exception: rust/cxx/kj-rs-io/ffi.rs:209: failed: bind(): Address already in use (os error 98)\nstack: node_modules/.pnpm/@cloudflare+workerd-linux-64@1.20261006.1/node_modules/@cloudflare/workerd-linux-64/bin/workerd@22abd7b node_modules/.pnpm/@cloudflare+workerd-linux-64@1.202",
+        "*** Fatal uncaught kj::Exception: rust/cxx/kj-rs-io/ffi.rs:209: failed: bind(): Address already in use (os error 98)\nstack: node_modules/.pnpm/@cloudflare+workerd-linux-64@1.20261006.1/node_modules/@cloudflare/workerd-linux-64/bin/workerd@22abd7b node_modules/.pnpm/@cloudflare+workerd-linux-64@1.202"
+      ]
+    },
+    {
+      "suite": "node-host",
+      "payload": "lazy-1024k",
+      "shape": "lazy",
+      "bytes": 1048724,
+      "plugins": 1,
+      "totalBytes": 1048724,
+      "readyMs": [
+        239,
+        246,
+        245
+      ],
+      "readyMedianMs": 245,
+      "rssKb": [
+        54460,
+        54864,
+        54552
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "lazy-1024k",
+      "shape": "lazy",
+      "bytes": 1048724,
+      "plugins": 5,
+      "totalBytes": 5243620,
+      "readyMs": [
+        883,
+        887,
+        922
+      ],
+      "readyMedianMs": 887,
+      "rssKb": [
+        87508,
+        87152,
+        87056
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "lazy-1024k",
+      "shape": "lazy",
+      "bytes": 1048724,
+      "plugins": 10,
+      "totalBytes": 10487240,
+      "readyMs": [
+        1782,
+        1761,
+        1733
+      ],
+      "readyMedianMs": 1761,
+      "rssKb": [
+        136340,
+        136240,
+        136388
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "lazy-1024k",
+      "shape": "lazy",
+      "bytes": 1048724,
+      "plugins": 20,
+      "totalBytes": 20974480,
+      "readyMs": [
+        3448,
+        null,
+        3499
+      ],
+      "readyMedianMs": 3448,
+      "rssKb": [
+        223468,
+        0,
+        223412
+      ],
+      "errors": [
+        "*** Fatal uncaught kj::Exception: rust/cxx/kj-rs-io/ffi.rs:209: failed: bind(): Address already in use (os error 98)\nstack: node_modules/.pnpm/@cloudflare+workerd-linux-64@1.20261006.1/node_modules/@cloudflare/workerd-linux-64/bin/workerd@22abd7b node_modules/.pnpm/@cloudflare+workerd-linux-64@1.202"
+      ]
+    },
+    {
+      "suite": "node-host",
+      "payload": "data-1024k",
+      "shape": "data",
+      "bytes": 1048576,
+      "plugins": 1,
+      "totalBytes": 1048576,
+      "readyMs": [
+        137,
+        134,
+        138
+      ],
+      "readyMedianMs": 137,
+      "rssKb": [
+        53064,
+        53172,
+        53032
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "data-1024k",
+      "shape": "data",
+      "bytes": 1048576,
+      "plugins": 5,
+      "totalBytes": 5242880,
+      "readyMs": [
+        406,
+        396,
+        413
+      ],
+      "readyMedianMs": 406,
+      "rssKb": [
+        85852,
+        85828,
+        85956
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "data-1024k",
+      "shape": "data",
+      "bytes": 1048576,
+      "plugins": 10,
+      "totalBytes": 10485760,
+      "readyMs": [
+        774,
+        764,
+        774
+      ],
+      "readyMedianMs": 774,
+      "rssKb": [
+        134036,
+        134172,
+        134404
+      ],
+      "errors": []
+    },
+    {
+      "suite": "node-host",
+      "payload": "data-1024k",
+      "shape": "data",
+      "bytes": 1048576,
+      "plugins": 20,
+      "totalBytes": 20971520,
+      "readyMs": [
+        1540,
+        1518,
+        1534
+      ],
+      "readyMedianMs": 1534,
+      "rssKb": [
+        219592,
+        219704,
+        220056
+      ],
+      "errors": []
+    }
+  ],
+  "edge": [],
+  "edgeBisect": []
+}
