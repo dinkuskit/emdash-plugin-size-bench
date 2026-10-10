@@ -194,9 +194,9 @@ footer { color: var(--ink-3); font-size: 13px; }
 const DATA = /*__DATA__*/null;
 const el = (tag, attrs = {}, text) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
 const svgEl = (tag, attrs = {}) => { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; };
-const size = (b) => b >= 1000 * 1024 ? `${+(b / 1048576).toFixed(1)} MB` : `${Math.round(b / 1024)} KB`;
+const size = (b) => b >= 1000 * 1024 ? `${+(b / 1048576).toFixed(1)} MB` : b < 1024 ? `${b} bytes` : `${Math.round(b / 1024)} KB`;
 const SHAPES = [["eager", "Run at import", "--series-1"], ["lazy", "Run later", "--series-2"], ["data", "Plain data", "--series-3"]];
-const NAMES = { "real-audit-log": "audit-log (upstream)", "real-webhook-notifier": "webhook-notifier (upstream)", "real-atproto": "atproto (upstream)", "real-dinkus-inventory-zodmini": "DinkusKit Inventory, zod/mini", "real-dinkus-commerce": "DinkusKit Commerce", "real-dinkus-inventory": "DinkusKit Inventory, full zod", "real-combo-commerce-inventory-zodmini": "Commerce + Inventory zod/mini, one plugin", "real-combo-commerce-inventory": "Commerce + Inventory, one plugin", "real-combo-x2": "Commerce + Inventory ×2, one plugin", "real-combo-x4": "Commerce + Inventory ×4, one plugin" };
+const NAMES = { tiny: "Almost empty plugin", "real-audit-log": "audit-log (upstream)", "real-webhook-notifier": "webhook-notifier (upstream)", "real-atproto": "atproto (upstream)", "real-dinkus-inventory-zodmini": "DinkusKit Inventory, zod/mini", "real-dinkus-commerce": "DinkusKit Commerce", "real-dinkus-inventory": "DinkusKit Inventory, full zod", "real-combo-commerce-inventory-zodmini": "Commerce + Inventory zod/mini, one plugin", "real-combo-commerce-inventory": "Commerce + Inventory, one plugin", "real-combo-x2": "Commerce + Inventory ×2, one plugin", "real-combo-x4": "Commerce + Inventory ×4, one plugin" };
 const label = (n) => NAMES[n] ?? n;
 const niceName = (n) => NAMES[n] ?? (n.startsWith("eager") ? "Run at import" : n.startsWith("lazy") ? "Run later" : n.startsWith("data") ? "Plain data" : n);
 // Runs with the outside high-resolution clock report it (one decimal); older runs only have workerd's 1 ms clock.
@@ -426,20 +426,22 @@ const nodeRows = [...new Set(DATA.node.map((n) => n.n))].map((name) => {
 });
 table("t-node", ["Plugin", "Size each", ...counts.map((c) => `${c} plugin${c > 1 ? "s" : ""}`)], nodeRows);
 
-const shapeName = { eager: "Run at import", lazy: "Run later", data: "Plain data", real: "Real" };
+// The Cloudflare tables have Shape and Size columns, so synthetic plugins need no name of their own.
+const edgeName = (n) => NAMES[n] ?? "Synthetic plugin";
+const shapeName = { tiny: "Baseline", eager: "Run at import", lazy: "Run later", data: "Plain data", real: "Real" };
 const all = [...DATA.matrix].sort((a, b) => ["real", "eager", "lazy", "data"].indexOf(a.s) - ["real", "eager", "lazy", "data"].indexOf(b.s) || a.b - b.b);
 if (OUTER) table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Extra over a tiny plugin (95% range)", "Inside clock, median", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), fmt1(d.o), fmt1(d.o90), fmt1(d.omin), extra(d), d.p50, d.same, d.w, d.k]), { mono: [0] });
 else table("t-all", ["Plugin", "Shape", "Bytes", "First call, median", "90th pct", "Fastest", "Same source again", "Later calls", "Samples"], all.map((d) => [label(d.n), shapeName[d.s], d.b.toLocaleString("en-US"), d.p50, d.p90, d.min, d.same, d.w, d.k]), { mono: [0] });
 
 if (DATA.bisect?.length) {
 	document.getElementById("sec-bisect").hidden = false;
-	const rows = [...DATA.bisect].sort((a, b) => ["real", "eager", "lazy"].indexOf(a.s) - ["real", "eager", "lazy"].indexOf(b.s) || a.b - b.b);
-	table("t-bisect", ["Plugin", "Shape", "Size", "Smallest CPU limit that loads", "Fits EmDash's 50 ms default"], rows.map((d) => [label(d.n), shapeName[d.s], size(d.b), d.cpu == null ? d.note : `${d.cpu} ms`, d.cpu == null ? "no" : d.cpu <= 50 ? "yes" : "no"]), { hot: (r, i) => i === 4 && r[4] === "no" });
+	const rows = [...DATA.bisect].sort((a, b) => ["tiny", "real", "eager", "lazy"].indexOf(a.s) - ["tiny", "real", "eager", "lazy"].indexOf(b.s) || a.b - b.b);
+	table("t-bisect", ["Plugin", "Shape", "Size", "Smallest CPU limit that loads", "Fits EmDash's 50 ms default"], rows.map((d) => [edgeName(d.n), shapeName[d.s], size(d.b), d.cpu == null ? d.note : `${d.cpu} ms`, d.cpu == null ? "no" : d.cpu <= 50 ? "yes" : "no"]), { hot: (r, i) => i === 4 && r[4] === "no" });
 }
 if (DATA.edge?.length) {
 	document.getElementById("sec-edge").hidden = false;
 	// One row per plugin: EmDash's 50 ms limit next to the high limit.
-	const order = ["real", "eager", "lazy", "data"];
+	const order = ["tiny", "real", "eager", "lazy", "data"];
 	const rows = [...new Set(DATA.edge.map((d) => d.n))].map((n) => {
 		const lo = DATA.edge.find((d) => d.n === n && d.cpu === 50), hi = DATA.edge.find((d) => d.n === n && d.cpu !== 50);
 		return { n, s: (lo ?? hi).s, b: (lo ?? hi).b, lo, hi };
@@ -448,6 +450,6 @@ if (DATA.edge?.length) {
 	const limitText = (cpu) => (cpu >= 1000 ? `${cpu / 1000} s` : `${cpu} ms`);
 	const first = (d) => (d?.p50 == null ? "n/a" : `${d.p50} ms`);
 	const failed = (d) => (d ? `${d.failed} of ${d.total}` : "n/a");
-	table("t-edge", ["Plugin", "Shape", "Size", "First call at 50 ms", "Failed at 50 ms", `First call at ${hiCpu ? limitText(hiCpu) : "high limit"}`, `Failed at ${hiCpu ? limitText(hiCpu) : "high limit"}`], rows.map((r) => [label(r.n), shapeName[r.s], size(r.b), first(r.lo), failed(r.lo), first(r.hi), failed(r.hi)]), { hot: (r, i) => (i === 4 || i === 6) && !String(r[i]).startsWith("0 ") && r[i] !== "n/a" });
+	table("t-edge", ["Plugin", "Shape", "Size", "First call at 50 ms", "Failed at 50 ms", `First call at ${hiCpu ? limitText(hiCpu) : "high limit"}`, `Failed at ${hiCpu ? limitText(hiCpu) : "high limit"}`], rows.map((r) => [edgeName(r.n), shapeName[r.s], size(r.b), first(r.lo), failed(r.lo), first(r.hi), failed(r.hi)]), { hot: (r, i) => (i === 4 || i === 6) && !String(r[i]).startsWith("0 ") && r[i] !== "n/a" });
 }
 </script>

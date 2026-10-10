@@ -65,7 +65,9 @@ MODE=all node run-edge.mjs https://emdash-plugin-size-bench.<account>.workers.de
 cd .. && node analyze.mjs                # adds the "Real Cloudflare" tables
 ```
 
-`MODE=timing` loads every payload at the production limit (50 ms) and at 30 s. `MODE=bisect` finds, for each real plugin and for eager and lazy code up to 2 MB, the smallest `cpuMs` under which a fresh isolate still loads and answers (two of three fresh loads at each step). That number is the plugin's start-up CPU cost as Cloudflare counts it, which is what decides whether a bigger plugin fits under EmDash's 50 ms default.
+`MODE=timing` loads every payload at the production limit (50 ms) and at 30 s. `MODE=bisect` finds, for an almost empty plugin (`tiny`, built into the worker as the baseline), each real plugin, and eager and lazy code up to 2 MB, the smallest `cpuMs` under which a fresh isolate still loads and answers (two of three fresh loads at each step). That number is the plugin's start-up CPU cost as Cloudflare counts it, which is what decides whether a bigger plugin fits under EmDash's 50 ms default.
+
+The worker makes the plugin bridge from its own exports, as EmDash's runner does. Cloudflare's docs tie those exports to the `enable_ctx_exports` compatibility flag and a deploy without it had no callable bridge, so `wrangler.jsonc` sets it; if the bridge still can't be made, the plugin gets a placeholder, which the benchmark routes never call. `GET /diag` shows what the runtime offered, and every `/run` answer records how the bridge was made.
 
 `edge/src/wrapper.js.txt` is EmDash 1.2.0's generated wrapper. It was exported by the harness's `wrapper` suite, so the edge worker loads exactly the module pair the runner loads, at limits of 50 ms (production) and 30 s.
 

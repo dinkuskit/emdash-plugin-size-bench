@@ -27,7 +27,9 @@ const write = (row) => appendFileSync(out, JSON.stringify(row) + "\n");
 
 // ONLY=name,name limits the run to those payloads.
 const ONLY = process.env.ONLY?.split(",");
-const index = (await (await fetch(`${base}/index.json`)).json()).filter((p) => !ONLY || ONLY.includes(p.name));
+// "tiny" is the worker's built-in almost empty plugin, the baseline for the rest.
+const TINY = { name: "tiny", shape: "tiny", bytes: 71 };
+const index = [TINY, ...(await (await fetch(`${base}/index.json`)).json())].filter((p) => !ONLY || ONLY.includes(p.name));
 const shuffle = (xs) => xs.map((x) => [Math.random(), x]).sort((a, b) => a[0] - b[0]).map((x) => x[1]);
 
 async function run(name, cold, warm, cpuMs) {
@@ -49,9 +51,9 @@ if (MODE === "timing" || MODE === "all") {
 }
 
 if (MODE === "bisect" || MODE === "all") {
-	// Real plugins plus eager and lazy code up to 2 MB; data payloads barely use CPU.
+	// The baseline, real plugins, and eager and lazy code up to 2 MB; data payloads barely use CPU.
 	const BISECT_MAX = Number(process.env.BISECT_MAX_BYTES ?? 2 * 1024 * 1024 + 4096);
-	const list = index.filter((p) => p.shape === "real" || ((p.shape === "eager" || p.shape === "lazy") && p.bytes <= BISECT_MAX));
+	const list = index.filter((p) => p.shape === "tiny" || p.shape === "real" || ((p.shape === "eager" || p.shape === "lazy") && p.bytes <= BISECT_MAX));
 	for (const p of list) {
 		const trials = [];
 		let colo = null;
