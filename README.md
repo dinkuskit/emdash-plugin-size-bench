@@ -74,19 +74,17 @@ cd .. && node analyze.mjs                # adds the "Real Cloudflare" tables
 - `results/hetzner-ccx33-ash/`: a dedicated Hetzner CCX33 server (8 AMD EPYC-Milan vCPUs), 20 to 100 cold loads per payload with the outside clock and paired tiny-plugin loads. Its `NOTES.md` explains the uneven sample counts.
 - `results/`: the first run, on a shared 4-vCPU Intel Xeon VM, 21 cold loads per payload with the inside clock only.
 
-Loading code took 2.2 to 2.9 times as long on the Hetzner server as on the Xeon VM, while a plugin that is one long string took the same time on both. The curves rise the same way on both machines, so read them for shape and for costs relative to an almost empty plugin; only the Real Cloudflare run gives production times.
+Everything, even an almost empty plugin, loaded several times slower on the Hetzner server than on the Xeon VM, so read the times for shape and for costs relative to an almost empty plugin; only the Real Cloudflare run gives production times.
 
-`report/plugin-size-benchmark.html` shows the Hetzner run with the first run alongside:
+`report/plugin-size-benchmark.html` shows the Hetzner run. `COMPARE_DIR` adds a second machine's first-call times next to it, and `EDGE_DIR` takes the Cloudflare tables from an edge run analysed in its own folder:
 
 ```sh
-RESULTS_DIR=results/hetzner-ccx33-ash COMPARE_DIR=results \
-  COMPARE_LABEL="a shared 4-vCPU Intel Xeon cloud VM (the first run)" COMPARE_SHORT="Shared Xeon VM" \
-  node report/build-report.mjs
+RESULTS_DIR=results/hetzner-ccx33-ash node report/build-report.mjs
 ```
 
 ## Caveats
 
-- Absolute times depend heavily on the machine (see Results). In the first run (`results/`), below about 30 ms, run-to-run noise (5 to 20 ms) is as large as the size effect; the Hetzner run's paired loads bring its 95% ranges to within a few percent.
+- Absolute times depend heavily on the machine (see Results). In the first run (`results/`), below about 30 ms, run-to-run noise (5 to 20 ms) is as large as the size effect, and its plain-data times jump around; the Hetzner run's paired loads bring its 95% ranges to within a few percent.
 - RSS per isolate is the workerd process growth divided by eight loaded isolates, so it includes allocator slack.
 - The Node-hosting harness uses a minimal stand-in wrapper and shim module instead of EmDash's generated ones. Those are the same few KB for every plugin, so they do not change the size trend.
 - Network and storage costs that also grow with size are not measured here: downloading the bundle from the Registry at install, and reading `backend.js` from R2 on every host cold start (`loadBundleFromR2`).

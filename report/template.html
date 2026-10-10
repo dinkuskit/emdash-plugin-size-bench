@@ -229,17 +229,22 @@ if (DATA.machine) {
 	document.getElementById("machine").textContent = `${mc.label ? `${mc.label}, ` : ""}${mc.cpus} × ${mc.cpu}, ${mc.memGb} GB`;
 	document.getElementById("chart-note").textContent = `Median of ${samplesText} cold loads per point (${samplesMin === samples ? "" : "up to "}${mc.passes} passes × ${mc.cold}, in fresh workerd processes with shuffled order${samplesMin === samples ? "" : "; some passes stopped early, see the sample counts at the bottom"})${OUTER ? ", timed from outside the sandbox with a high-resolution clock" : ""}. Log scale across, linear up. Hover or tab through the sizes for exact values.`;
 }
-// Where each shape first crosses 50 ms on this machine.
+// Where each shape first crosses 50 ms on this machine, and on the comparison machine when there is one.
 {
-	const cross = (shape) => DATA.matrix.filter((d) => d.s === shape).sort((a, b) => a.b - b.b).find((d) => val(d) > 50);
-	const e = cross("eager"), l = cross("lazy");
-	const realOver = DATA.matrix.filter((d) => d.s === "real" && val(d) > 50).sort((a, b) => a.b - b.b)[0];
+	const other = DATA.compare ? Object.fromEntries(DATA.compare.rows.map((r) => [r.n, r.o ?? r.p50])) : null;
+	const there = DATA.compare ? `on the ${DATA.compare.short[0].toLowerCase()}${DATA.compare.short.slice(1)}` : "";
+	const sorted = (shape) => DATA.matrix.filter((d) => d.s === shape).sort((a, b) => a.b - b.b);
+	const cross = (shape, v) => sorted(shape).find((d) => v(d) != null && v(d) > 50);
+	const vOther = (d) => (other ? other[d.n] ?? null : null);
+	const e = cross("eager", val), l = cross("lazy", val), realOver = cross("real", val);
+	const eo = other && cross("eager", vOther), lo = other && cross("lazy", vOther), ro = other && cross("real", vOther);
 	const bits = [];
-	bits.push(e ? `run-at-import code from about ${size(e.b)} would fail on its first call at this machine's speed` : "run-at-import code stayed under 50 ms at every size measured");
-	bits.push(l ? `lazy code would reach that point near ${size(l.b)}` : "lazy code stayed under 50 ms at every size measured");
-	if (realOver) bits.push(`the smallest real plugin over 50 ms here is ${label(realOver.n)} at ${size(realOver.b)} (${fmt(val(realOver))} ms)`);
+	bits.push(e ? `run-at-import code from about ${size(e.b)} would fail on its first call at this machine's speed${eo ? ` (from about ${size(eo.b)} ${there})` : ""}` : "run-at-import code stayed under 50 ms at every size measured");
+	bits.push(l ? `lazy code would reach that point near ${size(l.b)}${lo ? ` (${size(lo.b)} ${there})` : ""}` : "lazy code stayed under 50 ms at every size measured");
+	if (realOver) bits.push(`the smallest real plugin over 50 ms here is ${label(realOver.n)} at ${size(realOver.b)} (${fmt(val(realOver))} ms)${other ? (ro ? `, and ${there} it is ${label(ro.n)} at ${size(ro.b)} (${fmt(vOther(ro))} ms)` : `, while ${there} every real plugin stayed under 50 ms`) : ""}`);
 	const tinyD = byName["real-audit-log"];
-	document.getElementById("cross-50").textContent = `On the edge, if everything the first call does counts toward its 50 ms${tinyD ? `, including the ${fmt(val(tinyD))} ms that even an almost empty plugin needs on this machine` : ""}, then ${bits.join("; ")}. ${DATA.bisect?.length ? "The Cloudflare measurements below answer it directly." : "The edge folder in the benchmark measures exactly this on real Cloudflare."}`;
+	const tinyO = tinyD && other ? vOther(tinyD) : null;
+	document.getElementById("cross-50").textContent = `On the edge, if everything the first call does counts toward its 50 ms${tinyD ? `, including the ${fmt(val(tinyD))} ms that even an almost empty plugin needs on this machine${tinyO != null ? ` (${fmt(tinyO)} ms ${there})` : ""}` : ""}, then ${bits.join("; ")}. ${DATA.bisect?.length ? "The Cloudflare measurements below answer it directly." : "The edge folder in the benchmark measures exactly this on real Cloudflare."}`;
 }
 
 function table(id, head, rows, opts = {}) {
@@ -296,16 +301,15 @@ function table(id, head, rows, opts = {}) {
 // ---- the same plugins on another machine, when the report was built with one
 if (DATA.compare) {
 	const other = Object.fromEntries(DATA.compare.rows.map((r) => [r.n, r]));
-	const rows = ["real-audit-log", "real-dinkus-commerce", "eager-256k", "eager-1024k", "lazy-1024k", "data-1024k"].filter((n) => byName[n] && other[n]);
+	const rows = ["real-audit-log", "real-dinkus-commerce", "real-dinkus-inventory", "real-combo-commerce-inventory", "eager-256k", "eager-1024k", "lazy-1024k", "data-1024k"].filter((n) => byName[n] && other[n]);
 	// Like with like: the outside clock when both runs have it, otherwise workerd's own clock.
 	const both = rows.every((n) => byName[n].o != null && other[n].o != null);
 	const here = (n) => (both ? byName[n].o : byName[n].p50);
 	const there = (n) => (both ? other[n].o : other[n].p50);
 	const ratio = (n) => here(n) / there(n);
-	const code = rows.filter((n) => !n.startsWith("data")).map(ratio).sort((a, b) => a - b);
-	const dataR = rows.includes("data-1024k") ? ratio("data-1024k") : null;
+	const rs = rows.map(ratio).sort((a, b) => a - b);
 	document.getElementById("sec-compare").hidden = false;
-	document.getElementById("compare-note").textContent = `This machine took ${code[0].toFixed(1)} to ${code[code.length - 1].toFixed(1)} times as long as ${DATA.compare.label} to load the same plugins${dataR != null && dataR < 1.5 ? `, while the plain-data plugin, which mostly parses one long string, took about the same (${dataR.toFixed(1)}×)` : ""}. Every curve keeps its shape, so read the times on this page as relative costs. What production pays depends on the machine, and only a run on Cloudflare measures that.${both ? "" : " Both columns here use workerd's own 1 ms clock, the only one the other run recorded."}`;
+	document.getElementById("compare-note").textContent = `This machine took ${rs[0].toFixed(1)} to ${rs[rs.length - 1].toFixed(1)} times as long as ${DATA.compare.label} to load the same plugins, so read the times on this page as costs relative to each other and to an almost empty plugin. What production pays depends on the machine, and only a run on Cloudflare measures that.${both ? "" : " Both columns here use workerd's own 1 ms clock, the only one the other run recorded."}`;
 	table("t-compare", ["Plugin", "Size", "This machine", DATA.compare.short, "Ratio"], rows.map((n) => [niceName(n), size(byName[n].b), `${fmt(here(n))} ms`, `${fmt(there(n))} ms`, `${ratio(n).toFixed(1)}×`]));
 }
 
