@@ -1,0 +1,497 @@
+== 2026-10-09T23:39:51Z setup on crabbox-pearl-barnacle-8c1e09f8, 8 CPUs, pinning to 1-7
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +658
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 658, reused 0, downloaded 0, added 0
+Progress: resolved 658, reused 0, downloaded 14, added 0
+
+   ╭──────────────────────────────────────────────────────────────────────╮
+   │                                                                      │
+   │                 Update available! 10.34.6 → 12.10.1.                 │
+   │                 Changelog: https://pnpm.io/v/12.10.1                 │
+   │   To update, run: curl -fsSL https://get.pnpm.io/install.sh | sh -   │
+   │                                                                      │
+   ╰──────────────────────────────────────────────────────────────────────╯
+
+Progress: resolved 658, reused 0, downloaded 54, added 12
+Progress: resolved 658, reused 0, downloaded 89, added 24
+Progress: resolved 658, reused 0, downloaded 110, added 31
+Progress: resolved 658, reused 0, downloaded 145, added 40
+Progress: resolved 658, reused 0, downloaded 169, added 49
+Progress: resolved 658, reused 0, downloaded 218, added 66
+Progress: resolved 658, reused 0, downloaded 296, added 91
+Progress: resolved 658, reused 0, downloaded 350, added 109
+Progress: resolved 658, reused 0, downloaded 447, added 142
+Progress: resolved 658, reused 0, downloaded 563, added 170
+Progress: resolved 658, reused 0, downloaded 654, added 236
+Progress: resolved 658, reused 0, downloaded 658, added 506
+Progress: resolved 658, reused 0, downloaded 658, added 658, done
+
+devDependencies:
++ @cloudflare/vitest-plugin 1.4.0
++ @emdash-cms/blocks 1.2.0
++ @emdash-cms/cloudflare 1.2.0
++ @emdash-cms/plugin-cli 0.13.3
++ @emdash-cms/plugin-test 0.2.8
++ @emdash-cms/plugin-types 0.6.0
++ emdash 1.2.0
++ esbuild 0.28.2
++ kysely 0.29.6
++ vite 8.3.4
++ vitest 4.1.11
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: esbuild@0.28.2, workerd@1.20261006.1.               │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 18.8s using pnpm v10.34.6
+
+added 17 packages in 14s
+npm notice
+npm notice New major version of npm available! 10.9.9 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+corpus written to /home/crabbox/emdash-plugin-size-bench/corpus
+governor: not exposed (normal on VMs)
+== 2026-10-09T23:40:39Z local suites (limits, matrix x 5 passes, memory, multi)
+
+=== limits ===
+
+
+=== matrix pass 1 ===
+[22m[39meager-2048k                    prod          cold median    780 ms  extra over tiny   758.9 ms  warm    1 ms  errors 0
+[22m[39mreal-dinkus-inventory          prod          cold median    113 ms  extra over tiny    90.3 ms  warm    2 ms  errors 0
+[22m[39mreal-combo-commerce-inventory  prod          cold median    121 ms  extra over tiny   100.4 ms  warm    2 ms  errors 0
+[22m[39mdata-384k                      prod          cold median     30 ms  extra over tiny    10.3 ms  warm    1 ms  errors 0
+[22m[39mdata-64k                       prod          cold median     23 ms  extra over tiny     1.8 ms  warm    2 ms  errors 0
+[22m[39meager-1024k                    prod          cold median    499 ms  extra over tiny   478.5 ms  warm    1 ms  errors 0
+[22m[39mlazy-192k                      prod          cold median     46 ms  extra over tiny    24.8 ms  warm    1 ms  errors 0
+[22m[39meager-768k                     prod          cold median    384 ms  extra over tiny   361.2 ms  warm    1 ms  errors 0
+[22m[39mreal-atproto                   prod          cold median     28 ms  extra over tiny     4.2 ms  warm    2 ms  errors 0
+[22m[39mlazy-64k                       prod          cold median     31 ms  extra over tiny     7.8 ms  warm    1 ms  errors 0
+[22m[39mreal-combo-x2                  prod          cold median    215 ms  extra over tiny   192.7 ms  warm    2 ms  errors 0
+[22m[39meager-96k                      prod          cold median     57 ms  extra over tiny    35.2 ms  warm    2 ms  errors 0
+[22m[39mlazy-8192k                     prod          cold median    848 ms  extra over tiny   829.4 ms  warm    1 ms  errors 0
+[22m[39meager-192k                     prod          cold median    157 ms  extra over tiny   138.4 ms  warm    1 ms  errors 0
+[22m[39mlazy-1024k                     prod          cold median    144 ms  extra over tiny   121.4 ms  warm    1 ms  errors 0
+[22m[39mlazy-1536k                     prod          cold median    189 ms  extra over tiny   167.0 ms  warm    1 ms  errors 0
+[22m[39meager-384k                     prod          cold median    220 ms  extra over tiny   199.0 ms  warm    1 ms  errors 0
+[22m[39mlazy-96k                       prod          cold median     33 ms  extra over tiny    11.5 ms  warm    1 ms  errors 0
+[22m[39mreal-dinkus-commerce           prod          cold median     43 ms  extra over tiny    21.0 ms  warm    2 ms  errors 0
+[22m[39mlazy-768k                      prod          cold median    110 ms  extra over tiny    88.7 ms  warm    1 ms  errors 0
+[22m[39mdata-128k                      prod          cold median     25 ms  extra over tiny     3.5 ms  warm    1 ms  errors 0
+[22m[39mreal-audit-log                 prod          cold median     23 ms  extra over tiny     2.0 ms  warm    2 ms  errors 0
+[22m[39mdata-256k                      prod          cold median     27 ms  extra over tiny     6.4 ms  warm    1 ms  errors 0
+[22m[39mreal-combo-commerce-inventory-zodmini prod          cold median     84 ms  extra over tiny    62.6 ms  warm    2 ms  errors 0
+[22m[39mdata-1024k                     prod          cold median     40 ms  extra over tiny    20.1 ms  warm    1 ms  errors 0
+[22m[39mdata-1536k                     prod          cold median     49 ms  extra over tiny    30.0 ms  warm    1 ms  errors 0
+[22m[39mlazy-16k                       prod          cold median     23 ms  extra over tiny     1.8 ms  warm    1 ms  errors 0
+[22m[39meager-64k                      prod          cold median     50 ms  extra over tiny    28.1 ms  warm    1 ms  errors 0
+[22m[39mdata-2048k                     prod          cold median     59 ms  extra over tiny    38.1 ms  warm    2 ms  errors 0
+[22m[39mlazy-2048k                     prod          cold median    245 ms  extra over tiny   221.6 ms  warm    1 ms  errors 0
+[22m[39meager-16k                      prod          cold median     27 ms  extra over tiny     4.6 ms  warm    2 ms  errors 0
+[22m[39mdata-768k                      prod          cold median     38 ms  extra over tiny    18.6 ms  warm    1 ms  errors 0
+[22m[39meager-4096k                    prod          cold median   1381 ms  extra over tiny  1359.6 ms  warm    2 ms  errors 0
+[22m[39mlazy-128k                      prod          cold median     37 ms  extra over tiny    15.4 ms  warm    1 ms  errors 0
+[22m[39mdata-32k                       prod          cold median     21 ms  extra over tiny     0.5 ms  warm    1 ms  errors 0
+(exit 1)
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+*** Received signal #11: Segmentation fault
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Errors [49m[22m[31m⎯⎯⎯⎯⎯⎯[39m
+[31m[1m
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[31m[1mError[22m: [vitest-pool]: Worker cloudflare-pool emitted error.[39m
+[90m [2m❯[22m EventEmitter.onTaskError node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3526:21[22m[39m
+[90m [2m❯[22m EventEmitter.emit node:events:[2m519:28[22m[39m
+[90m [2m❯[22m _WebSocket.emitUnexpectedExit node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3092:22[22m[39m
+[90m [2m❯[22m [nodejs.internal.kHybridDispatch] node:internal/event_target:[2m843:20[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node:internal/event_target:[2m776:26[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m89759:18[22m[39m
+[90m [2m❯[22m #queuingDispatchToPair node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90070:12[22m[39m
+[90m [2m❯[22m [kClose] node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90136:37[22m[39m
+[90m [2m❯[22m WebSocket.<anonymous> node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90172:19[22m[39m
+[90m [2m❯[22m WebSocket.emit node:events:[2m519:28[22m[39m
+
+[31m[1mCaused by: Error[22m: Worker exited unexpectedly[39m
+[90m [2m❯[22m _WebSocket.emitUnexpectedExit node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3090:33[22m[39m
+[90m [2m❯[22m [nodejs.internal.kHybridDispatch] node:internal/event_target:[2m843:20[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node:internal/event_target:[2m776:26[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m89759:18[22m[39m
+[90m [2m❯[22m #queuingDispatchToPair node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90070:12[22m[39m
+[90m [2m❯[22m [kClose] node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90136:37[22m[39m
+[90m [2m❯[22m WebSocket.<anonymous> node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90172:19[22m[39m
+[90m [2m❯[22m WebSocket.emit node:events:[2m519:28[22m[39m
+[90m [2m❯[22m WebSocket.emitClose node_modules/.pnpm/ws@8.21.0/node_modules/ws/lib/websocket.js:[2m279:10[22m[39m
+[90m [2m❯[22m Socket.socketOnClose node_modules/.pnpm/ws@8.21.0/node_modules/ws/lib/websocket.js:[2m1360:15[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39m
+
+close timed out after 10000ms
+Tests closed successfully but something prevents Vite server from exiting
+You can try to identify the cause by enabling "hanging-process" reporter. See https://vitest.dev/guide/reporters.html#hanging-process-reporter
+
+
+=== matrix pass 2 ===
+[22m[39mlazy-4096k                     prod          cold median    470 ms  extra over tiny   448.4 ms  warm    2 ms  errors 0
+[22m[39mlazy-768k                      prod          cold median    116 ms  extra over tiny    93.6 ms  warm    2 ms  errors 0
+[22m[39meager-256k                     prod          cold median    190 ms  extra over tiny   167.5 ms  warm    2 ms  errors 0
+[22m[39mdata-192k                      prod          cold median     27 ms  extra over tiny     4.9 ms  warm    1 ms  errors 0
+[22m[39mlazy-96k                       prod          cold median     34 ms  extra over tiny    12.1 ms  warm    2 ms  errors 0
+[22m[39mdata-64k                       prod          cold median     25 ms  extra over tiny     1.7 ms  warm    2 ms  errors 0
+[22m[39mreal-combo-commerce-inventory  prod          cold median    133 ms  extra over tiny   109.8 ms  warm    3 ms  errors 0
+[22m[39mreal-atproto                   prod          cold median     27 ms  extra over tiny     4.5 ms  warm    2 ms  errors 0
+[22m[39mreal-combo-commerce-inventory-zodmini prod          cold median     88 ms  extra over tiny    64.9 ms  warm    2 ms  errors 0
+[22m[39mlazy-256k                      prod          cold median     59 ms  extra over tiny    36.3 ms  warm    2 ms  errors 0
+[22m[39mdata-1024k                     prod          cold median     40 ms  extra over tiny    19.7 ms  warm    1 ms  errors 0
+[22m[39meager-192k                     prod          cold median    166 ms  extra over tiny   144.9 ms  warm    1 ms  errors 0
+[22m[39meager-4096k                    prod          cold median   1369 ms  extra over tiny  1349.3 ms  warm    1 ms  errors 0
+[22m[39mlazy-128k                      prod          cold median     35 ms  extra over tiny    15.2 ms  warm    1 ms  errors 0
+[22m[39meager-16k                      prod          cold median     25 ms  extra over tiny     4.3 ms  warm    1 ms  errors 0
+[22m[39meager-96k                      prod          cold median     56 ms  extra over tiny    35.0 ms  warm    1 ms  errors 0
+[22m[39mlazy-8192k                     prod          cold median    889 ms  extra over tiny   868.4 ms  warm    2 ms  errors 0
+[22m[39mlazy-16k                       prod          cold median     24 ms  extra over tiny     2.4 ms  warm    1 ms  errors 0
+[22m[39mdata-4096k                     prod          cold median     80 ms  extra over tiny    60.8 ms  warm    2 ms  errors 0
+[22m[39mlazy-512k                      prod          cold median     88 ms  extra over tiny    65.8 ms  warm    1 ms  errors 0
+[22m[39mdata-256k                      prod          cold median     28 ms  extra over tiny     6.0 ms  warm    2 ms  errors 0
+[22m[39meager-512k                     prod          cold median    279 ms  extra over tiny   256.3 ms  warm    1 ms  errors 0
+[22m[39meager-768k                     prod          cold median    363 ms  extra over tiny   342.6 ms  warm    1 ms  errors 0
+[22m[39mdata-2048k                     prod          cold median     53 ms  extra over tiny    34.9 ms  warm    1 ms  errors 0
+[22m[39mlazy-192k                      prod          cold median     45 ms  extra over tiny    24.3 ms  warm    1 ms  errors 0
+[22m[39mdata-384k                      prod          cold median     31 ms  extra over tiny     9.2 ms  warm    1 ms  errors 0
+[22m[39meager-1024k                    prod          cold median    513 ms  extra over tiny   491.6 ms  warm    1 ms  errors 0
+[22m[39mlazy-2048k                     prod          cold median    237 ms  extra over tiny   215.5 ms  warm    1 ms  errors 0
+[22m[39mlazy-1536k                     prod          cold median    178 ms  extra over tiny   157.9 ms  warm    1 ms  errors 0
+(exit 1)
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+*** Received signal #6: Aborted
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Errors [49m[22m[31m⎯⎯⎯⎯⎯⎯[39m
+[31m[1m
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[31m[1mError[22m: [vitest-pool]: Worker cloudflare-pool emitted error.[39m
+[90m [2m❯[22m EventEmitter.onTaskError node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3526:21[22m[39m
+[90m [2m❯[22m EventEmitter.emit node:events:[2m519:28[22m[39m
+[90m [2m❯[22m _WebSocket.emitUnexpectedExit node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3092:22[22m[39m
+[90m [2m❯[22m [nodejs.internal.kHybridDispatch] node:internal/event_target:[2m843:20[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node:internal/event_target:[2m776:26[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m89759:18[22m[39m
+[90m [2m❯[22m #queuingDispatchToPair node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90070:12[22m[39m
+[90m [2m❯[22m [kClose] node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90136:37[22m[39m
+[90m [2m❯[22m WebSocket.<anonymous> node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90172:19[22m[39m
+[90m [2m❯[22m WebSocket.emit node:events:[2m519:28[22m[39m
+
+[31m[1mCaused by: Error[22m: Worker exited unexpectedly[39m
+[90m [2m❯[22m _WebSocket.emitUnexpectedExit node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3090:33[22m[39m
+[90m [2m❯[22m [nodejs.internal.kHybridDispatch] node:internal/event_target:[2m843:20[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node:internal/event_target:[2m776:26[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m89759:18[22m[39m
+[90m [2m❯[22m #queuingDispatchToPair node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90070:12[22m[39m
+[90m [2m❯[22m [kClose] node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90136:37[22m[39m
+[90m [2m❯[22m WebSocket.<anonymous> node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90172:19[22m[39m
+[90m [2m❯[22m WebSocket.emit node:events:[2m519:28[22m[39m
+[90m [2m❯[22m WebSocket.emitClose node_modules/.pnpm/ws@8.21.0/node_modules/ws/lib/websocket.js:[2m279:10[22m[39m
+[90m [2m❯[22m Socket.socketOnClose node_modules/.pnpm/ws@8.21.0/node_modules/ws/lib/websocket.js:[2m1360:15[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39m
+
+close timed out after 10000ms
+Tests closed successfully but something prevents Vite server from exiting
+You can try to identify the cause by enabling "hanging-process" reporter. See https://vitest.dev/guide/reporters.html#hanging-process-reporter
+
+
+=== matrix pass 3 ===
+[22m[39mdata-192k                      prod          cold median     26 ms  extra over tiny     4.5 ms  warm    2 ms  errors 0
+[22m[39mreal-audit-log                 prod          cold median     24 ms  extra over tiny     2.2 ms  warm    3 ms  errors 0
+[22m[39mreal-combo-commerce-inventory  prod          cold median    130 ms  extra over tiny   108.3 ms  warm    2 ms  errors 0
+[22m[39mlazy-2048k                     prod          cold median    244 ms  extra over tiny   224.3 ms  warm    1 ms  errors 0
+[22m[39mlazy-64k                       prod          cold median     28 ms  extra over tiny     7.6 ms  warm    1 ms  errors 0
+[22m[39meager-128k                     prod          cold median     64 ms  extra over tiny    43.7 ms  warm    1 ms  errors 0
+[22m[39mlazy-128k                      prod          cold median     38 ms  extra over tiny    15.7 ms  warm    1 ms  errors 0
+[22m[39meager-768k                     prod          cold median    383 ms  extra over tiny   360.9 ms  warm    1 ms  errors 0
+[22m[39mdata-32k                       prod          cold median     24 ms  extra over tiny     0.9 ms  warm    1 ms  errors 0
+[22m[39mdata-8192k                     prod          cold median    144 ms  extra over tiny   123.6 ms  warm    1 ms  errors 0
+[22m[39mreal-atproto                   prod          cold median     25 ms  extra over tiny     4.0 ms  warm    2 ms  errors 0
+[22m[39mreal-combo-x2                  prod          cold median    215 ms  extra over tiny   193.3 ms  warm    2 ms  errors 0
+[22m[39mdata-512k                      prod          cold median     33 ms  extra over tiny    11.2 ms  warm    1 ms  errors 0
+[22m[39mlazy-1024k                     prod          cold median    144 ms  extra over tiny   121.3 ms  warm    2 ms  errors 0
+[22m[39mlazy-512k                      prod          cold median     89 ms  extra over tiny    67.0 ms  warm    2 ms  errors 0
+[22m[39mreal-dinkus-commerce           prod          cold median     44 ms  extra over tiny    21.6 ms  warm    2 ms  errors 0
+[22m[39mdata-4096k                     prod          cold median     85 ms  extra over tiny    65.1 ms  warm    1 ms  errors 0
+[22m[39mreal-webhook-notifier          prod          cold median     25 ms  extra over tiny     2.5 ms  warm    2 ms  errors 0
+[22m[39meager-2048k                    prod          cold median    803 ms  extra over tiny   781.3 ms  warm    1 ms  errors 0
+[22m[39mreal-combo-commerce-inventory-zodmini prod          cold median     87 ms  extra over tiny    65.0 ms  warm    2 ms  errors 0
+[22m[39meager-1536k                    prod          cold median    632 ms  extra over tiny   608.5 ms  warm    2 ms  errors 0
+[22m[39mlazy-768k                      prod          cold median    114 ms  extra over tiny    91.0 ms  warm    1 ms  errors 0
+[22m[39mlazy-32k                       prod          cold median     27 ms  extra over tiny     3.8 ms  warm    1 ms  errors 0
+[22m[39mreal-combo-x4                  prod          cold median    390 ms  extra over tiny   368.6 ms  warm    2 ms  errors 0
+[22m[39meager-96k                      prod          cold median     60 ms  extra over tiny    37.3 ms  warm    1 ms  errors 0
+[22m[39meager-192k                     prod          cold median    168 ms  extra over tiny   146.2 ms  warm    2 ms  errors 0
+[22m[39mreal-dinkus-inventory-zodmini  prod          cold median     74 ms  extra over tiny    51.1 ms  warm    2 ms  errors 0
+[22m[39meager-64k                      prod          cold median     52 ms  extra over tiny    29.0 ms  warm    1 ms  errors 0
+[22m[39mdata-384k                      prod          cold median     32 ms  extra over tiny     9.6 ms  warm    1 ms  errors 0
+[22m[39meager-16k                      prod          cold median     27 ms  extra over tiny     4.9 ms  warm    1 ms  errors 0
+[22m[39mdata-96k                       prod          cold median     24 ms  extra over tiny     2.1 ms  warm    1 ms  errors 0
+[22m[39meager-512k                     prod          cold median    281 ms  extra over tiny   259.0 ms  warm    2 ms  errors 0
+[22m[39mlazy-384k                      prod          cold median     74 ms  extra over tiny    51.2 ms  warm    2 ms  errors 0
+[22m[39mdata-128k                      prod          cold median     25 ms  extra over tiny     3.0 ms  warm    1 ms  errors 0
+[22m[39mdata-2048k                     prod          cold median     56 ms  extra over tiny    35.5 ms  warm    1 ms  errors 0
+[22m[39mdata-256k                      prod          cold median     28 ms  extra over tiny     6.0 ms  warm    1 ms  errors 0
+[22m[39meager-384k                     prod          cold median    227 ms  extra over tiny   204.8 ms  warm    1 ms  errors 0
+(exit 1)
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+*** Received signal #6: Aborted
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Errors [49m[22m[31m⎯⎯⎯⎯⎯⎯[39m
+[31m[1m
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[31m[1mError[22m: [vitest-pool]: Worker cloudflare-pool emitted error.[39m
+[90m [2m❯[22m EventEmitter.onTaskError node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3526:21[22m[39m
+[90m [2m❯[22m EventEmitter.emit node:events:[2m519:28[22m[39m
+[90m [2m❯[22m _WebSocket.emitUnexpectedExit node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3092:22[22m[39m
+[90m [2m❯[22m [nodejs.internal.kHybridDispatch] node:internal/event_target:[2m843:20[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node:internal/event_target:[2m776:26[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m89759:18[22m[39m
+[90m [2m❯[22m #queuingDispatchToPair node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90070:12[22m[39m
+[90m [2m❯[22m [kClose] node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90136:37[22m[39m
+[90m [2m❯[22m WebSocket.<anonymous> node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90172:19[22m[39m
+[90m [2m❯[22m WebSocket.emit node:events:[2m519:28[22m[39m
+
+[31m[1mCaused by: Error[22m: Worker exited unexpectedly[39m
+[90m [2m❯[22m _WebSocket.emitUnexpectedExit node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3090:33[22m[39m
+[90m [2m❯[22m [nodejs.internal.kHybridDispatch] node:internal/event_target:[2m843:20[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node:internal/event_target:[2m776:26[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m89759:18[22m[39m
+[90m [2m❯[22m #queuingDispatchToPair node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90070:12[22m[39m
+[90m [2m❯[22m [kClose] node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90136:37[22m[39m
+[90m [2m❯[22m WebSocket.<anonymous> node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90172:19[22m[39m
+[90m [2m❯[22m WebSocket.emit node:events:[2m519:28[22m[39m
+[90m [2m❯[22m WebSocket.emitClose node_modules/.pnpm/ws@8.21.0/node_modules/ws/lib/websocket.js:[2m279:10[22m[39m
+[90m [2m❯[22m Socket.socketOnClose node_modules/.pnpm/ws@8.21.0/node_modules/ws/lib/websocket.js:[2m1360:15[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39m
+
+close timed out after 10000ms
+Tests closed successfully but something prevents Vite server from exiting
+You can try to identify the cause by enabling "hanging-process" reporter. See https://vitest.dev/guide/reporters.html#hanging-process-reporter
+
+
+=== matrix pass 4 ===
+[22m[39mreal-combo-x4                  prod          cold median    368 ms  extra over tiny   348.9 ms  warm    3 ms  errors 0
+[22m[39mdata-16k                       prod          cold median     21 ms  extra over tiny     0.2 ms  warm    1 ms  errors 0
+[22m[39mreal-webhook-notifier          prod          cold median     23 ms  extra over tiny     2.3 ms  warm    2 ms  errors 0
+[22m[39mlazy-4096k                     prod          cold median    457 ms  extra over tiny   434.7 ms  warm    1 ms  errors 0
+[22m[39meager-1536k                    prod          cold median    606 ms  extra over tiny   587.4 ms  warm    2 ms  errors 0
+[22m[39meager-16k                      prod          cold median     26 ms  extra over tiny     4.2 ms  warm    1 ms  errors 0
+[22m[39meager-1024k                    prod          cold median    495 ms  extra over tiny   475.0 ms  warm    1 ms  errors 0
+[22m[39meager-384k                     prod          cold median    222 ms  extra over tiny   200.9 ms  warm    1 ms  errors 0
+[22m[39mlazy-32k                       prod          cold median     25 ms  extra over tiny     3.6 ms  warm    1 ms  errors 0
+[22m[39mlazy-384k                      prod          cold median     72 ms  extra over tiny    50.7 ms  warm    2 ms  errors 0
+[22m[39mreal-dinkus-commerce           prod          cold median     42 ms  extra over tiny    20.8 ms  warm    2 ms  errors 0
+[22m[39mreal-combo-commerce-inventory  prod          cold median    123 ms  extra over tiny   101.3 ms  warm    2 ms  errors 0
+[22m[39mdata-8192k                     prod          cold median    138 ms  extra over tiny   120.1 ms  warm    1 ms  errors 0
+[22m[39mreal-dinkus-inventory          prod          cold median    108 ms  extra over tiny    86.7 ms  warm    2 ms  errors 0
+[22m[39mreal-audit-log                 prod          cold median     23 ms  extra over tiny     2.0 ms  warm    2 ms  errors 0
+[22m[39mreal-combo-x2                  prod          cold median    208 ms  extra over tiny   187.1 ms  warm    2 ms  errors 0
+[22m[39mreal-atproto                   prod          cold median     25 ms  extra over tiny     4.2 ms  warm    2 ms  errors 0
+[22m[39meager-64k                      prod          cold median     48 ms  extra over tiny    27.5 ms  warm    1 ms  errors 0
+[22m[39mlazy-8192k                     prod          cold median    891 ms  extra over tiny   870.3 ms  warm    2 ms  errors 0
+[22m[39mlazy-192k                      prod          cold median     48 ms  extra over tiny    26.4 ms  warm    1 ms  errors 0
+[22m[39mdata-64k                       prod          cold median     24 ms  extra over tiny     1.6 ms  warm    1 ms  errors 0
+[22m[39meager-96k                      prod          cold median     58 ms  extra over tiny    35.8 ms  warm    2 ms  errors 0
+[22m[39mdata-256k                      prod          cold median     27 ms  extra over tiny     6.0 ms  warm    1 ms  errors 0
+[22m[39mlazy-1024k                     prod          cold median    140 ms  extra over tiny   120.2 ms  warm    1 ms  errors 0
+[22m[39mdata-1024k                     prod          cold median     40 ms  extra over tiny    20.4 ms  warm    1 ms  errors 0
+[22m[39meager-192k                     prod          cold median    160 ms  extra over tiny   139.6 ms  warm    1 ms  errors 0
+[22m[39mdata-96k                       prod          cold median     23 ms  extra over tiny     2.1 ms  warm    1 ms  errors 0
+[22m[39mlazy-1536k                     prod          cold median    188 ms  extra over tiny   167.0 ms  warm    1 ms  errors 0
+[22m[39mlazy-96k                       prod          cold median     33 ms  extra over tiny    11.5 ms  warm    1 ms  errors 0
+[22m[39meager-512k                     prod          cold median    273 ms  extra over tiny   251.8 ms  warm    1 ms  errors 0
+(exit 1)
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+*** Received signal #6: Aborted
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Errors [49m[22m[31m⎯⎯⎯⎯⎯⎯[39m
+[31m[1m
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[31m[1mError[22m: [vitest-pool]: Worker cloudflare-pool emitted error.[39m
+[90m [2m❯[22m EventEmitter.onTaskError node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3526:21[22m[39m
+[90m [2m❯[22m EventEmitter.emit node:events:[2m519:28[22m[39m
+[90m [2m❯[22m _WebSocket.emitUnexpectedExit node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3092:22[22m[39m
+[90m [2m❯[22m [nodejs.internal.kHybridDispatch] node:internal/event_target:[2m843:20[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node:internal/event_target:[2m776:26[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m89759:18[22m[39m
+[90m [2m❯[22m #queuingDispatchToPair node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90070:12[22m[39m
+[90m [2m❯[22m [kClose] node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90136:37[22m[39m
+[90m [2m❯[22m WebSocket.<anonymous> node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90172:19[22m[39m
+[90m [2m❯[22m WebSocket.emit node:events:[2m519:28[22m[39m
+
+[31m[1mCaused by: Error[22m: Worker exited unexpectedly[39m
+[90m [2m❯[22m _WebSocket.emitUnexpectedExit node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3090:33[22m[39m
+[90m [2m❯[22m [nodejs.internal.kHybridDispatch] node:internal/event_target:[2m843:20[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node:internal/event_target:[2m776:26[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m89759:18[22m[39m
+[90m [2m❯[22m #queuingDispatchToPair node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90070:12[22m[39m
+[90m [2m❯[22m [kClose] node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90136:37[22m[39m
+[90m [2m❯[22m WebSocket.<anonymous> node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90172:19[22m[39m
+[90m [2m❯[22m WebSocket.emit node:events:[2m519:28[22m[39m
+[90m [2m❯[22m WebSocket.emitClose node_modules/.pnpm/ws@8.21.0/node_modules/ws/lib/websocket.js:[2m279:10[22m[39m
+[90m [2m❯[22m Socket.socketOnClose node_modules/.pnpm/ws@8.21.0/node_modules/ws/lib/websocket.js:[2m1360:15[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39m
+
+close timed out after 10000ms
+Tests closed successfully but something prevents Vite server from exiting
+You can try to identify the cause by enabling "hanging-process" reporter. See https://vitest.dev/guide/reporters.html#hanging-process-reporter
+
+
+=== matrix pass 5 ===
+[22m[39mdata-96k                       prod          cold median     22 ms  extra over tiny     1.9 ms  warm    1 ms  errors 0
+[22m[39mlazy-128k                      prod          cold median     36 ms  extra over tiny    15.1 ms  warm    1 ms  errors 0
+[22m[39meager-128k                     prod          cold median     64 ms  extra over tiny    43.6 ms  warm    1 ms  errors 0
+[22m[39mlazy-4096k                     prod          cold median    452 ms  extra over tiny   433.8 ms  warm    1 ms  errors 0
+[22m[39meager-4096k                    prod          cold median   1381 ms  extra over tiny  1360.5 ms  warm    1 ms  errors 0
+[22m[39mdata-256k                      prod          cold median     26 ms  extra over tiny     5.9 ms  warm    1 ms  errors 0
+[22m[39mlazy-1024k                     prod          cold median    141 ms  extra over tiny   119.8 ms  warm    1 ms  errors 0
+[22m[39mreal-combo-x2                  prod          cold median    216 ms  extra over tiny   195.1 ms  warm    2 ms  errors 0
+[22m[39mdata-768k                      prod          cold median     35 ms  extra over tiny    14.3 ms  warm    1 ms  errors 0
+[22m[39meager-16k                      prod          cold median     25 ms  extra over tiny     4.3 ms  warm    1 ms  errors 0
+[22m[39meager-512k                     prod          cold median    270 ms  extra over tiny   249.9 ms  warm    1 ms  errors 0
+[22m[39mreal-webhook-notifier          prod          cold median     24 ms  extra over tiny     2.6 ms  warm    2 ms  errors 0
+[22m[39mlazy-192k                      prod          cold median     46 ms  extra over tiny    25.6 ms  warm    2 ms  errors 0
+[22m[39mdata-8192k                     prod          cold median    136 ms  extra over tiny   117.8 ms  warm    1 ms  errors 0
+[22m[39mreal-dinkus-inventory          prod          cold median    106 ms  extra over tiny    84.7 ms  warm    2 ms  errors 0
+[22m[39mreal-atproto                   prod          cold median     25 ms  extra over tiny     4.3 ms  warm    2 ms  errors 0
+[22m[39meager-384k                     prod          cold median    222 ms  extra over tiny   201.3 ms  warm    1 ms  errors 0
+[22m[39meager-8192k                    prod          cold median   2379 ms  extra over tiny  2360.5 ms  warm    1 ms  errors 0
+[22m[39mdata-1536k                     prod          cold median     45 ms  extra over tiny    26.9 ms  warm    1 ms  errors 0
+[22m[39mlazy-8192k                     prod          cold median    859 ms  extra over tiny   840.6 ms  warm    1 ms  errors 0
+[22m[39meager-32k                      prod          cold median     27 ms  extra over tiny     7.0 ms  warm    1 ms  errors 0
+[22m[39mdata-128k                      prod          cold median     23 ms  extra over tiny     3.1 ms  warm    1 ms  errors 0
+[22m[39mlazy-32k                       prod          cold median     24 ms  extra over tiny     3.4 ms  warm    1 ms  errors 0
+[22m[39meager-64k                      prod          cold median     49 ms  extra over tiny    28.0 ms  warm    1 ms  errors 0
+[22m[39mlazy-256k                      prod          cold median     55 ms  extra over tiny    34.4 ms  warm    2 ms  errors 0
+[22m[39mlazy-96k                       prod          cold median     32 ms  extra over tiny    11.3 ms  warm    1 ms  errors 0
+(exit 1)
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+*** Received signal #11: Segmentation fault
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Errors [49m[22m[31m⎯⎯⎯⎯⎯⎯[39m
+[31m[1m
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[31m[1mError[22m: [vitest-pool]: Worker cloudflare-pool emitted error.[39m
+[90m [2m❯[22m EventEmitter.onTaskError node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3526:21[22m[39m
+[90m [2m❯[22m EventEmitter.emit node:events:[2m519:28[22m[39m
+[90m [2m❯[22m _WebSocket.emitUnexpectedExit node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3092:22[22m[39m
+[90m [2m❯[22m [nodejs.internal.kHybridDispatch] node:internal/event_target:[2m843:20[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node:internal/event_target:[2m776:26[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m89759:18[22m[39m
+[90m [2m❯[22m #queuingDispatchToPair node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90070:12[22m[39m
+[90m [2m❯[22m [kClose] node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90136:37[22m[39m
+[90m [2m❯[22m WebSocket.<anonymous> node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90172:19[22m[39m
+[90m [2m❯[22m WebSocket.emit node:events:[2m519:28[22m[39m
+
+[31m[1mCaused by: Error[22m: Worker exited unexpectedly[39m
+[90m [2m❯[22m _WebSocket.emitUnexpectedExit node_modules/.pnpm/vitest@4.1.11_@types+node@26.6.5_vite@8.3.4_@types+node@26.6.5_esbuild@0.28.2_yaml@2.9.1_/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:[2m3090:33[22m[39m
+[90m [2m❯[22m [nodejs.internal.kHybridDispatch] node:internal/event_target:[2m843:20[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node:internal/event_target:[2m776:26[22m[39m
+[90m [2m❯[22m _WebSocket.dispatchEvent node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m89759:18[22m[39m
+[90m [2m❯[22m #queuingDispatchToPair node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90070:12[22m[39m
+[90m [2m❯[22m [kClose] node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90136:37[22m[39m
+[90m [2m❯[22m WebSocket.<anonymous> node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@26.6.5/node_modules/miniflare/dist/src/index.js:[2m90172:19[22m[39m
+[90m [2m❯[22m WebSocket.emit node:events:[2m519:28[22m[39m
+[90m [2m❯[22m WebSocket.emitClose node_modules/.pnpm/ws@8.21.0/node_modules/ws/lib/websocket.js:[2m279:10[22m[39m
+[90m [2m❯[22m Socket.socketOnClose node_modules/.pnpm/ws@8.21.0/node_modules/ws/lib/websocket.js:[2m1360:15[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39m
+
+close timed out after 10000ms
+Tests closed successfully but something prevents Vite server from exiting
+You can try to identify the cause by enabling "hanging-process" reporter. See https://vitest.dev/guide/reporters.html#hanging-process-reporter
+
+
+=== memory ===
+
+
+=== multi ===
+
+== 2026-10-10T00:03:32Z Node hosting suite
+real-audit-log           x 1  ready     89 ms  rss 42 MB
+real-audit-log           x 5  ready    162 ms  rss 48 MB
+real-audit-log           x10  ready    247 ms  rss 55 MB
+real-audit-log           x20  ready    436 ms  rss 70 MB
+real-dinkus-commerce     x 1  ready    111 ms  rss 45 MB
+real-dinkus-commerce     x 5  ready    254 ms  rss 54 MB
+real-dinkus-commerce     x10  ready    451 ms  rss 65 MB
+real-dinkus-commerce     x20  ready    819 ms  rss 87 MB
+real-combo-commerce-inventory x 1  ready    205 ms  rss 55 MB
+real-combo-commerce-inventory x 5  ready    701 ms  rss 79 MB
+real-combo-commerce-inventory x10  ready   1337 ms  rss 109 MB
+real-combo-commerce-inventory x20  ready   2662 ms  rss 160 MB
+real-combo-x2            x 1  ready    307 ms  rss 58 MB
+real-combo-x2            x 5  ready   1148 ms  rss 99 MB
+real-combo-x2            x10  ready   2342 ms  rss 140 MB
+real-combo-x2            x20  ready   4559 ms  rss 225 MB
+eager-128k               x 1  ready    143 ms  rss 46 MB
+eager-128k               x 5  ready    390 ms  rss 54 MB
+eager-128k               x10  ready    693 ms  rss 67 MB
+eager-128k               x20  ready   1383 ms  rss 94 MB
+eager-256k               x 1  ready    261 ms  rss 50 MB
+eager-256k               x 5  ready    989 ms  rss 74 MB
+eager-256k               x10  ready   1964 ms  rss 105 MB
+eager-256k               x20  ready   3793 ms  rss 157 MB
+eager-512k               x 1  ready    367 ms  rss 54 MB
+eager-512k               x 5  ready   1490 ms  rss 92 MB
+eager-512k               x10  ready   2959 ms  rss 128 MB
+eager-512k               x20  ready   6096 ms  rss 215 MB
+eager-1024k              x 1  ready    616 ms  rss 63 MB
+eager-1024k              x 5  ready   2702 ms  rss 123 MB
+eager-1024k              x10  ready   5513 ms  rss 204 MB
+eager-1024k              x20  ready  11223 ms  rss 358 MB
+eager-2048k              x 1  ready    974 ms  rss 80 MB
+eager-2048k              x 5  ready   4339 ms  rss 178 MB
+eager-2048k              x10  ready   8386 ms  rss 300 MB  ERR *** Fatal uncaught kj::Exception: rust/cxx/kj-rs-io/ffi.rs:209: failed: bind(): Address already in use (os error 98)
+stack: node_modules/.pnpm/@cloudflare+workerd-linux-64@1.20261006.1/node_modules/@cloudflare/workerd-linux-64/bin/workerd@22abd7b node_modules/.pnpm/@cloudflare+workerd-linux-64@1.202
+eager-2048k              x20  ready  16910 ms  rss 532 MB
+eager-4096k              x 1  ready   1580 ms  rss 95 MB
+eager-4096k              x 5  ready   7833 ms  rss 277 MB
+eager-4096k              x10  ready  15546 ms  rss 492 MB
+eager-4096k              x20  ready  31251 ms  rss 0 MB  ERR *** Fatal uncaught kj::Exception: rust/cxx/kj-rs-io/ffi.rs:209: failed: bind(): Address already in use (os error 98)
+stack: node_modules/.pnpm/@cloudflare+workerd-linux-64@1.20261006.1/node_modules/@cloudflare/workerd-linux-64/bin/workerd@22abd7b node_modules/.pnpm/@cloudflare+workerd-linux-64@1.202
+lazy-1024k               x 1  ready    245 ms  rss 53 MB
+lazy-1024k               x 5  ready    887 ms  rss 85 MB
+lazy-1024k               x10  ready   1761 ms  rss 133 MB
+lazy-1024k               x20  ready   3448 ms  rss 218 MB  ERR *** Fatal uncaught kj::Exception: rust/cxx/kj-rs-io/ffi.rs:209: failed: bind(): Address already in use (os error 98)
+stack: node_modules/.pnpm/@cloudflare+workerd-linux-64@1.20261006.1/node_modules/@cloudflare/workerd-linux-64/bin/workerd@22abd7b node_modules/.pnpm/@cloudflare+workerd-linux-64@1.202
+data-1024k               x 1  ready    137 ms  rss 52 MB
+data-1024k               x 5  ready    406 ms  rss 84 MB
+data-1024k               x10  ready    774 ms  rss 131 MB
+data-1024k               x20  ready   1534 ms  rss 214 MB
+== 2026-10-10T00:11:10Z analysis
+ok 11658
+== 2026-10-10T00:11:22Z done: results/hetzner-ccx33-ash/summary.md

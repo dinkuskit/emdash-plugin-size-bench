@@ -1,0 +1,187 @@
+2026-10-09T23:41:26.989Z limits quick prod: cold 23 ms ok | second 1 ms ok
+2026-10-09T23:41:27.046Z limits quick no-cpu-limit: cold 20 ms ok | second 1 ms ok
+2026-10-09T23:41:42.812Z limits spin-at-import prod: cold 15733 ms ok | second 2 ms ok
+2026-10-09T23:41:58.578Z limits spin-at-import no-cpu-limit: cold 15729 ms ok | second 1 ms ok
+2026-10-09T23:42:00.028Z limits spin-in-route prod: cold 720 ms ok | second 696 ms ok
+2026-10-09T23:42:01.482Z limits spin-in-route no-cpu-limit: cold 725 ms ok | second 698 ms ok
+2026-10-09T23:43:07.134Z eager-2048k                    prod          cold median    780 ms  extra over tiny   758.9 ms  warm    1 ms  errors 0
+2026-10-09T23:43:10.688Z real-dinkus-inventory          prod          cold median    113 ms  extra over tiny    90.3 ms  warm    2 ms  errors 0
+2026-10-09T23:43:14.206Z real-combo-commerce-inventory  prod          cold median    121 ms  extra over tiny   100.4 ms  warm    2 ms  errors 0
+2026-10-09T23:43:15.681Z data-384k                      prod          cold median     30 ms  extra over tiny    10.3 ms  warm    1 ms  errors 0
+2026-10-09T23:43:17.009Z data-64k                       prod          cold median     23 ms  extra over tiny     1.8 ms  warm    2 ms  errors 0
+2026-10-09T23:43:28.860Z eager-1024k                    prod          cold median    499 ms  extra over tiny   478.5 ms  warm    1 ms  errors 0
+2026-10-09T23:43:30.717Z lazy-192k                      prod          cold median     46 ms  extra over tiny    24.8 ms  warm    1 ms  errors 0
+2026-10-09T23:43:40.098Z eager-768k                     prod          cold median    384 ms  extra over tiny   361.2 ms  warm    1 ms  errors 0
+2026-10-09T23:43:41.546Z real-atproto                   prod          cold median     28 ms  extra over tiny     4.2 ms  warm    2 ms  errors 0
+2026-10-09T23:43:43.065Z lazy-64k                       prod          cold median     31 ms  extra over tiny     7.8 ms  warm    1 ms  errors 0
+2026-10-09T23:43:48.570Z real-combo-x2                  prod          cold median    215 ms  extra over tiny   192.7 ms  warm    2 ms  errors 0
+2026-10-09T23:43:50.699Z eager-96k                      prod          cold median     57 ms  extra over tiny    35.2 ms  warm    2 ms  errors 0
+2026-10-09T23:44:10.605Z lazy-8192k                     prod          cold median    848 ms  extra over tiny   829.4 ms  warm    1 ms  errors 0
+2026-10-09T23:44:14.926Z eager-192k                     prod          cold median    157 ms  extra over tiny   138.4 ms  warm    1 ms  errors 0
+2026-10-09T23:44:18.960Z lazy-1024k                     prod          cold median    144 ms  extra over tiny   121.4 ms  warm    1 ms  errors 0
+2026-10-09T23:44:24.009Z lazy-1536k                     prod          cold median    189 ms  extra over tiny   167.0 ms  warm    1 ms  errors 0
+2026-10-09T23:44:29.665Z eager-384k                     prod          cold median    220 ms  extra over tiny   199.0 ms  warm    1 ms  errors 0
+2026-10-09T23:44:31.199Z lazy-96k                       prod          cold median     33 ms  extra over tiny    11.5 ms  warm    1 ms  errors 0
+2026-10-09T23:44:32.920Z real-dinkus-commerce           prod          cold median     43 ms  extra over tiny    21.0 ms  warm    2 ms  errors 0
+2026-10-09T23:44:36.153Z lazy-768k                      prod          cold median    110 ms  extra over tiny    88.7 ms  warm    1 ms  errors 0
+2026-10-09T23:44:37.467Z data-128k                      prod          cold median     25 ms  extra over tiny     3.5 ms  warm    1 ms  errors 0
+2026-10-09T23:44:38.756Z real-audit-log                 prod          cold median     23 ms  extra over tiny     2.0 ms  warm    2 ms  errors 0
+2026-10-09T23:44:40.139Z data-256k                      prod          cold median     27 ms  extra over tiny     6.4 ms  warm    1 ms  errors 0
+2026-10-09T23:44:42.950Z real-combo-commerce-inventory-zodmini prod          cold median     84 ms  extra over tiny    62.6 ms  warm    2 ms  errors 0
+2026-10-09T23:44:44.610Z data-1024k                     prod          cold median     40 ms  extra over tiny    20.1 ms  warm    1 ms  errors 0
+2026-10-09T23:44:46.485Z data-1536k                     prod          cold median     49 ms  extra over tiny    30.0 ms  warm    1 ms  errors 0
+2026-10-09T23:44:47.789Z lazy-16k                       prod          cold median     23 ms  extra over tiny     1.8 ms  warm    1 ms  errors 0
+2026-10-09T23:44:49.747Z eager-64k                      prod          cold median     50 ms  extra over tiny    28.1 ms  warm    1 ms  errors 0
+2026-10-09T23:44:51.893Z data-2048k                     prod          cold median     59 ms  extra over tiny    38.1 ms  warm    2 ms  errors 0
+2026-10-09T23:44:58.155Z lazy-2048k                     prod          cold median    245 ms  extra over tiny   221.6 ms  warm    1 ms  errors 0
+2026-10-09T23:44:59.520Z eager-16k                      prod          cold median     27 ms  extra over tiny     4.6 ms  warm    2 ms  errors 0
+2026-10-09T23:45:01.013Z data-768k                      prod          cold median     38 ms  extra over tiny    18.6 ms  warm    1 ms  errors 0
+2026-10-09T23:45:32.231Z eager-4096k                    prod          cold median   1381 ms  extra over tiny  1359.6 ms  warm    2 ms  errors 0
+2026-10-09T23:45:33.731Z lazy-128k                      prod          cold median     37 ms  extra over tiny    15.4 ms  warm    1 ms  errors 0
+2026-10-09T23:45:34.879Z data-32k                       prod          cold median     21 ms  extra over tiny     0.5 ms  warm    1 ms  errors 0
+2026-10-09T23:46:47.505Z lazy-4096k                     prod          cold median    470 ms  extra over tiny   448.4 ms  warm    2 ms  errors 0
+2026-10-09T23:46:50.975Z lazy-768k                      prod          cold median    116 ms  extra over tiny    93.6 ms  warm    2 ms  errors 0
+2026-10-09T23:46:56.055Z eager-256k                     prod          cold median    190 ms  extra over tiny   167.5 ms  warm    2 ms  errors 0
+2026-10-09T23:46:57.511Z data-192k                      prod          cold median     27 ms  extra over tiny     4.9 ms  warm    1 ms  errors 0
+2026-10-09T23:46:59.133Z lazy-96k                       prod          cold median     34 ms  extra over tiny    12.1 ms  warm    2 ms  errors 0
+2026-10-09T23:47:00.547Z data-64k                       prod          cold median     25 ms  extra over tiny     1.7 ms  warm    2 ms  errors 0
+2026-10-09T23:47:04.356Z real-combo-commerce-inventory  prod          cold median    133 ms  extra over tiny   109.8 ms  warm    3 ms  errors 0
+2026-10-09T23:47:05.930Z real-atproto                   prod          cold median     27 ms  extra over tiny     4.5 ms  warm    2 ms  errors 0
+2026-10-09T23:47:08.705Z real-combo-commerce-inventory-zodmini prod          cold median     88 ms  extra over tiny    64.9 ms  warm    2 ms  errors 0
+2026-10-09T23:47:10.872Z lazy-256k                      prod          cold median     59 ms  extra over tiny    36.3 ms  warm    2 ms  errors 0
+2026-10-09T23:47:12.554Z data-1024k                     prod          cold median     40 ms  extra over tiny    19.7 ms  warm    1 ms  errors 0
+2026-10-09T23:47:17.060Z eager-192k                     prod          cold median    166 ms  extra over tiny   144.9 ms  warm    1 ms  errors 0
+2026-10-09T23:47:48.456Z eager-4096k                    prod          cold median   1369 ms  extra over tiny  1349.3 ms  warm    1 ms  errors 0
+2026-10-09T23:47:50.021Z lazy-128k                      prod          cold median     35 ms  extra over tiny    15.2 ms  warm    1 ms  errors 0
+2026-10-09T23:47:51.342Z eager-16k                      prod          cold median     25 ms  extra over tiny     4.3 ms  warm    1 ms  errors 0
+2026-10-09T23:47:53.350Z eager-96k                      prod          cold median     56 ms  extra over tiny    35.0 ms  warm    1 ms  errors 0
+2026-10-09T23:48:14.210Z lazy-8192k                     prod          cold median    889 ms  extra over tiny   868.4 ms  warm    2 ms  errors 0
+2026-10-09T23:48:15.539Z lazy-16k                       prod          cold median     24 ms  extra over tiny     2.4 ms  warm    1 ms  errors 0
+2026-10-09T23:48:18.197Z data-4096k                     prod          cold median     80 ms  extra over tiny    60.8 ms  warm    2 ms  errors 0
+2026-10-09T23:48:20.957Z lazy-512k                      prod          cold median     88 ms  extra over tiny    65.8 ms  warm    1 ms  errors 0
+2026-10-09T23:48:22.389Z data-256k                      prod          cold median     28 ms  extra over tiny     6.0 ms  warm    2 ms  errors 0
+2026-10-09T23:48:29.388Z eager-512k                     prod          cold median    279 ms  extra over tiny   256.3 ms  warm    1 ms  errors 0
+2026-10-09T23:48:38.163Z eager-768k                     prod          cold median    363 ms  extra over tiny   342.6 ms  warm    1 ms  errors 0
+2026-10-09T23:48:40.052Z data-2048k                     prod          cold median     53 ms  extra over tiny    34.9 ms  warm    1 ms  errors 0
+2026-10-09T23:48:41.778Z lazy-192k                      prod          cold median     45 ms  extra over tiny    24.3 ms  warm    1 ms  errors 0
+2026-10-09T23:48:43.220Z data-384k                      prod          cold median     31 ms  extra over tiny     9.2 ms  warm    1 ms  errors 0
+2026-10-09T23:48:55.316Z eager-1024k                    prod          cold median    513 ms  extra over tiny   491.6 ms  warm    1 ms  errors 0
+2026-10-09T23:49:01.355Z lazy-2048k                     prod          cold median    237 ms  extra over tiny   215.5 ms  warm    1 ms  errors 0
+2026-10-09T23:49:06.123Z lazy-1536k                     prod          cold median    178 ms  extra over tiny   157.9 ms  warm    1 ms  errors 0
+2026-10-09T23:50:31.493Z data-192k                      prod          cold median     26 ms  extra over tiny     4.5 ms  warm    2 ms  errors 0
+2026-10-09T23:50:32.905Z real-audit-log                 prod          cold median     24 ms  extra over tiny     2.2 ms  warm    3 ms  errors 0
+2026-10-09T23:50:36.656Z real-combo-commerce-inventory  prod          cold median    130 ms  extra over tiny   108.3 ms  warm    2 ms  errors 0
+2026-10-09T23:50:42.951Z lazy-2048k                     prod          cold median    244 ms  extra over tiny   224.3 ms  warm    1 ms  errors 0
+2026-10-09T23:50:44.387Z lazy-64k                       prod          cold median     28 ms  extra over tiny     7.6 ms  warm    1 ms  errors 0
+2026-10-09T23:50:46.628Z eager-128k                     prod          cold median     64 ms  extra over tiny    43.7 ms  warm    1 ms  errors 0
+2026-10-09T23:50:48.330Z lazy-128k                      prod          cold median     38 ms  extra over tiny    15.7 ms  warm    1 ms  errors 0
+2026-10-09T23:50:57.688Z eager-768k                     prod          cold median    383 ms  extra over tiny   360.9 ms  warm    1 ms  errors 0
+2026-10-09T23:50:59.178Z data-32k                       prod          cold median     24 ms  extra over tiny     0.9 ms  warm    1 ms  errors 0
+2026-10-09T23:51:03.802Z data-8192k                     prod          cold median    144 ms  extra over tiny   123.6 ms  warm    1 ms  errors 0
+2026-10-09T23:51:05.210Z real-atproto                   prod          cold median     25 ms  extra over tiny     4.0 ms  warm    2 ms  errors 0
+2026-10-09T23:51:10.857Z real-combo-x2                  prod          cold median    215 ms  extra over tiny   193.3 ms  warm    2 ms  errors 0
+2026-10-09T23:51:12.451Z data-512k                      prod          cold median     33 ms  extra over tiny    11.2 ms  warm    1 ms  errors 0
+2026-10-09T23:51:16.511Z lazy-1024k                     prod          cold median    144 ms  extra over tiny   121.3 ms  warm    2 ms  errors 0
+2026-10-09T23:51:19.327Z lazy-512k                      prod          cold median     89 ms  extra over tiny    67.0 ms  warm    2 ms  errors 0
+2026-10-09T23:51:21.108Z real-dinkus-commerce           prod          cold median     44 ms  extra over tiny    21.6 ms  warm    2 ms  errors 0
+2026-10-09T23:51:23.863Z data-4096k                     prod          cold median     85 ms  extra over tiny    65.1 ms  warm    1 ms  errors 0
+2026-10-09T23:51:25.204Z real-webhook-notifier          prod          cold median     25 ms  extra over tiny     2.5 ms  warm    2 ms  errors 0
+2026-10-09T23:51:43.779Z eager-2048k                    prod          cold median    803 ms  extra over tiny   781.3 ms  warm    1 ms  errors 0
+2026-10-09T23:51:46.498Z real-combo-commerce-inventory-zodmini prod          cold median     87 ms  extra over tiny    65.0 ms  warm    2 ms  errors 0
+2026-10-09T23:52:01.299Z eager-1536k                    prod          cold median    632 ms  extra over tiny   608.5 ms  warm    2 ms  errors 0
+2026-10-09T23:52:04.648Z lazy-768k                      prod          cold median    114 ms  extra over tiny    91.0 ms  warm    1 ms  errors 0
+2026-10-09T23:52:06.053Z lazy-32k                       prod          cold median     27 ms  extra over tiny     3.8 ms  warm    1 ms  errors 0
+2026-10-09T23:52:15.519Z real-combo-x4                  prod          cold median    390 ms  extra over tiny   368.6 ms  warm    2 ms  errors 0
+2026-10-09T23:52:17.676Z eager-96k                      prod          cold median     60 ms  extra over tiny    37.3 ms  warm    1 ms  errors 0
+2026-10-09T23:52:22.200Z eager-192k                     prod          cold median    168 ms  extra over tiny   146.2 ms  warm    2 ms  errors 0
+2026-10-09T23:52:24.641Z real-dinkus-inventory-zodmini  prod          cold median     74 ms  extra over tiny    51.1 ms  warm    2 ms  errors 0
+2026-10-09T23:52:26.599Z eager-64k                      prod          cold median     52 ms  extra over tiny    29.0 ms  warm    1 ms  errors 0
+2026-10-09T23:52:28.072Z data-384k                      prod          cold median     32 ms  extra over tiny     9.6 ms  warm    1 ms  errors 0
+2026-10-09T23:52:29.426Z eager-16k                      prod          cold median     27 ms  extra over tiny     4.9 ms  warm    1 ms  errors 0
+2026-10-09T23:52:30.703Z data-96k                       prod          cold median     24 ms  extra over tiny     2.1 ms  warm    1 ms  errors 0
+2026-10-09T23:52:37.658Z eager-512k                     prod          cold median    281 ms  extra over tiny   259.0 ms  warm    2 ms  errors 0
+2026-10-09T23:52:40.040Z lazy-384k                      prod          cold median     74 ms  extra over tiny    51.2 ms  warm    2 ms  errors 0
+2026-10-09T23:52:41.298Z data-128k                      prod          cold median     25 ms  extra over tiny     3.0 ms  warm    1 ms  errors 0
+2026-10-09T23:52:43.210Z data-2048k                     prod          cold median     56 ms  extra over tiny    35.5 ms  warm    1 ms  errors 0
+2026-10-09T23:52:44.538Z data-256k                      prod          cold median     28 ms  extra over tiny     6.0 ms  warm    1 ms  errors 0
+2026-10-09T23:52:50.338Z eager-384k                     prod          cold median    227 ms  extra over tiny   204.8 ms  warm    1 ms  errors 0
+2026-10-09T23:54:07.466Z real-combo-x4                  prod          cold median    368 ms  extra over tiny   348.9 ms  warm    3 ms  errors 0
+2026-10-09T23:54:08.773Z data-16k                       prod          cold median     21 ms  extra over tiny     0.2 ms  warm    1 ms  errors 0
+2026-10-09T23:54:10.077Z real-webhook-notifier          prod          cold median     23 ms  extra over tiny     2.3 ms  warm    2 ms  errors 0
+2026-10-09T23:54:21.038Z lazy-4096k                     prod          cold median    457 ms  extra over tiny   434.7 ms  warm    1 ms  errors 0
+2026-10-09T23:54:35.380Z eager-1536k                    prod          cold median    606 ms  extra over tiny   587.4 ms  warm    2 ms  errors 0
+2026-10-09T23:54:36.773Z eager-16k                      prod          cold median     26 ms  extra over tiny     4.2 ms  warm    1 ms  errors 0
+2026-10-09T23:54:48.540Z eager-1024k                    prod          cold median    495 ms  extra over tiny   475.0 ms  warm    1 ms  errors 0
+2026-10-09T23:54:54.297Z eager-384k                     prod          cold median    222 ms  extra over tiny   200.9 ms  warm    1 ms  errors 0
+2026-10-09T23:54:55.658Z lazy-32k                       prod          cold median     25 ms  extra over tiny     3.6 ms  warm    1 ms  errors 0
+2026-10-09T23:54:58.072Z lazy-384k                      prod          cold median     72 ms  extra over tiny    50.7 ms  warm    2 ms  errors 0
+2026-10-09T23:54:59.825Z real-dinkus-commerce           prod          cold median     42 ms  extra over tiny    20.8 ms  warm    2 ms  errors 0
+2026-10-09T23:55:03.357Z real-combo-commerce-inventory  prod          cold median    123 ms  extra over tiny   101.3 ms  warm    2 ms  errors 0
+2026-10-09T23:55:07.458Z data-8192k                     prod          cold median    138 ms  extra over tiny   120.1 ms  warm    1 ms  errors 0
+2026-10-09T23:55:10.666Z real-dinkus-inventory          prod          cold median    108 ms  extra over tiny    86.7 ms  warm    2 ms  errors 0
+2026-10-09T23:55:11.953Z real-audit-log                 prod          cold median     23 ms  extra over tiny     2.0 ms  warm    2 ms  errors 0
+2026-10-09T23:55:17.315Z real-combo-x2                  prod          cold median    208 ms  extra over tiny   187.1 ms  warm    2 ms  errors 0
+2026-10-09T23:55:18.630Z real-atproto                   prod          cold median     25 ms  extra over tiny     4.2 ms  warm    2 ms  errors 0
+2026-10-09T23:55:20.466Z eager-64k                      prod          cold median     48 ms  extra over tiny    27.5 ms  warm    1 ms  errors 0
+2026-10-09T23:55:41.137Z lazy-8192k                     prod          cold median    891 ms  extra over tiny   870.3 ms  warm    2 ms  errors 0
+2026-10-09T23:55:43.004Z lazy-192k                      prod          cold median     48 ms  extra over tiny    26.4 ms  warm    1 ms  errors 0
+2026-10-09T23:55:44.342Z data-64k                       prod          cold median     24 ms  extra over tiny     1.6 ms  warm    1 ms  errors 0
+2026-10-09T23:55:46.438Z eager-96k                      prod          cold median     58 ms  extra over tiny    35.8 ms  warm    2 ms  errors 0
+2026-10-09T23:55:47.778Z data-256k                      prod          cold median     27 ms  extra over tiny     6.0 ms  warm    1 ms  errors 0
+2026-10-09T23:55:51.703Z lazy-1024k                     prod          cold median    140 ms  extra over tiny   120.2 ms  warm    1 ms  errors 0
+2026-10-09T23:55:53.298Z data-1024k                     prod          cold median     40 ms  extra over tiny    20.4 ms  warm    1 ms  errors 0
+2026-10-09T23:55:57.710Z eager-192k                     prod          cold median    160 ms  extra over tiny   139.6 ms  warm    1 ms  errors 0
+2026-10-09T23:55:58.928Z data-96k                       prod          cold median     23 ms  extra over tiny     2.1 ms  warm    1 ms  errors 0
+2026-10-09T23:56:03.818Z lazy-1536k                     prod          cold median    188 ms  extra over tiny   167.0 ms  warm    1 ms  errors 0
+2026-10-09T23:56:05.347Z lazy-96k                       prod          cold median     33 ms  extra over tiny    11.5 ms  warm    1 ms  errors 0
+2026-10-09T23:56:12.118Z eager-512k                     prod          cold median    273 ms  extra over tiny   251.8 ms  warm    1 ms  errors 0
+2026-10-09T23:57:41.646Z data-96k                       prod          cold median     22 ms  extra over tiny     1.9 ms  warm    1 ms  errors 0
+2026-10-09T23:57:43.215Z lazy-128k                      prod          cold median     36 ms  extra over tiny    15.1 ms  warm    1 ms  errors 0
+2026-10-09T23:57:45.423Z eager-128k                     prod          cold median     64 ms  extra over tiny    43.6 ms  warm    1 ms  errors 0
+2026-10-09T23:57:56.244Z lazy-4096k                     prod          cold median    452 ms  extra over tiny   433.8 ms  warm    1 ms  errors 0
+2026-10-09T23:58:27.810Z eager-4096k                    prod          cold median   1381 ms  extra over tiny  1360.5 ms  warm    1 ms  errors 0
+2026-10-09T23:58:29.151Z data-256k                      prod          cold median     26 ms  extra over tiny     5.9 ms  warm    1 ms  errors 0
+2026-10-09T23:58:33.079Z lazy-1024k                     prod          cold median    141 ms  extra over tiny   119.8 ms  warm    1 ms  errors 0
+2026-10-09T23:58:38.592Z real-combo-x2                  prod          cold median    216 ms  extra over tiny   195.1 ms  warm    2 ms  errors 0
+2026-10-09T23:58:40.154Z data-768k                      prod          cold median     35 ms  extra over tiny    14.3 ms  warm    1 ms  errors 0
+2026-10-09T23:58:41.527Z eager-16k                      prod          cold median     25 ms  extra over tiny     4.3 ms  warm    1 ms  errors 0
+2026-10-09T23:58:48.323Z eager-512k                     prod          cold median    270 ms  extra over tiny   249.9 ms  warm    1 ms  errors 0
+2026-10-09T23:58:49.649Z real-webhook-notifier          prod          cold median     24 ms  extra over tiny     2.6 ms  warm    2 ms  errors 0
+2026-10-09T23:58:51.569Z lazy-192k                      prod          cold median     46 ms  extra over tiny    25.6 ms  warm    2 ms  errors 0
+2026-10-09T23:58:55.613Z data-8192k                     prod          cold median    136 ms  extra over tiny   117.8 ms  warm    1 ms  errors 0
+2026-10-09T23:58:58.697Z real-dinkus-inventory          prod          cold median    106 ms  extra over tiny    84.7 ms  warm    2 ms  errors 0
+2026-10-09T23:59:00.019Z real-atproto                   prod          cold median     25 ms  extra over tiny     4.3 ms  warm    2 ms  errors 0
+2026-10-09T23:59:05.707Z eager-384k                     prod          cold median    222 ms  extra over tiny   201.3 ms  warm    1 ms  errors 0
+2026-10-09T23:59:58.963Z eager-8192k                    prod          cold median   2379 ms  extra over tiny  2360.5 ms  warm    1 ms  errors 0
+2026-10-10T00:00:00.752Z data-1536k                     prod          cold median     45 ms  extra over tiny    26.9 ms  warm    1 ms  errors 0
+2026-10-10T00:00:20.726Z lazy-8192k                     prod          cold median    859 ms  extra over tiny   840.6 ms  warm    1 ms  errors 0
+2026-10-10T00:00:22.073Z eager-32k                      prod          cold median     27 ms  extra over tiny     7.0 ms  warm    1 ms  errors 0
+2026-10-10T00:00:23.317Z data-128k                      prod          cold median     23 ms  extra over tiny     3.1 ms  warm    1 ms  errors 0
+2026-10-10T00:00:24.639Z lazy-32k                       prod          cold median     24 ms  extra over tiny     3.4 ms  warm    1 ms  errors 0
+2026-10-10T00:00:26.610Z eager-64k                      prod          cold median     49 ms  extra over tiny    28.0 ms  warm    1 ms  errors 0
+2026-10-10T00:00:28.695Z lazy-256k                      prod          cold median     55 ms  extra over tiny    34.4 ms  warm    2 ms  errors 0
+2026-10-10T00:00:30.217Z lazy-96k                       prod          cold median     32 ms  extra over tiny    11.3 ms  warm    1 ms  errors 0
+2026-10-10T00:01:32.152Z memory real-audit-log           +1247 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:01:32.754Z memory real-dinkus-commerce     +2216 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:01:34.028Z memory real-combo-commerce-inventory +3926 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:01:35.914Z memory real-combo-x2            +8544 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:01:39.121Z memory real-combo-x4            +13770 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:01:39.778Z memory eager-64k                +1631 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:01:40.565Z memory eager-128k               +2208 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:01:42.275Z memory eager-256k               +5394 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:01:44.722Z memory eager-512k               +7441 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:01:49.061Z memory eager-1024k              +11132 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:01:55.627Z memory eager-2048k              +18615 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:02:07.115Z memory eager-4096k              +33664 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:02:08.557Z memory lazy-1024k               +6474 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:02:12.541Z memory lazy-4096k               +21344 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:02:13.129Z memory data-1024k               +5824 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:02:14.265Z memory data-4096k               +19383 KB per isolate (8 isolates, 0 errors)
+2026-10-10T00:03:01.944Z multi real-audit-log         prod          10 in a row 315 ms (0 err), at once 275 ms (0 err)
+2026-10-10T00:03:02.905Z multi real-dinkus-commerce   prod          10 in a row 493 ms (0 err), at once 448 ms (0 err)
+2026-10-10T00:03:05.554Z multi real-combo-commerce-inventory prod          10 in a row 1320 ms (0 err), at once 1309 ms (0 err)
+2026-10-10T00:03:09.803Z multi real-combo-x2          prod          10 in a row 2136 ms (0 err), at once 2091 ms (0 err)
+2026-10-10T00:03:11.233Z multi eager-128k             prod          10 in a row 725 ms (0 err), at once 680 ms (0 err)
+2026-10-10T00:03:15.110Z multi eager-256k             prod          10 in a row 1957 ms (0 err), at once 1896 ms (0 err)
+2026-10-10T00:03:20.848Z multi eager-512k             prod          10 in a row 2908 ms (0 err), at once 2806 ms (0 err)
+2026-10-10T00:03:31.188Z multi eager-1024k            prod          10 in a row 5245 ms (0 err), at once 5062 ms (0 err)
