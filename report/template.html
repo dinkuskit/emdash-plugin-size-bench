@@ -342,7 +342,9 @@ function table(id, head, rows, opts = {}) {
 		const e = (n) => DATA.edge.find((d) => d.n === n && d.cpu === 50);
 		const t = e("tiny"), c = e("real-dinkus-commerce"), c1 = e("real-combo-commerce-inventory"), c4 = e("real-combo-x4"), e8 = e("eager-8192k");
 		const ws = DATA.edge.map((d) => d.w).filter((v) => v != null);
-		if (c && c1) li("What size costs on Cloudflare is time on the first call.", `${t ? `An almost empty plugin took ${t.p50} ms, ` : ""}Commerce (${size(c.b)}) ${c.p50} ms, Commerce and Inventory bundled (${size(c1.b)}) ${c1.p50} ms${c4 ? ` and ${size(c4.b)} of real code ${c4.p50} ms` : ""}${e8 ? `; 8 MB of code that runs at import took ${e8.p50} ms` : ""}. Later calls took ${Math.min(...ws)} to ${Math.max(...ws)} ms at every size.`);
+		const aud = e("real-audit-log"), lAud = byName["real-audit-log"], lC1 = byName["real-combo-commerce-inventory"];
+		const ratio = aud && lAud && lC1 ? ` Measured against the almost empty audit-log plugin, Commerce and Inventory bundled cost ${(c1.p50 / aud.p50).toFixed(1)} times as much on Cloudflare and ${(val(lC1) / val(lAud)).toFixed(1)} times on this machine.` : "";
+		if (c && c1) li("What size costs on Cloudflare is time on the first call.", `${t ? `An almost empty plugin took ${t.p50} ms, ` : ""}Commerce (${size(c.b)}) ${c.p50} ms, Commerce and Inventory bundled (${size(c1.b)}) ${c1.p50} ms${c4 ? ` and ${size(c4.b)} of real code ${c4.p50} ms` : ""}${e8 ? `; 8 MB of code that runs at import took ${e8.p50} ms` : ""}. Later calls took ${Math.min(...ws)} to ${Math.max(...ws)} ms at every size.${ratio}`);
 	}
 	const warms = DATA.matrix.map((d) => d.w).filter((v) => v != null);
 	li("Size only costs on the first call into a new isolate.", `On this machine, every later call took ${Math.min(...warms)} to ${Math.max(...warms)} ms at every size up to 8 MB.`);
