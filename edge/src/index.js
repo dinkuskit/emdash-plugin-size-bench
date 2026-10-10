@@ -1,7 +1,10 @@
 // Loads benchmark payloads through Worker Loader with the same module layout
 // and limits EmDash's CloudflareSandboxRunner uses (wrapper.js is EmDash's
 // generated wrapper, saved by the local harness's "wrapper" suite).
-import { WorkerEntrypoint } from "cloudflare:workers";
+// The bridge comes from the module-level `exports`, as in EmDash's own runner
+// (getPluginBridge in @emdash-cms/cloudflare): on deployed Workers
+// ctx.exports.BenchBridge cannot be called with props.
+import { WorkerEntrypoint, exports } from "cloudflare:workers";
 import WRAPPER from "./wrapper.js.txt";
 
 // Stand-in for EmDash's PluginBridge. The benchmark routes never call it.
@@ -18,7 +21,7 @@ async function payload(env, name) {
 	return { code, route: manifest.routes[0] ?? "ping" };
 }
 
-async function invokeOnce(env, ctx, code, route, cpuMs, key) {
+async function invokeOnce(env, code, route, cpuMs, key) {
 	const t0 = Date.now();
 	let error = null;
 	try {
@@ -28,7 +31,7 @@ async function invokeOnce(env, ctx, code, route, cpuMs, key) {
 			modules: { "plugin.js": { js: WRAPPER }, "sandbox-plugin.js": { js: code } },
 			globalOutbound: null,
 			limits: { cpuMs, subRequests: 10 },
-			env: { PLUGIN_ID: "bench", PLUGIN_VERSION: "1.0.0", BRIDGE: ctx.exports.BenchBridge({ props: {} }) },
+			env: { PLUGIN_ID: "bench", PLUGIN_VERSION: "1.0.0", BRIDGE: exports.BenchBridge({ props: {} }) },
 		}));
 		await stub.getEntrypoint("default").invokeRoute(route, {}, REQ, crypto.randomUUID());
 	} catch (e) {
@@ -54,9 +57,9 @@ export default {
 		for (let i = 0; i < cold; i++) {
 			const key = `bench-${crypto.randomUUID()}`;
 			const unique = `/* nonce ${key} */\n${code}`;
-			coldRuns.push(await invokeOnce(env, ctx, unique, route, cpuMs, key));
+			coldRuns.push(await invokeOnce(env, unique, route, cpuMs, key));
 			if (i === 0 && !coldRuns[0].error) {
-				for (let w = 0; w < warm; w++) warmRuns.push(await invokeOnce(env, ctx, unique, route, cpuMs, key));
+				for (let w = 0; w < warm; w++) warmRuns.push(await invokeOnce(env, unique, route, cpuMs, key));
 			}
 		}
 		return Response.json({
